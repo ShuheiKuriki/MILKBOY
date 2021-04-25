@@ -1,0 +1,70 @@
+@charset "UTF-8";
+/* CSS Document */
+
+html{
+    background-color: #fff;
+	height: 100%;
+}
+
+body{
+	font-family: Verdana, Arial;
+	font-size: 14px;
+}
+
+#container {
+	min-height: 100%;
+	height: 480px;
+	width: 860px;
+	margin: 20px auto;
+	padding: 0 10px;
+	background-color: #eee;
+	box-shadow: 0 0 3px rgba(0,0,0,0.2);
+}
+
+.box {
+	height: 240px;
+	width: 860px;
+}
+
+#container1 {
+    background-image: url('../img/fukidashi_left.png');
+}
+
+#container2 {
+    background-image: url('../img/fukidashi_right.png');
+}
+
+#komaba0, #utsumi0 {
+    text-align:  center;
+    width: 420px;
+    height: 180px;
+    margin: 0 auto;
+    padding: 30px;
+    font-size: 20px;
+}
+
+#button1 {
+    margin: 20px auto;
+    width: 80px;
+}
+
+.button {
+
+    display       : inline-block;
+    border-radius : 5%;          /* 角丸       */
+    font-size     : 16pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    padding       : 12px 16px;   /* 余白       */
+    color         : #999999;     /* 背景色     */
+    background    : #ffffff;     /* 文字色     */
+    line-height   : 0.8em;         /* 1行の高さ  */
+    transition    : .1s;         /* なめらか変化 */
+    border        : 2px solid #999999;    /* 枠の指定 */
+    border-radius: 4px;
+  }
+
+.button:hover {
+background    : #999999;     /* 背景色     */
+color         : #ffffff;     /* 文字色     */
+}
