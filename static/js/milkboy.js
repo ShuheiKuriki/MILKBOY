@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/milkboy/stage"
+const BASE_URL = "http://" + location.host + "/milkboy/stage"
 var stage = 0;
 var stage_end = true;
 var rally_num = -2;
