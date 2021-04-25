@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>MILKBOY</title>
+  <script type="text/javascript" src="{% static 'js/milkboy.js' %}"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">-->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+  <div class='container my-4'>
+    <form id="input_form" class='form-inline'>
+      <div class="form-group row form-inline m-2">
+          <label class="m-2">テーマ</label>
+          <input type="text" class="form-control input-sm" id="message" value='random' placeholder="random">
+      </div>
+      <div class="form-group row form-inline m-2">
+          <label class="m-2">seed</label>
+          <input type="number" class="form-control input-sm col-2" id="seed" placeholder="-1" value="-1">
+          <label class="m-2">stage</label>
+          <select class="form-control input-sm col-2" id="stage" placeholder="4" value="4">
+            <option value='0'>0</option>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4' selected="selected">4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+          </select>
+          <div class="checkbox mx-3">
+            <label>
+              <input id="infinity" type="checkbox" value=''>∞
+            </label>
+          </div>
+          <button type="button" onclick="showMessage()" class="btn-sm btn-secondary">ネタ生成</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="container">
+    <div id="debug">
+      <div class="box" id="container1">
+        <div id="komaba0"></div>
+      </div>
+      <div class="box" id="container2">
+        <div id="utsumi0"></div>
+      </div>
+    </div>
+
+    <div class='text-center my-4'>
+      <a class="btn btn-secondary" role='button' href="{% url 'milkboy:index' %}">停止</a>
+    </div>
+
+  </div>
+</body>
+
+</html>

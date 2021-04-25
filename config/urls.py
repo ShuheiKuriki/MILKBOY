@@ -14,8 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from . import settings, views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('milkboy/', include('milkboy.urls')),
+    path('', views.IndexView.as_view(), name='index')
 ]
+
+try:
+    debug = settings.dev.DEBUG    # この if 文 (5STEP) を追加します。
+    import debug_toolbar
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
+except:
+    pass
