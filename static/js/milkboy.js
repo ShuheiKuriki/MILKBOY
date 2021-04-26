@@ -1,16 +1,17 @@
-const BASE_URL = "http://" + location.host + "/milkboy/stage"
+const BASE_URL = location.protocol + "//" + location.host + "/milkboy/stage"
 var stage = 0;
 var stage_end = true;
 var rally_num = -2;
 const delay_time = 1;
 var cur_stage_obj = null;
+var next = true;
 const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
 var inputValue = "ミルクボーイ";
 var seed = 0;
 var inf = false;
 
-const showMessage = () => {
+async function showMessage(){
   const textbox = document.getElementById("message");
   const num = document.getElementById("seed");
   const num2 = document.getElementById("stage");
@@ -23,8 +24,14 @@ const showMessage = () => {
   stage_end = true;
   rally_num = -2;
   if (infinity.checked) inf = true;
-  please_wait();
-  show_next();
+  next = false;
+  for (var i=0; i<2; i++) {
+    speechSynthesis.cancel();
+    await pause(1);
+  }
+  await say_UTSUMI('ネタを生成中です。');
+  next = true;
+  if (next) show_next();
 }
 
 async function say_UTSUMI(text){
@@ -45,13 +52,13 @@ async function say_UTSUMI(text){
   uttr.voice = ja_voices[0];
   speechSynthesis.speak(uttr);
 
-  await pause(text.length * 0.15);
   var i = 0;
   while (speechSynthesis.speaking) {
     await pause(text.length * 0.01);
     i++;
-    if (i>=10) {
+    if (i>=25) {
       speechSynthesis.cancel();
+      i = 0;
       break;
     }
   }
@@ -75,22 +82,16 @@ async function say_KOMABA(text){
   uttr.voice = ja_voices[Math.min(1,ja_voices.length-1)];
   speechSynthesis.speak(uttr);
 
-  await pause(text.length * 0.15);
   var i = 0;
+  console.log(text.length);
   while (speechSynthesis.speaking) {
     await pause(text.length * 0.01);
     i++;
-    if (i>=8) {
+    if (i>=23) {
       speechSynthesis.cancel();
       break;
     }
   }
-}
-
-function please_wait() {
-    (async() => {
-        await say_UTSUMI('ネタを生成中です。');
-    }) ()
 }
 
 function print_stage(stage, i){
@@ -102,7 +103,7 @@ function print_stage(stage, i){
         // 正しい特徴
         await say_KOMABA(stage["featX"]);
         await say_UTSUMI(stage["featX_reply"]);
-        show_next();
+        if (next) show_next();
       })()
       break;
 
@@ -111,7 +112,7 @@ function print_stage(stage, i){
         // 誤った特徴
         await say_KOMABA(stage["anti_featX"])
         await say_UTSUMI(stage["anti_featX_reply"]);
-        show_next();
+        if (next) show_next();
       })()
 
       // 次がもうラストstageの場合，conjunctionはいらない
@@ -125,7 +126,7 @@ function print_stage(stage, i){
       (async() => {
         // 次のターンへの接続
         await say_UTSUMI(stage["conjunction"]);
-        show_next();
+        if (next) show_next();
       })()
 
     default:
@@ -143,7 +144,7 @@ function tsukami(first_stage){
     // つかみ
     await say_UTSUMI('あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。')
     await say_UTSUMI('こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。')
-    show_next();
+    if (next) show_next();
   })()
 }
 
@@ -152,7 +153,7 @@ function introduction(first_stage){
     // 導入
     await say_KOMABA('うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
     await say_UTSUMI('ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
-    show_next();
+    if (next) show_next();
   })()
 }
 
@@ -163,7 +164,7 @@ function drop(last_stage, i){
         // 締め
         await say_KOMABA(last_stage["featX"]);
         await say_UTSUMI(last_stage["featX_reply"]);
-        show_next();
+        if (next) show_next();
       })()
       break;
 
@@ -171,7 +172,7 @@ function drop(last_stage, i){
       (async() => {
         await say_KOMABA(last_stage["anti_featX"]);
         await say_UTSUMI(last_stage["anti_featX_reply"]);
-        show_next();
+        if (next) show_next();
       })()
       break;
 
@@ -213,11 +214,6 @@ function show_next() {
 
   console.log("=".repeat(50));
   console.log("stage: " + stage);
-  // JSONのキーと値を全部表示する
-  // Object.keys(cur_stage_obj).forEach(function(key){
-  //   console.log(key + ":" + cur_stage_obj[key]);
-  // });
-  // console.log("=".repeat(50));
 
   switch (cur_stage_obj["stage"]) {
     case -1:
@@ -286,7 +282,7 @@ function getJSON() {
       console.log(req.responseText);
       // cur_stage_obj = cur_stage_obj[0];
       stage_end = false;
-      show_next();
+      if (next) show_next();
     }
   };
 
