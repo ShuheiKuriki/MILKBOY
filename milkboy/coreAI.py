@@ -436,7 +436,7 @@ def choose_anti_themes(theme, cat, catmems, num):
         if mem2 not in theme2 and theme2 not in mem2 and \
             mem2 not in cat2 and cat2 not in mem2:
             catmem_list.append(mem)
-    return sample(catmem_list, min(len(catmem_list),num))
+    return sample(catmem_list, max(min(len(catmem_list), num), 1))
 
 def make_random(input_theme, seed):
     """
@@ -489,13 +489,13 @@ def generate_neta_list(input_theme, seed, stage_max):
             except:
                 pass
         else:
-            return make_random(input_theme, seed)
+            return generate_neta_list(input_theme, seed, stage_max)
     anti_themes = choose_anti_themes(theme, cat, catmems, stage_max)
     # print("choose_anti_themes:", time.time()-t)
     if len(anti_themes):
         neta_list = generate_stages(input_theme, theme, anti_themes, cat, seed, stage_max)
     else:
-        neta_list = make_random(theme, seed)
+        generate_neta_list(input_theme, seed, stage_max)
 
     return neta_list
 
@@ -503,7 +503,7 @@ if __name__=="__main__":
     args = sys.argv
     input_theme = args[1] if len(args)>1 else 'random'
     print(input_theme)
-    seed = int(args[2]) if len(args)>2 else randint(0,100000)
+    seed = int(args[2]) if len(args)>2 else randint(0, 100000)
     import time
     t = time.time()
     generated = generate_neta_list(input_theme=input_theme, seed=seed, stage_max=5)

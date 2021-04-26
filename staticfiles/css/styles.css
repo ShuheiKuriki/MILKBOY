@@ -42,29 +42,3 @@ body{
     padding: 30px;
     font-size: 20px;
 }
-
-#button1 {
-    margin: 20px auto;
-    width: 80px;
-}
-
-.button {
-
-    display       : inline-block;
-    border-radius : 5%;          /* 角丸       */
-    font-size     : 16pt;        /* 文字サイズ */
-    text-align    : center;      /* 文字位置   */
-    cursor        : pointer;     /* カーソル   */
-    padding       : 12px 16px;   /* 余白       */
-    color         : #999999;     /* 背景色     */
-    background    : #ffffff;     /* 文字色     */
-    line-height   : 0.8em;         /* 1行の高さ  */
-    transition    : .1s;         /* なめらか変化 */
-    border        : 2px solid #999999;    /* 枠の指定 */
-    border-radius: 4px;
-  }
-
-.button:hover {
-background    : #999999;     /* 背景色     */
-color         : #ffffff;     /* 文字色     */
-}
