@@ -27,12 +27,12 @@ async function showMessage(){
   rally_num = -2;
   if (infinity.checked) inf = true;
   await stop();
-  await say('ネタを生成中です。', 0);
+  await say(0, 'ネタを生成中です。');
 
   show_next();
 }
 
-async function say(text, pearson){
+async function say(pearson, text){
   console.log("say_" + name[pearson] + ":" + text);
 
   var div = document.getElementById(name2[pearson]);
@@ -59,26 +59,22 @@ async function say(text, pearson){
   }
 }
 
-function print_stage(stage, i){
+async function print_stage(stage, i){
   console.log("rally_num: " + rally_num);
 
   switch (i) {
     case 0:
-      (async() => {
-        // 正しい特徴
-        await say(stage["featX"], 1);
-        await say(stage["featX_reply"], 0);
-        if (next) show_next();
-      })()
+      // 正しい特徴
+      await say(1, stage["featX"]);
+      await say(0, stage["featX_reply"]);
+      if (next) show_next();
       break;
 
     case 1:
-      (async() => {
-        // 誤った特徴
-        await say(stage["anti_featX"], 1)
-        await say(stage["anti_featX_reply"], 0);
-        if (next) show_next();
-      })()
+      // 誤った特徴
+      await say(1, stage["anti_featX"])
+      await say(0, stage["anti_featX_reply"]);
+      if (next) show_next();
 
       // 次がもうラストstageの場合，conjunctionはいらない
       if(stage["next_is_last"]){
@@ -88,11 +84,9 @@ function print_stage(stage, i){
       break;
 
     case 2:
-      (async() => {
-        // 次のターンへの接続
-        await say(stage["conjunction"], 0);
-        if (next) show_next();
-      })()
+      // 次のターンへの接続
+      await say(0, stage["conjunction"]);
+      if (next) show_next();
 
     default:
       return true;
@@ -101,46 +95,40 @@ function print_stage(stage, i){
   return false;
 }
 
-function tsukami(first_stage){
-  (async() => {
-    // 挨拶
-    await say('できました', 0);
-    await say("どうもーミルクボーイです。お願いします。", 0)
-    // つかみ
-    await say('あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。', 0)
-    await say('こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。', 0)
-    if (next) show_next();
-  })()
+async function tsukami(first_stage){
+  await say(0, 'できました');
+  await say(0, "どうもーミルクボーイです。お願いします。");
+  await say(0, 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。');
+  await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
+  if (next) show_next();
 }
 
-function introduction(first_stage){
-  (async() => {
-    // 導入
-    await say('うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。', 1);
-    await say('ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。', 0);
-    if (next) show_next();
-  })()
+async function introduction(first_stage){
+  // 導入
+  await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
+  await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
+  if (next) show_next();
 }
 
 async function drop(last_stage, i){
   switch (i) {
     case 0:
       // 締め
-      await say(last_stage["featX"], 1);
-      await say(last_stage["featX_reply"], 0);
+      await say(1, last_stage["featX"]);
+      await say(0, last_stage["featX_reply"]);
       if (next) show_next();
       break;
 
     case 1:
-      await say(last_stage["anti_featX"], 1);
-      await say(last_stage["anti_featX_reply"], 0);
+      await say(1, last_stage["anti_featX"]);
+      await say(0, last_stage["anti_featX_reply"]);
       if (next) show_next();
       break;
 
     case 2:
-      await say(last_stage["conjunction"], 1);
-      await say("いや、絶対ちゃうやろ！", 0);
-      await say("もうええわ。どうもありがとうございました。", 0);
+      await say(1, last_stage["conjunction"]);
+      await say(0, "いや、絶対ちゃうやろ！");
+      await say(0, "もうええわ。どうもありがとうございました。");
       if (inf) showMessage();
 
     default:
@@ -151,7 +139,7 @@ async function drop(last_stage, i){
 }
 
 async function finish() {
-  await say("もうええわ。どうもありがとうございました。", 0);
+  await say(0, "もうええわ。どうもありがとうございました。");
   if (inf) showMessage();
 }
 
@@ -171,7 +159,7 @@ async function stop() {
 function show_next() {
   var debug = document.getElementById("debug");
   if(stage == -3){
-    say('次のネタを押してください', 0);
+    say(0, '次のネタを押してください');
     return;
   }
 
