@@ -37,7 +37,7 @@
               <input id="infinity" type="checkbox" value=''>∞
             </label>
           </div>
-          <button type="button" onclick="showMessage()" class="btn-sm btn-secondary">ネタ生成</button>
+          <button type="button" onclick="showMessage()" class="btn-sm btn-secondary">次のネタを聞く</button>
       </div>
     </form>
   </div>
@@ -45,11 +45,15 @@
   <div id="container">
     <div id="debug">
       <div class="box" id="container1">
-        <div id="komaba0"></div>
+        <div id="komaba"></div>
       </div>
       <div class="box" id="container2">
-        <div id="utsumi0"></div>
+        <div id="utsumi"></div>
       </div>
+    </div>
+
+    <div class='text-center my-4'>
+      <button type="button" onclick="stop()" class="btn-sm btn-secondary">聞くのをやめる</button>
     </div>
 
   </div>

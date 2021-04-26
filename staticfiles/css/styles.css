@@ -34,7 +34,7 @@ body{
     background-image: url('../img/fukidashi_right.png');
 }
 
-#komaba0, #utsumi0 {
+#komaba, #utsumi {
     text-align:  center;
     width: 420px;
     height: 180px;

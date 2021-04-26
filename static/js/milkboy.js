@@ -1,4 +1,6 @@
 const BASE_URL = location.protocol + "//" + location.host + "/milkboy/stage"
+const name = ["UTSUMI", "KOMABA"];
+const name2 = ["utsumi", "komaba"];
 var stage = 0;
 var stage_end = true;
 var rally_num = -2;
@@ -24,32 +26,26 @@ async function showMessage(){
   stage_end = true;
   rally_num = -2;
   if (infinity.checked) inf = true;
-  next = false;
-  for (var i=0; i<2; i++) {
-    speechSynthesis.cancel();
-    await pause(1);
-  }
-  await say_UTSUMI('ネタを生成中です。');
-  next = true;
-  if (next) show_next();
+  await stop();
+  await say('ネタを生成中です。', 0);
+
+  show_next();
 }
 
-async function say_UTSUMI(text){
-  console.log("say_UTSUMI: " + text);
+async function say(text, pearson){
+  console.log("say_" + name[pearson] + ":" + text);
 
-  var utsumi = document.getElementById("utsumi0");
-  text_bom = text;
-  utsumi.innerHTML = text_bom;
+  var div = document.getElementById(name2[pearson]);
+  div.innerHTML = text;
 
   const voices = speechSynthesis.getVoices();
   ja_voices = new Array();
   voices.forEach(voice => {
     if(voice.lang.match('ja')) ja_voices.push(voice);
   })
-  // console.log(ja_voices)
 
   const uttr = new SpeechSynthesisUtterance(text);
-  uttr.voice = ja_voices[0];
+  uttr.voice = ja_voices[pearson];
   speechSynthesis.speak(uttr);
 
   var i = 0;
@@ -57,37 +53,6 @@ async function say_UTSUMI(text){
     await pause(text.length * 0.01);
     i++;
     if (i>=25) {
-      speechSynthesis.cancel();
-      i = 0;
-      break;
-    }
-  }
-}
-
-async function say_KOMABA(text){
-  console.log("say_KOMABA: " + text);
-
-  var komaba = document.getElementById("komaba0");
-  text_bom = text;
-  komaba.innerHTML = text_bom;
-
-  const voices = speechSynthesis.getVoices();
-  ja_voices = new Array();
-  voices.forEach(voice => {
-    if(voice.lang.match('ja')) ja_voices.push(voice);
-  })
-  // console.log(ja_voices);
-
-  const uttr = new SpeechSynthesisUtterance(text);
-  uttr.voice = ja_voices[Math.min(1,ja_voices.length-1)];
-  speechSynthesis.speak(uttr);
-
-  var i = 0;
-  console.log(text.length);
-  while (speechSynthesis.speaking) {
-    await pause(text.length * 0.01);
-    i++;
-    if (i>=23) {
       speechSynthesis.cancel();
       break;
     }
@@ -101,8 +66,8 @@ function print_stage(stage, i){
     case 0:
       (async() => {
         // 正しい特徴
-        await say_KOMABA(stage["featX"]);
-        await say_UTSUMI(stage["featX_reply"]);
+        await say(stage["featX"], 1);
+        await say(stage["featX_reply"], 0);
         if (next) show_next();
       })()
       break;
@@ -110,8 +75,8 @@ function print_stage(stage, i){
     case 1:
       (async() => {
         // 誤った特徴
-        await say_KOMABA(stage["anti_featX"])
-        await say_UTSUMI(stage["anti_featX_reply"]);
+        await say(stage["anti_featX"], 1)
+        await say(stage["anti_featX_reply"], 0);
         if (next) show_next();
       })()
 
@@ -125,7 +90,7 @@ function print_stage(stage, i){
     case 2:
       (async() => {
         // 次のターンへの接続
-        await say_UTSUMI(stage["conjunction"]);
+        await say(stage["conjunction"], 0);
         if (next) show_next();
       })()
 
@@ -139,11 +104,11 @@ function print_stage(stage, i){
 function tsukami(first_stage){
   (async() => {
     // 挨拶
-    await say_UTSUMI('できました');
-    await say_UTSUMI("どうもーミルクボーイです。お願いします。")
+    await say('できました', 0);
+    await say("どうもーミルクボーイです。お願いします。", 0)
     // つかみ
-    await say_UTSUMI('あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。')
-    await say_UTSUMI('こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。')
+    await say('あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。', 0)
+    await say('こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。', 0)
     if (next) show_next();
   })()
 }
@@ -151,40 +116,32 @@ function tsukami(first_stage){
 function introduction(first_stage){
   (async() => {
     // 導入
-    await say_KOMABA('うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
-    await say_UTSUMI('ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
+    await say('うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。', 1);
+    await say('ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。', 0);
     if (next) show_next();
   })()
 }
 
-function drop(last_stage, i){
+async function drop(last_stage, i){
   switch (i) {
     case 0:
-      (async() => {
-        // 締め
-        await say_KOMABA(last_stage["featX"]);
-        await say_UTSUMI(last_stage["featX_reply"]);
-        if (next) show_next();
-      })()
+      // 締め
+      await say(last_stage["featX"], 1);
+      await say(last_stage["featX_reply"], 0);
+      if (next) show_next();
       break;
 
     case 1:
-      (async() => {
-        await say_KOMABA(last_stage["anti_featX"]);
-        await say_UTSUMI(last_stage["anti_featX_reply"]);
-        if (next) show_next();
-      })()
+      await say(last_stage["anti_featX"], 1);
+      await say(last_stage["anti_featX_reply"], 0);
+      if (next) show_next();
       break;
 
     case 2:
-      (async() => {
-        await say_KOMABA(last_stage["conjunction"]);
-        await say_UTSUMI("いや、絶対ちゃうやろ！");
-        await say_UTSUMI("もうええわ。どうもありがとうございました。");
-        if (inf) {
-          showMessage();
-        }
-      })()
+      await say(last_stage["conjunction"], 1);
+      await say("いや、絶対ちゃうやろ！", 0);
+      await say("もうええわ。どうもありがとうございました。", 0);
+      if (inf) showMessage();
 
     default:
       return true;
@@ -193,17 +150,28 @@ function drop(last_stage, i){
   return false;
 }
 
-function finish() {
-  (async() => {
-    await say_UTSUMI("もうええわ。どうもありがとうございました。");
-    if (inf) showMessage();
-  })()
+async function finish() {
+  await say("もうええわ。どうもありがとうございました。", 0);
+  if (inf) showMessage();
+}
+
+async function stop() {
+  next = false;
+  for (var i=0; i<10; i++) {
+    speechSynthesis.cancel();
+    await pause(0.2);
+  }
+  for (var i=0; i<2; i++) {
+    var div = document.getElementById(name2[i]);
+    div.innerHTML = "";
+  }
+  next = true;
 }
 
 function show_next() {
   var debug = document.getElementById("debug");
   if(stage == -3){
-    say_UTSUMI('次のネタを押してください');
+    say('次のネタを押してください', 0);
     return;
   }
 
