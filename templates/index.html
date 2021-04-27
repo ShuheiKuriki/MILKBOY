@@ -1,62 +1,152 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>MILKBOY</title>
-  <script type="text/javascript" src="{% static 'js/milkboy.js' %}"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<!--  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">-->
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-
-<body>
-
-  <div class='container my-4'>
-    <form id="input_form" class='form-inline'>
-      <div class="form-group row form-inline m-2">
-          <label class="m-2">テーマ</label>
-          <input type="text" class="form-control input-sm" id="message" value='random' placeholder="random">
-      </div>
-      <div class="form-group row form-inline m-2">
-          <label class="m-2">seed</label>
-          <input type="number" class="form-control input-sm col-2" id="seed" placeholder="-1" value="-1">
-          <label class="m-2">stage</label>
-          <select class="form-control input-sm col-2" id="stage" placeholder="4" value="4">
-            <option value='0'>0</option>
-            <option value='1'>1</option>
-            <option value='2'>2</option>
-            <option value='3'>3</option>
-            <option value='4' selected="selected">4</option>
-            <option value='5'>5</option>
-            <option value='6'>6</option>
-          </select>
-          <div class="checkbox mx-3">
-            <label>
-              <input id="infinity" type="checkbox" value=''>∞
-            </label>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>MILKBOY</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/styles2.css' %}" rel="stylesheet" />
+        <script type="text/javascript" src="{% static 'js/milkboy.js' %}"></script>
+<!--        <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!--  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">-->
+    </head>
+    <body id="page-top">
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="K8x7J7Fr"></script>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="javascript:move_top()">MILKBOY Core AI</a>
+<!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                    Menu-->
+<!--                    <i class="fas fa-bars"></i>-->
+<!--                </button>-->
+<!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
+<!--                    <ul class="navbar-nav ml-auto">-->
+<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
+<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
+<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+            </div>
+        </nav>
+        <!-- Masthead-->
+        <header class="masthead" id="top">
+            <div class="container d-flex h-100 align-items-center">
+                <div class="mx-auto text-center">
+                    <h5><br></br></h5>
+                    <h1 class="mx-auto mt-5 text-uppercase">MILKBOY</h1>
+                    <h2 class="text-white-50 mx-auto mt-2 mb-5">
+                        <span style="color:black">M</span>anzai
+                        <span style="color:black">I</span>ntelligence using
+                        <span style="color:black">L</span>inguistic
+                        <span style="color:black">K</span>nowledge
+                        <span style="color:black">B</span>uilt in an
+                        <span style="color:black">O</span>nline-hackathon by
+                        <span style="color:black">Y</span>ahoo!
+                        <br></br>
+                    </h2>
+                    <h5 class="text-info mx-auto mt-5">
+                        Wikipediaから自動生成した</h5>
+                    <h5 class="text-info mx-auto">ミルクボーイ風の漫才を聞くことができます</h5>
+                    <h5 class="text-info mx-auto m-4">まずはランダムなお題で試してみましょう！</h5>
+                    <button type='button' class="btn btn-lg btn-light btn-outline-secondary" onclick="default_show()">
+                        MILKBOY風の漫才を聞いてみる
+                    </button>
+                </div>
+            </div>
+        </header>
+        <div class="masthead" id="neta">
+          <div class='container'>
+            <form id="input_form" class='form-inline mx-auto'>
+              <div class="form-group row mt-5 mx-auto">
+                  <label class="m-3">テーマ</label>
+                  <input type="text" class="form-control input-sm" id="message" value='random' placeholder="random">
+                  <label class="m-3">長さ</label>
+                  <select class="form-control input-sm" id="stage" placeholder="4" value="4">
+                    <option value='0'>つかみだけ</option>
+                    <option value='2'>短め</option>
+                    <option value='4' selected="selected">普通</option>
+                    <option value='6'>長め</option>
+                  </select>
+                  <div class="checkbox mx-3">
+                    <label class="form-control-lg">
+                      <input id="infinity" type="checkbox" value=''>リピート
+                    </label>
+                  </div>
+                <button type="button" onclick="showMessage()" class="btn-lg btn-white btn-outline-danger mx-auto">次のネタを聞く</button>
+              </div>
+            </form>
           </div>
-          <button type="button" onclick="showMessage()" class="btn-lg btn-outline-danger">次のネタを聞く</button>
-      </div>
-    </form>
-  </div>
 
-  <div id="container">
-    <div id="debug">
-      <div class="box" id="container1">
-        <div id="komaba"></div>
-      </div>
-      <div class="box" id="container2">
-        <div id="utsumi"></div>
-      </div>
-    </div>
+          <div id="container">
+            <div id="debug" class="my-4">
+              <div class="box mx-auto" id="container1">
+                <div id="komaba"></div>
+              </div>
+              <div class="box mx-auto" id="container2">
+                <div id="utsumi"></div>
+              </div>
+            </div>
 
-    <div class='text-center my-4'>
-      <button type="button" onclick="stop()" class="btn btn-outline-primary">聞くのをやめる</button>
-    </div>
+            <div class='text-center my-4'>
+              <button type="button" onclick="stop()" class="btn-sm btn-outline-secondary">聞くのをやめる</button>
+            </div>
+          </div>
+        </div>
 
-  </div>
-</body>
+        <!-- Footer-->
+        <footer class="footer bg-black small text-center text-white-50 content-center">
+            <div class="container">
+                <div class="row">
+                    <div class="ml-auto mr-2 my-4">
+                        <a href="https://twitter.com/intent/tweet?url=https://milkboy-core-ai.herokuapp.com&text=%E3%83%9F%E3%83%AB%E3%82%AF%E3%83%9C%E3%83%BC%E3%82%A4%E3%81%AE%E3%83%8D%E3%82%BF%E3%82%92%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90%E3%81%99%E3%82%8BAI"
+                           class="twitter-share-button" data-show-count="false">Tweet</a>
+                    </div>
+                    <div class="fb-share-button my-4 mx-2"
+                         data-href="https://milkboy-core-ai.herokuapp.com"
+                         data-layout="button" data-size="small">
+                        <a target="_blank"
+                           href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmilkboy-core-ai.herokuapp.com%2F&amp;src=sdkpreparse"
+                           class="fb-xfbml-parse-ignore">シェア</a>
+                    </div>
+                    <div class="my-4 mx-2">
+                        <a href="https://b.hatena.ne.jp/entry/s/milkboy-core-ai.herokuapp.com"
+                           class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label"
+                           data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加">
+                            <img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png"
+                                 alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" />
+                        </a>
+                    </div>
+                    <div class="mr-auto my-4 ml-2">
+                        <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3"
+                             data-url="https://milkboy-core-ai.herokuapp.com" data-color="default"
+                             data-size="small" data-count="false" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            Copyright © Team-rejected 2021
+            </div>
+        </footer>
+        <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></li>
+        <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
 
+    </body>
 </html>
