@@ -45,7 +45,7 @@
         <header class="masthead" id="top">
             <div class="container d-flex h-100">
                 <div class="mx-auto text-center">
-                    <h2><br></br><br></br><br></br></h2>
+                    <h3><br></br><br></br><br></br></h3>
                     <h1 class="mx-auto mt-5 text-uppercase">MILKBOY</h1>
                     <h3 class="text-white-30 mx-auto mt-2 mb-5">
                         <span class=text-white-75>M</span>anzai
@@ -68,53 +68,27 @@
             </div>
         </header>
         <div class="masthead" id="neta">
-            <h2><br></br></h2>
-            <div class='container d-none d-lg-block'>
-                <form class=''>
-                    <div class="form-group mx-auto row">
-                        <div class="col-5 mx-auto">
-                            <input type="text" class="form-control input-sm" id="theme1" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
-                        </div>
-                        <div class="col-auto">
-                            <select class="form-control input-sm" id="length1" placeholder="4" value="4">
-                                <option value='0'>つかみだけ</option>
-                                <option value='2'>短め</option>
-                                <option value='4' selected="selected">長さ : 普通</option>
-                                <option value='6'>長め</option>
-                            </select>
-                        </div>
-                        <div class="checkbox col-auto">
-                            <label class="form-control">
-                                <input id="repeat1" type="checkbox" value=''>リピート
-                            </label>
-                        </div>
-                        <div class="col-auto mx-auto">
-                            <button type="button" onclick="showMessage()" class="btn-lg btn-white btn-outline-danger">次のネタを聞く</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class='container d-lg-none'>
+            <div class='container' style="max-width: 630px;">
                 <h2><br></br></h2>
                 <form class='text-center'>
                     <div class="form-group mx-auto container">
-                        <input type="text" class="form-control input-sm" id="theme2" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
+                        <input type="text" class="form-control input-sm" id="theme" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
                         <div class="row">
-                            <div class="my-3 col-auto">
-                                <select class="form-control input-sm" id="length2" placeholder="4" value="4">
+                            <div class="my-3 col-auto ml-auto">
+                                <select class="form-control input-sm" id="length" placeholder="4" value="4">
                                 <option value='0'>つかみだけ</option>
                                 <option value='2'>短め</option>
                                 <option value='4' selected="selected">長さ : 普通</option>
                                 <option value='6'>長め</option>
                             </select>
                             </div>
-                            <div class="checkbox my-3 col-auto">
+                            <div class="checkbox my-3 col-auto mr-auto">
                                 <label class="form-control">
-                                    <input id="repeat2" type="checkbox" value=''>リピート
+                                    <input id="repeat" type="checkbox" value=''>リピート
                                 </label>
                             </div>
                         </div>
-                        <button type="button" onclick="showMessage()" class="btn-lg btn-white btn-outline-danger">次のネタを聞く</button>
+                        <button type="button" onclick="showMessage()" class="btn-lg btn-danger">次のネタを聞く</button>
                     </div>
                 </form>
             </div>

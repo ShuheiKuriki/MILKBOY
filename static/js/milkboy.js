@@ -12,14 +12,8 @@ var inputValue = "";
 var seed = 0;
 
 async function showMessage(){
-    if (document.body.clientWidth >= 975) {
-        var textbox = document.getElementById("theme1");
-        var len = document.getElementById("length1");
-    }
-    else {
-        var textbox = document.getElementById("theme2");
-        var len = document.getElementById("length2");
-    }
+    var textbox = document.getElementById("theme");
+    var len = document.getElementById("length");
     inputValue = textbox.value;
     stage_max = len.value;
     await start();
@@ -164,7 +158,7 @@ async function stop() {
     next = false;
     for (var i=0; i<10; i++) {
         speechSynthesis.cancel();
-        await pause(0.1);
+        await pause(0.15);
     }
     for (var i=0; i<2; i++) {
         var div = document.getElementById(name2[i]);
@@ -176,8 +170,7 @@ async function stop() {
 async function show_next() {
     if (stage == -3) {
         await say(0, '次のネタもぜひ聞いてください');
-        if (document.body.clientWidth >= 975) var infinity = document.getElementById("repeat1");
-        else var infinity = document.getElementById("repeat2");
+        var infinity = document.getElementById("repeat");
         if (infinity.checked) await showMessage();
         return;
     }
