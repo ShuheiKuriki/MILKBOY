@@ -68,40 +68,47 @@
             </div>
         </header>
         <div class="masthead" id="neta">
-            <div class='container d-none d-lg-inline'>
-                <form class='form-inline mx-auto'>
-                    <div class="form-group mt-5 mx-auto">
-                        <label class="m-3">お題</label>
-                        <input type="text" class="form-control input-sm" id="theme1" value='random' placeholder="random">
-                        <label class="m-3">長さ</label>
-                        <select class="form-control input-sm" id="length1" placeholder="4" value="4">
-                            <option value='0'>つかみだけ</option>
-                            <option value='2'>短め</option>
-                            <option value='4' selected="selected">普通</option>
-                            <option value='6'>長め</option>
-                        </select>
-                        <div class="checkbox mx-3">
-                            <label class="form-control">
-                                <input id="repeat1" type="checkbox" value=''>リピート
-                            </label>
+            <h2><br></br></h2>
+            <div class='container d-none d-lg-block'>
+                <form class=''>
+                    <div class="form-group mx-auto row">
+                        <div class="col-5 mx-auto">
+                            <input type="text" class="form-control input-sm" id="theme1" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
                         </div>
-                        <button type="button" onclick="showMessage()" class="btn-lg btn-white btn-outline-danger mx-auto">次のネタを聞く</button>
-                    </div>
-                </form>
-            </div>
-            <div class='container d-lg-none'>
-                <h1><br></br></h1>
-                <form class='text-center'>
-                    <div class="form-group mx-auto">
-                        <input type="text" class="form-control input-sm" id="theme2" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
-                        <div class="row">
-                            <select class="form-control input-sm mx-auto col-7 my-3" id="length2" placeholder="4" value="4">
+                        <div class="col-auto">
+                            <select class="form-control input-sm" id="length1" placeholder="4" value="4">
                                 <option value='0'>つかみだけ</option>
                                 <option value='2'>短め</option>
                                 <option value='4' selected="selected">長さ : 普通</option>
                                 <option value='6'>長め</option>
                             </select>
-                            <div class="checkbox mx-auto my-3 col-4">
+                        </div>
+                        <div class="checkbox col-auto">
+                            <label class="form-control">
+                                <input id="repeat1" type="checkbox" value=''>リピート
+                            </label>
+                        </div>
+                        <div class="col-auto mx-auto">
+                            <button type="button" onclick="showMessage()" class="btn-lg btn-white btn-outline-danger">次のネタを聞く</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class='container d-lg-none'>
+                <h2><br></br></h2>
+                <form class='text-center'>
+                    <div class="form-group mx-auto container">
+                        <input type="text" class="form-control input-sm" id="theme2" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
+                        <div class="row">
+                            <div class="my-3 col-auto">
+                                <select class="form-control input-sm" id="length2" placeholder="4" value="4">
+                                <option value='0'>つかみだけ</option>
+                                <option value='2'>短め</option>
+                                <option value='4' selected="selected">長さ : 普通</option>
+                                <option value='6'>長め</option>
+                            </select>
+                            </div>
+                            <div class="checkbox my-3 col-auto">
                                 <label class="form-control">
                                     <input id="repeat2" type="checkbox" value=''>リピート
                                 </label>

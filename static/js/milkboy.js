@@ -10,22 +10,18 @@ const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
 var inputValue = "";
 var seed = 0;
-var inf = false;
 
 async function showMessage(){
     if (document.body.clientWidth >= 975) {
         var textbox = document.getElementById("theme1");
         var len = document.getElementById("length1");
-        var infinity = document.getElementById("repeat1");
     }
     else {
         var textbox = document.getElementById("theme2");
         var len = document.getElementById("length2");
-        var infinity = document.getElementById("repeat2");
     }
     inputValue = textbox.value;
     stage_max = len.value;
-    if (infinity.checked) inf = true;
     await start();
 }
 
@@ -34,7 +30,6 @@ async function default_show(){
     document.getElementById("neta").style.display = "block";
     inputValue = '';
     stage_max = 4;
-    inf = false;
     await start();
 }
 
@@ -86,6 +81,24 @@ async function say(pearson, text){
     }
 }
 
+async function tsukami(first_stage){
+    // つかみネタ
+    await say(0, '整いました');
+    await say(0, "どうもーミルクボーイです。お願いします。");
+    await say(0, 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。');
+    await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
+    rally_num++;
+    if (stage_max == 0) await finish();
+    return;
+}
+
+async function introduction(first_stage){
+    // 導入
+    await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
+    await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
+    rally_num++;
+}
+
 async function print_stage(stage_obj){
     switch (rally_num) {
         case 0:
@@ -115,24 +128,6 @@ async function print_stage(stage_obj){
             need_neta = true;
             return;
   }
-}
-
-async function tsukami(first_stage){
-    // つかみネタ
-    await say(0, '整いました');
-    await say(0, "どうもーミルクボーイです。お願いします。");
-    await say(0, 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。');
-    await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
-    rally_num++;
-    if (stage_max == 0) await finish();
-    return;
-}
-
-async function introduction(first_stage){
-    // 導入
-    await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
-    await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
-    rally_num++;
 }
 
 async function drop(last_stage){
@@ -180,8 +175,10 @@ async function stop() {
 
 async function show_next() {
     if (stage == -3) {
-        say(0, '次のネタもぜひ聞いてください');
-        if (inf) await showMessage();
+        await say(0, '次のネタもぜひ聞いてください');
+        if (document.body.clientWidth >= 975) var infinity = document.getElementById("repeat1");
+        else var infinity = document.getElementById("repeat2");
+        if (infinity.checked) await showMessage();
         return;
     }
 
