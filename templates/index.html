@@ -23,123 +23,123 @@
         <!--  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">-->
     </head>
     <body id="page-top">
-        <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="K8x7J7Fr"></script>
+<!--        <div id="fb-root"></div>-->
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="javascript:move_top()">MILKBOY Core AI</a>
-<!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--                    Menu-->
-<!--                    <i class="fas fa-bars"></i>-->
-<!--                </button>-->
-<!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
-<!--                    <ul class="navbar-nav ml-auto">-->
-<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
-<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
-<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-            </div>
-        </nav>
+        <nav class="navbar fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="javascript:move_top()">MILKBOY Core AI</a>
+        <!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
+        <!--                    Menu-->
+        <!--                    <i class="fas fa-bars"></i>-->
+        <!--                </button>-->
+        <!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
+        <!--                    <ul class="navbar-nav ml-auto">-->
+        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
+        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
+        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
+        <!--                    </ul>-->
+        <!--                </div>-->
+    </div>
+</nav>
         <!-- Masthead-->
         <header class="masthead" id="top">
-            <div class="container d-flex h-100 align-items-center">
-                <div class="mx-auto text-center">
-                    <h5><br></br></h5>
-                    <h1 class="mx-auto mt-5 text-uppercase">MILKBOY</h1>
-                    <h2 class="text-white-50 mx-auto mt-2 mb-5">
-                        <span style="color:black">M</span>anzai
-                        <span style="color:black">I</span>ntelligence using
-                        <span style="color:black">L</span>inguistic
-                        <span style="color:black">K</span>nowledge
-                        <span style="color:black">B</span>uilt in an
-                        <span style="color:black">O</span>nline-hackathon by
-                        <span style="color:black">Y</span>ahoo!
-                        <br></br>
-                    </h2>
-                    <h5 class="text-info mx-auto mt-5">
-                        Wikipediaから自動生成した</h5>
-                    <h5 class="text-info mx-auto">ミルクボーイ風の漫才を聞くことができます</h5>
-                    <h5 class="text-info mx-auto m-4">まずはランダムなお題で試してみましょう！</h5>
-                    <button type='button' class="btn btn-lg btn-light btn-outline-secondary" onclick="default_show()">
-                        MILKBOY風の漫才を聞いてみる
-                    </button>
-                </div>
-            </div>
-        </header>
-        <div class="masthead" id="neta">
-          <div class='container'>
-            <form id="input_form" class='form-inline mx-auto'>
-              <div class="form-group row mt-5 mx-auto">
-                  <label class="m-3">テーマ</label>
-                  <input type="text" class="form-control input-sm" id="message" value='random' placeholder="random">
-                  <label class="m-3">長さ</label>
-                  <select class="form-control input-sm" id="stage" placeholder="4" value="4">
+    <div class="container d-flex h-100">
+        <div class="mx-auto text-center">
+            <h2><br></br><br></br><br></br></h2>
+            <h1 class="mx-auto mt-5 text-uppercase">MILKBOY</h1>
+            <h3 class="text-white-30 mx-auto mt-2 mb-5">
+                <span class=text-white-75>M</span>anzai
+                <span class=text-white-75>I</span>ntelligence using
+                <span class=text-white-75>L</span>inguistic
+                <span class=text-white-75>K</span>nowledge
+                <span class=text-white-75>B</span>uilt in an
+                <span class=text-white-75>O</span>nline-hackathon by
+                <span class=text-white-75>Y</span>ahoo!
+                <br></br>
+            </h3>
+            <h2 class="text-info mx-auto mt-5">
+                Wikipediaから自動生成した</h2>
+            <h2 class="text-info mx-auto">ミルクボーイ風漫才を聞くことができます</h2>
+            <h2 class="text-info mx-auto m-4">まずはランダムなお題で試してみましょう！</h2>
+            <button type='button' class="btn btn-lg btn-light btn-outline-secondary" onclick="default_show()">
+                MILKBOY風漫才を聞いてみる
+            </button>
+        </div>
+    </div>
+</header>
+<div class="masthead" id="neta">
+    <div class='container'>
+        <form id="input_form" class='form-inline mx-auto'>
+            <div class="form-group mt-5 mx-auto">
+                <label class="m-3">テーマ</label>
+                <input type="text" class="form-control input-sm" id="message" value='random' placeholder="random">
+                <label class="m-3">長さ</label>
+                <select class="form-control input-sm" id="stage" placeholder="4" value="4">
                     <option value='0'>つかみだけ</option>
                     <option value='2'>短め</option>
                     <option value='4' selected="selected">普通</option>
                     <option value='6'>長め</option>
-                  </select>
-                  <div class="checkbox mx-3">
+                </select>
+                <div class="checkbox mx-3">
                     <label class="form-control-lg">
-                      <input id="infinity" type="checkbox" value=''>リピート
+                        <input id="infinity" type="checkbox" value=''>リピート
                     </label>
-                  </div>
+                </div>
                 <button type="button" onclick="showMessage()" class="btn-lg btn-white btn-outline-danger mx-auto">次のネタを聞く</button>
-              </div>
-            </form>
-          </div>
+            </div>
+        </form>
+    </div>
 
-          <div id="container">
-            <div id="debug" class="my-4">
-              <div class="box mx-auto" id="container1">
+    <div id="container">
+        <div id="debug" class="my-4">
+            <div class="box mx-auto" id="container1">
                 <div id="komaba"></div>
-              </div>
-              <div class="box mx-auto" id="container2">
+            </div>
+            <div class="box mx-auto" id="container2">
                 <div id="utsumi"></div>
-              </div>
             </div>
-
-            <div class='text-center my-4'>
-              <button type="button" onclick="stop()" class="btn-sm btn-outline-secondary">聞くのをやめる</button>
-            </div>
-          </div>
         </div>
+
+        <div class='text-center my-4'>
+            <button type="button" onclick="stop()" class="btn-sm btn-outline-secondary">聞くのをやめる</button>
+        </div>
+    </div>
+</div>
 
         <!-- Footer-->
         <footer class="footer bg-black small text-center text-white-50 content-center">
             <div class="container">
                 <div class="row">
                     <div class="ml-auto mr-2 my-4">
-                        <a href="https://twitter.com/intent/tweet?url=https://milkboy-core-ai.herokuapp.com&text=%E3%83%9F%E3%83%AB%E3%82%AF%E3%83%9C%E3%83%BC%E3%82%A4%E3%81%AE%E3%83%8D%E3%82%BF%E3%82%92%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90%E3%81%99%E3%82%8BAI"
-                           class="twitter-share-button" data-show-count="false">Tweet</a>
+                        <a href="https://twitter.com/intent/tweet?url=https://milkboy-core-ai.herokuapp.com&text=%E3%83%9F%E3%83%AB%E3%82%AF%E3%83%9C%E3%83%BC%E3%82%A4%E9%A2%A8%E3%81%AE%E6%BC%AB%E6%89%8D%E3%83%8D%E3%82%BF%E3%82%92%E3%81%9F%E3%81%A3%E3%81%9F%E3%81%AE5%E7%A7%92%E3%81%A7%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90%E3%81%99%E3%82%8BAI%E3%82%A2%E3%83%97%E3%83%AA"
+                        class="twitter-share-button" data-show-count="false">Tweet</a>
                     </div>
                     <div class="fb-share-button my-4 mx-2"
-                         data-href="https://milkboy-core-ai.herokuapp.com"
-                         data-layout="button" data-size="small">
+                                 data-href="https://milkboy-core-ai.herokuapp.com"
+                                 data-layout="button" data-size="small">
                         <a target="_blank"
-                           href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmilkboy-core-ai.herokuapp.com%2F&amp;src=sdkpreparse"
-                           class="fb-xfbml-parse-ignore">シェア</a>
+                                   href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmilkboy-core-ai.herokuapp.com%2F&amp;src=sdkpreparse"
+                        class="fb-xfbml-parse-ignore">シェア</a>
                     </div>
                     <div class="my-4 mx-2">
                         <a href="https://b.hatena.ne.jp/entry/s/milkboy-core-ai.herokuapp.com"
-                           class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label"
-                           data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加">
+                                   class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label"
+                                   data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加">
                             <img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png"
-                                 alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" />
+                                         alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" />
                         </a>
                     </div>
                     <div class="mr-auto my-4 ml-2">
                         <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3"
-                             data-url="https://milkboy-core-ai.herokuapp.com" data-color="default"
-                             data-size="small" data-count="false" style="display: none;">
+                                     data-url="https://milkboy-core-ai.herokuapp.com" data-color="default"
+                                     data-size="small" data-count="false" style="display: none;">
                         </div>
                     </div>
                 </div>
-            Copyright © Team-rejected 2021
+                Copyright © Team-rejected 2021
             </div>
         </footer>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="K8x7J7Fr"></script>
         <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></li>
         <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>

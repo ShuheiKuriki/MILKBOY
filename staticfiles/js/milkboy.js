@@ -8,34 +8,55 @@ var cur_stage_obj = null;
 var next = true;
 const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
-var inputValue = "ミルクボーイ";
+var inputValue = "";
 var seed = 0;
 var inf = false;
 
 async function showMessage(){
     const textbox = document.getElementById("message");
-    const num = document.getElementById("seed");
     const num2 = document.getElementById("stage");
     const infinity = document.getElementById("infinity");
     inputValue = textbox.value;
-    seed = num.value;
-    if (seed<0) seed = Math.floor( Math.random() * 100000 );
     stage_max = num2.value;
+    if (infinity.checked) inf = true;
+    await start();
+}
+
+async function default_show(){
+    document.getElementById("top").style.display = "none";
+    document.getElementById("neta").style.display = "block";
+    inputValue = '';
+    stage_max = 4;
+    inf = false;
+    await start();
+}
+
+async function start() {
+    await stop();
+    await say(0, 'ネタを生成中です。');
+    display_message(0, "最大で10秒ほどお待ちください");
+    seed = Math.floor( Math.random() * 100000 );
     stage = 0;
     need_neta = true;
     rally_num = -2;
-    if (infinity.checked) inf = true;
-
-    await stop();
-    await say(0, 'ネタを生成中です。');
-    show_next();
+    await pause(0.5);
+    await show_next();
 }
 
+async function move_top() {
+    document.getElementById("top").style.display = "block";
+    document.getElementById("neta").style.display = "none";
+    await stop();
+}
+
+function display_message(pearson, text) {
+    document.getElementById(name2[pearson]).innerHTML = text;
+    console.log(text);
+}
 async function say(pearson, text){
     console.log("say_" + name[pearson] + ":" + text);
 
-    var div = document.getElementById(name2[pearson]);
-    div.innerHTML = text;
+    display_message(pearson, text);
 
     const voices = speechSynthesis.getVoices();
     ja_voices = new Array();
@@ -141,7 +162,7 @@ async function stop() {
     next = false;
     for (var i=0; i<10; i++) {
         speechSynthesis.cancel();
-        await pause(0.2);
+        await pause(0.1);
     }
     for (var i=0; i<2; i++) {
         var div = document.getElementById(name2[i]);

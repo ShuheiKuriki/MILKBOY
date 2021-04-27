@@ -34,12 +34,13 @@ async function default_show(){
 async function start() {
     await stop();
     await say(0, 'ネタを生成中です。');
-
+    display_message(0, "最大で10秒ほどお待ちください");
     seed = Math.floor( Math.random() * 100000 );
     stage = 0;
     need_neta = true;
     rally_num = -2;
-    show_next();
+    await pause(0.5);
+    await show_next();
 }
 
 async function move_top() {
@@ -48,11 +49,14 @@ async function move_top() {
     await stop();
 }
 
+function display_message(pearson, text) {
+    document.getElementById(name2[pearson]).innerHTML = text;
+    console.log(text);
+}
 async function say(pearson, text){
     console.log("say_" + name[pearson] + ":" + text);
 
-    var div = document.getElementById(name2[pearson]);
-    div.innerHTML = text;
+    display_message(pearson, text);
 
     const voices = speechSynthesis.getVoices();
     ja_voices = new Array();
