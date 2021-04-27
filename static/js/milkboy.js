@@ -19,9 +19,9 @@ async function showMessage(){
         var infinity = document.getElementById("repeat1");
     }
     else {
-        var textbox = document.getElementById("theme1");
-        var len = document.getElementById("length1");
-        var infinity = document.getElementById("repeat1");
+        var textbox = document.getElementById("theme2");
+        var len = document.getElementById("length2");
+        var infinity = document.getElementById("repeat2");
     }
     inputValue = textbox.value;
     stage_max = len.value;
