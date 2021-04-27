@@ -12,25 +12,39 @@ body{
 }
 
 .box {
-	height: 240px;
-	width: 860px;
+    width: 86vw;
+    height: 24vw;
+    max-width: 860px;
+    max-height: 240px;
+}
+
+#container {
+    width: 100vw;
+    padding-right: min(1.5vw, 15px);
+    padding-left: min(1.5vw, 15px);
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #container1 {
     background-image: url('../img/fukidashi_left.png');
+    background-size: cover;
 }
 
 #container2 {
     background-image: url('../img/fukidashi_right.png');
+    background-size: cover;
 }
 
 #komaba, #utsumi {
     text-align:  center;
-    width: 420px;
-    height: 180px;
+    width: 42vw;
+    height: 18vw;
+    max-width: 420px;
+    max-height: 180px;
     margin: 0 auto;
-    padding: 30px;
-    font-size: 20px;
+    padding: min(3vw, 30px);
+    font-size: min(2vw, 20px);
 }
 
 #neta {

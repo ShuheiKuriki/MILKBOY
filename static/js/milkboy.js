@@ -13,11 +13,18 @@ var seed = 0;
 var inf = false;
 
 async function showMessage(){
-    const textbox = document.getElementById("message");
-    const num2 = document.getElementById("stage");
-    const infinity = document.getElementById("infinity");
+    if (document.body.clientWidth >= 975) {
+        var textbox = document.getElementById("theme1");
+        var len = document.getElementById("length1");
+        var infinity = document.getElementById("repeat1");
+    }
+    else {
+        var textbox = document.getElementById("theme1");
+        var len = document.getElementById("length1");
+        var infinity = document.getElementById("repeat1");
+    }
     inputValue = textbox.value;
-    stage_max = num2.value;
+    stage_max = len.value;
     if (infinity.checked) inf = true;
     await start();
 }
@@ -172,8 +179,6 @@ async function stop() {
 }
 
 async function show_next() {
-    var debug = document.getElementById("debug");
-
     if (stage == -3) {
         say(0, '次のネタもぜひ聞いてください');
         if (inf) await showMessage();
