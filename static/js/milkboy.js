@@ -19,12 +19,14 @@ async function showMessage(){
     await start();
 }
 
-async function default_show(){
+async function default_show() {
     document.getElementById("top").style.display = "none";
     document.getElementById("neta").style.display = "block";
+    document.getElementById("form").style.display = "none";
+    location.href = '#neta';
     inputValue = '';
     stage_max = 4;
-    await start();
+//    await start();
 }
 
 async function start() {

@@ -17,21 +17,25 @@ var theme = '？？';
 var category = '？？';
 var present = '？？';
 var father = '？？';
+
 async function showMessage(){
     inputValue = document.getElementById("theme").value;
     stage_max = document.getElementById("length").value;
     inf = document.getElementById("length").checked;
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
+    location.href = '#neta';
     await start();
 }
 
-async function default_show(){
+async function default_show() {
     document.getElementById("top").style.display = "none";
     document.getElementById("neta").style.display = "block";
+    document.getElementById("form").style.display = "none";
+    location.href = '#neta';
     inputValue = '';
     stage_max = 4;
-    await start();
+//    await start();
 }
 
 async function start() {
@@ -58,12 +62,16 @@ async function go_top() {
     await stop();
     document.getElementById("top").style.display = "block";
     document.getElementById("neta").style.display = "none";
+    document.getElementById("form").style.display = "none";
+    location.href = '#top';
 }
 
 async function go_form() {
     await stop();
     document.getElementById("form").style.display = "block";
     document.getElementById("neta").style.display = "none";
+    document.getElementById("top").style.display = "none";
+    location.href = '#form';
 }
 
 function display_message(id, text) {
@@ -205,7 +213,7 @@ async function stop() {
 
 async function show_next() {
     if (stage == -3) {
-        await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
+        await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！（面白くなかった場合は次のネタで挽回します泣）');
         if (inf) await showMessage();
         return;
     }
