@@ -354,8 +354,8 @@ def feat_to_script(sent, is_anti, theme):
                 f"それがわからないねん。オカンが言うには、[{res}]らしいねん。",
                 f"まだ、わからんねん。オカン、[{res}]って言ってたねん。"
                 ])
-            sent = re.sub(".*、", '', sent) if len(sent)>30 else sent
-            if len(sent)>30:
+            sent = choice(re.split("[。、]", sent)[:-1]) if len(sent)>30 else sent
+            if len(sent) > 30:
                 text2 = f"ほな[{theme}]とちがうか。"
             else:
                 text2 = f"{theme}と違うか！{theme}で[{sent}]はあり得ないことなんよ。ほな[{theme}]ちゃうがなそれ。"
