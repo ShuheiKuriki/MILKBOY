@@ -1,25 +1,36 @@
 const BASE_URL = location.protocol + "//" + location.host + "/milkboy/stage"
 const name = ["UTSUMI", "KOMABA"];
 const name2 = ["utsumi", "komaba"];
+const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
+
 var stage = 0;
 var need_neta = true;
 var rally_num = -2;
 var cur_stage_obj = null;
 var next = true;
-const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
 var inputValue = "";
 var seed = 0;
+var inf = false;
+
+var theme = '？？';
+var category = '？？';
+var present = '？？';
+var father = '？？';
 
 async function showMessage(){
-    var textbox = document.getElementById("theme");
-    var len = document.getElementById("length");
-    inputValue = textbox.value;
-    stage_max = len.value;
+    inputValue = document.getElementById("theme").value;
+    stage_max = document.getElementById("length").value;
+    inf = document.getElementById("length").checked;
+    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("neta").style.display = "block";
+    document.getElementById("form").style.display = "none";
+    location.href = '#neta';
     await start();
 }
 
 async function default_show() {
+    document.getElementById("neta_share_button").style.display = "none";
     document.getElementById("top").style.display = "none";
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
@@ -31,8 +42,16 @@ async function default_show() {
 
 async function start() {
     await stop();
+
+    theme = '？？';
+    category = '？？';
+    present = '？？';
+    father = '？？';
+
     await say(0, 'ネタを生成中です。');
-    display_message(0, "最大で10秒ほどお待ちください");
+    display_message(name2[0], "最大で10秒ほどお待ちください");
+    display_message('neta_info', get_neta_info());
+
     seed = Math.floor( Math.random() * 100000 );
     stage = 0;
     need_neta = true;
@@ -41,20 +60,57 @@ async function start() {
     await show_next();
 }
 
-async function move_top() {
+async function go_top() {
+    await stop();
     document.getElementById("top").style.display = "block";
     document.getElementById("neta").style.display = "none";
-    await stop();
+    document.getElementById("form").style.display = "none";
+    location.href = '#top';
 }
 
-function display_message(pearson, text) {
-    document.getElementById(name2[pearson]).innerHTML = text;
+async function go_form() {
+    await stop();
+    document.getElementById("form").style.display = "block";
+    document.getElementById("neta").style.display = "none";
+    document.getElementById("top").style.display = "none";
+    location.href = '#form';
+}
+
+function display_message(id, text) {
+    document.getElementById(id).innerHTML = text;
     console.log(text);
 }
+
+function get_neta_info() {
+    return 'お題：' + theme + '　カテゴリー：' + category + '<br>いただいたもの：' + present + '　おとん：' + father;
+}
+
+function get_tweet_text() {
+    var res = '面白かったネタ情報\n\n';
+    var dic = {'お題': theme, 'カテゴリー': category, 'いただいたもの': present, 'おとん': father}
+    for (var key in dic) if (dic[key]!='？？') res += key + '：' + dic[key] + '\n';
+    res += '\n'
+    return res;
+}
+
+function generate_share_button() {
+    const baseUrl = 'https://twitter.com/intent/tweet?';
+    const text = ['text', get_tweet_text()];
+    const hashtags = ['hashtags', ['HackDay2021'].join(',')];
+    const url = ['url', location.protocol + '//' + location.host];
+    const query = new URLSearchParams([text, hashtags, url]).toString();
+    const shareUrl = `${baseUrl}${query}`;
+    var target = document.getElementById("neta_share_button");
+    console.log(target.href);
+    target.style.display = "block";
+    target.href = shareUrl;
+    return;
+}
+
 async function say(pearson, text){
     console.log("say_" + name[pearson] + ":" + text);
 
-    display_message(pearson, text);
+    display_message(name2[pearson], text);
 
     const voices = speechSynthesis.getVoices();
     ja_voices = new Array();
@@ -82,6 +138,8 @@ async function tsukami(first_stage){
     await say(0, '整いました');
     await say(0, "どうもーミルクボーイです。お願いします。");
     await say(0, 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。');
+    present = first_stage["tsukami"];
+    display_message('neta_info', get_neta_info());
     await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
     rally_num++;
     if (stage_max == 0) await finish();
@@ -91,6 +149,8 @@ async function tsukami(first_stage){
 async function introduction(first_stage){
     // 導入
     await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
+    category = first_stage["category"];
+    display_message('neta_info', get_neta_info());
     await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
     rally_num++;
 }
@@ -101,6 +161,10 @@ async function print_stage(stage_obj){
             // 正しい特徴
             await say(1, stage_obj["featX"]);
             await say(0, stage_obj["featX_reply"]);
+            if (stage==0) {
+                theme = stage_obj["theme"];
+                display_message('neta_info', get_neta_info());
+            }
             rally_num++;
             return;
 
@@ -138,6 +202,8 @@ async function drop(last_stage){
         case 1:
             await say(1, last_stage["anti_featX"]);
             await say(0, last_stage["anti_featX_reply"]);
+            father = last_stage["anti_theme"];
+            display_message('neta_info', get_neta_info());
             rally_num++;
             return;
 
@@ -171,9 +237,9 @@ async function stop() {
 
 async function show_next() {
     if (stage == -3) {
-        await say(0, '次のネタもぜひ聞いてください');
-        var infinity = document.getElementById("repeat");
-        if (infinity.checked) await showMessage();
+        generate_share_button();
+        await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
+        if (inf) await showMessage();
         return;
     }
 

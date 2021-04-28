@@ -27,7 +27,7 @@
         <!-- Navigation-->
         <nav class="navbar fixed-top" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="javascript:move_top()">MILKBOY Core AI</a>
+                <a class="navbar-brand js-scroll-trigger" href="javascript:go_top()">MILKBOY Core AI</a>
         <!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
         <!--                    Menu-->
         <!--                    <i class="fas fa-bars"></i>-->
@@ -45,9 +45,9 @@
         <header class="masthead" id="top">
             <div class="container d-flex h-100">
                 <div class="mx-auto text-center">
-                    <h3><br></br><br></br><br></br></h3>
+                    <h2><br></br><br></br><br></br></h2>
                     <h1 class="mx-auto mt-5 text-uppercase">MILKBOY</h1>
-                    <h3 class="text-white-30 mx-auto mt-2 mb-5">
+                    <h2 class="text-white-30 mx-auto mt-2 mb-5">
                         <span class=text-white-75>M</span>anzai
                         <span class=text-white-75>I</span>ntelligence using
                         <span class=text-white-75>L</span>inguistic
@@ -56,56 +56,73 @@
                         <span class=text-white-75>O</span>nline-hackathon by
                         <span class=text-white-75>Y</span>ahoo!
                         <br></br>
-                    </h3>
-                    <h2 class="text-info mx-auto mt-5">
+                    </h2>
+                    <h2 class="text-white mx-auto mt-5">
                         Wikipediaから自動生成した</h2>
-                    <h2 class="text-info mx-auto">ミルクボーイ風漫才を聞くことができます</h2>
-                    <h2 class="text-info mx-auto m-4">まずはランダムなお題で試してみましょう！</h2>
-                    <button type='button' class="btn btn-lg btn-light btn-outline-secondary" onclick="default_show()">
+                    <h2 class="text-white mx-auto">ミルクボーイ風漫才を聞くことができます</h2>
+                    <h2 class="text-white mx-auto m-4">まずはランダムなお題で試してみましょう！</h2>
+                    <button type='button' class="btn btn-lg btn-primary" onclick="default_show()">
                         MILKBOY風漫才を聞く
                     </button>
                 </div>
             </div>
         </header>
         <div class="masthead" id="neta">
-            <div class='container' style="max-width: 630px;">
+            <div id="container">
                 <h2><br></br></h2>
+                <div class='container' style="max-width: 630px;">
+                    <div class="mx-auto mt-3" id="neta_info">
+                        お題：？？　カテゴリー：？？<br></br>いただいたもの：？？　おとん：？？
+                    </div>
+                </div>
+                <div class="box mx-auto mt-3" id="container1">
+                    <div class="" id="komaba"></div>
+                </div>
+                <div class="box mx-auto" id="container2">
+                    <div class="" id="utsumi"></div>
+                </div>
+                <div class='container mt-3'>
+                    <div class="row">
+                        <div class="ml-auto col-auto text-center">
+                            <a type="button" class="btn btn-primary" id="neta_share_button" href="#neta">ネタをシェアする</a>
+                        </div>
+                        <div class="mr-auto col-auto text-center">
+                            <button type="button" onclick="go_form()" class="btn btn-danger">次のネタを聞く</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="masthead" id="form">
+            <h2><br></br></h2>
+            <h2><br></br></h2>
+            <div class='container' style="max-width: 630px;">
+                <h3 class="text-center">お題などを決めて<br></br>決定ボタンを押してください</h3>
                 <form class='text-center'>
                     <div class="form-group mx-auto container">
-                        <input type="text" class="form-control input-sm" id="theme" value='' placeholder="お題を入力してください（空欄の場合ランダム）">
-                        <div class="row">
-                            <div class="my-3 col-auto ml-auto">
-                                <select class="form-control input-sm" id="length" placeholder="4" value="4">
-                                <option value='0'>つかみだけ</option>
-                                <option value='2'>短め</option>
-                                <option value='4' selected="selected">長さ : 普通</option>
-                                <option value='6'>長め</option>
-                            </select>
-                            </div>
-                            <div class="checkbox my-3 col-auto mr-auto">
-                                <label class="form-control">
-                                    <input id="repeat" type="checkbox" value=''>リピート
-                                </label>
-                            </div>
+                        <div class="my-5">
+                            <label class="text-white">漫才ネタのお題（空欄の場合ランダム）</label>
+                            <input type="text" class="form-control" id="theme" value='' placeholder="お題を入力（迷ったら空欄で）">
                         </div>
-                        <button type="button" onclick="showMessage()" class="btn-lg btn-danger">次のネタを聞く</button>
+                        <div class="my-4 col-6 mx-auto">
+                            <label class="text-white">ネタの長さ</label>
+                            <select class="form-control input-sm" id="length" placeholder="4" value="4">
+                                    <option value='0'>つかみだけ</option>
+                                    <option value='2'>短め</option>
+                                    <option value='4' selected="selected">普通</option>
+                                    <option value='6'>長め</option>
+                            </select>
+                        </div>
+                        <div class="checkbox my-5 col-5 mx-auto">
+                            <label class="form-control">リピートする
+                                <input id="repeat" type="checkbox" value=''>
+                            </label>
+                        </div>
+                        <button type="button" onclick="showMessage()" class="btn btn-lg btn-danger my-4">決定して漫才を聞く</button>
                     </div>
                 </form>
-            </div>
-
-            <div id="container">
-                <div>
-                    <div class="box mx-auto mt-4" id="container1">
-                        <div class="" id="komaba"></div>
-                    </div>
-                    <div class="box mx-auto" id="container2">
-                        <div class="" id="utsumi"></div>
-                    </div>
-                </div>
-
-                <div class='text-center mt-4'>
-                    <button type="button" onclick="stop()" class="btn-sm btn-outline-secondary">聞くのをやめる</button>
-                </div>
+                <h4 class="text-white-50 text-center mx-auto">※お題ランダム(空欄)+リピートとすると<br>新しいネタが流れ続けておすすめです！<br>
+                    作業用BGM等としてご活用ください</h4>
             </div>
         </div>
 
@@ -115,7 +132,7 @@
                 <h3>このアプリをシェアする</h3>
                 <div class="row">
                     <div class="ml-auto mr-2 my-4">
-                        <a href="https://twitter.com/intent/tweet?url=https://milkboy-core-ai.herokuapp.com&text=%E3%83%9F%E3%83%AB%E3%82%AF%E3%83%9C%E3%83%BC%E3%82%A4%E9%A2%A8%E3%81%AE%E6%BC%AB%E6%89%8D%E3%83%8D%E3%82%BF%E3%82%92%E3%81%9F%E3%81%A3%E3%81%9F%E3%81%AE5%E7%A7%92%E3%81%A7%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90%E3%81%99%E3%82%8BAI%E3%82%A2%E3%83%97%E3%83%AA"
+                        <a href="https://twitter.com/intent/tweet?url=https://milkboy-core-ai.herokuapp.com/&text=%E3%83%9F%E3%83%AB%E3%82%AF%E3%83%9C%E3%83%BC%E3%82%A4%E9%A2%A8%E3%81%AE%E7%AC%91%E3%81%88%E3%82%8B%E6%BC%AB%E6%89%8D%E3%82%92%E3%81%9F%E3%81%A3%E3%81%9F5%E7%A7%92%E3%81%A7%E7%94%9F%E6%88%90%E3%81%97%E8%AA%AD%E3%81%BF%E4%B8%8A%E3%81%92%E3%81%A6%E3%81%8F%E3%82%8C%E3%82%8B%E8%87%AA%E5%8B%95%E6%BC%AB%E6%89%8D%E3%82%A2%E3%83%97%E3%83%AA"
                         class="twitter-share-button" data-show-count="false">Tweet</a>
                     </div>
                     <div class="fb-share-button my-4 mx-2"

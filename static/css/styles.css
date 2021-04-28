@@ -54,6 +54,6 @@ body{
     padding: 10px;
 }
 
-#form, #neta {
+#form, #neta, #neta_share_button {
     display: none;
 }
