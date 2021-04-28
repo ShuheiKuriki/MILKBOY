@@ -71,7 +71,7 @@
             <div id="container">
                 <h2><br></br></h2>
                 <div class='container' style="max-width: 630px;">
-                    <div class="mx-auto mt-3" id="neta_info">
+                    <div class="mx-auto mt-3 description" id="neta_info">
                         お題：？？　カテゴリー：？？<br></br>いただいたもの：？？　おとん：？？
                     </div>
                 </div>
@@ -84,10 +84,10 @@
                 <div class='container mt-3'>
                     <div class="row">
                         <div class="ml-auto col-auto text-center">
-                            <a type="button" class="btn btn-primary" id="neta_share_button" href="#neta">ネタをシェアする</a>
+                            <a type="button" class="btn btn btn-primary" id="neta_share_button" href="#neta">ネタをシェア</a>
                         </div>
                         <div class="mr-auto col-auto text-center">
-                            <button type="button" onclick="go_form()" class="btn btn-danger">次のネタを聞く</button>
+                            <button type="button" onclick="go_form()" class="btn btn btn-danger">次のネタを聞く</button>
                         </div>
                     </div>
                 </div>
@@ -101,10 +101,10 @@
                 <form class='text-center'>
                     <div class="form-group mx-auto container">
                         <div class="my-5">
-                            <label class="text-white">漫才ネタのお題（空欄の場合ランダム）</label>
+                            <label class="text-white">漫才ネタのお題（空欄はランダム）</label>
                             <input type="text" class="form-control" id="theme" value='' placeholder="お題を入力（迷ったら空欄で）">
                         </div>
-                        <div class="my-4 col-6 mx-auto">
+                        <div class="my-4 col-8 mx-auto">
                             <label class="text-white">ネタの長さ</label>
                             <select class="form-control input-sm" id="length" placeholder="4" value="4">
                                     <option value='0'>つかみだけ</option>
@@ -113,16 +113,16 @@
                                     <option value='6'>長め</option>
                             </select>
                         </div>
-                        <div class="checkbox my-5 col-5 mx-auto">
-                            <label class="form-control">リピートする
+                        <div class="checkbox my-5 col-8 mx-auto">
+                            <label class="form-control">リピート
                                 <input id="repeat" type="checkbox" value=''>
                             </label>
                         </div>
                         <button type="button" onclick="showMessage()" class="btn btn-lg btn-danger my-4">決定して漫才を聞く</button>
                     </div>
                 </form>
-                <h4 class="text-white-50 text-center mx-auto">※お題ランダム(空欄)+リピートとすると<br>新しいネタが流れ続けておすすめです！<br>
-                    作業用BGM等としてご活用ください</h4>
+                <div class="text-white-50 text-center mx-auto description">※お題ランダム(空欄)+リピートとすると<br>新しいネタが流れ続けておすすめです！<br>
+                    作業用BGM等としてご活用ください</div>
             </div>
         </div>
 

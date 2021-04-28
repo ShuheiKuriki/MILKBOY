@@ -8,7 +8,6 @@ html{
 
 body{
 	font-family: Verdana, Arial;
-	font-size: 14px;
 }
 
 .box {
@@ -52,6 +51,10 @@ body{
     text-align: center;
     border-radius: 10px;
     padding: 10px;
+}
+
+.description {
+    font-size: min(2vw, 20px);
 }
 
 #form, #neta, #neta_share_button {
