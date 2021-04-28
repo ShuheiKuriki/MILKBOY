@@ -26,7 +26,7 @@ async function default_show() {
     location.href = '#neta';
     inputValue = '';
     stage_max = 4;
-//    await start();
+    await start();
 }
 
 async function start() {
