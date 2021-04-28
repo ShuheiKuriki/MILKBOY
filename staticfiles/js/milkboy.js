@@ -22,6 +22,7 @@ async function showMessage(){
     inputValue = document.getElementById("theme").value;
     stage_max = document.getElementById("length").value;
     inf = document.getElementById("length").checked;
+    document.getElementById("neta_share_button").style.display = "none";
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
     location.href = '#neta';
@@ -29,13 +30,14 @@ async function showMessage(){
 }
 
 async function default_show() {
+    document.getElementById("neta_share_button").style.display = "none";
     document.getElementById("top").style.display = "none";
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
     location.href = '#neta';
     inputValue = '';
     stage_max = 4;
-//    await start();
+    await start();
 }
 
 async function start() {
@@ -81,6 +83,28 @@ function display_message(id, text) {
 
 function get_neta_info() {
     return 'お題：' + theme + '　カテゴリー：' + category + '<br>いただいたもの：' + present + '　おとん：' + father;
+}
+
+function get_tweet_text() {
+    var res = '面白かったネタ情報\n\n';
+    var dic = {'お題': theme, 'カテゴリー': category, 'いただいたもの': present, 'おとん': father}
+    for (var key in dic) if (dic[key]!='？？') res += key + '：' + dic[key] + '\n';
+    res += '\n'
+    return res;
+}
+
+function generate_share_button() {
+    const baseUrl = 'https://twitter.com/intent/tweet?';
+    const text = ['text', get_tweet_text()];
+    const hashtags = ['hashtags', ['HackDay2021'].join(',')];
+    const url = ['url', location.protocol + '//' + location.host];
+    const query = new URLSearchParams([text, hashtags, url]).toString();
+    const shareUrl = `${baseUrl}${query}`;
+    var target = document.getElementById("neta_share_button");
+    console.log(target.href);
+    target.style.display = "block";
+    target.href = shareUrl;
+    return;
 }
 
 async function say(pearson, text){
@@ -213,7 +237,8 @@ async function stop() {
 
 async function show_next() {
     if (stage == -3) {
-        await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！（面白くなかった場合は次のネタで挽回します泣）');
+        generate_share_button();
+        await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
         if (inf) await showMessage();
         return;
     }
