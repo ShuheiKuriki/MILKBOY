@@ -12,7 +12,7 @@ var next = true;
 var inputValue = "";
 var seed = 0;
 var inf = false;
-var speed = 1.2;
+var speed = 1.1;
 
 var theme = '？？';
 var category = '？？';
@@ -22,7 +22,8 @@ var father = '？？';
 async function showMessage(){
     inputValue = document.getElementById("theme").value;
     stage_max = document.getElementById("length").value;
-    inf = document.getElementById("length").checked;
+    inf = document.getElementById("repeat").checked;
+    speed = document.getElementById("speed").value;
     seed = Math.floor( Math.random() * 100000 );
     document.getElementById("neta_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
@@ -130,7 +131,7 @@ async function say(pearson, text){
 
     var i = 0;
     while (speechSynthesis.speaking) {
-        await pause(text.length * 0.01);
+        await pause(text.length * 0.01 / speed);
         i++;
         if (i>=25) {
             speechSynthesis.cancel();
@@ -143,8 +144,15 @@ async function tsukami(first_stage){
     // つかみネタ
     await say(0, '整いました');
     await say(0, "どうもーミルクボーイです。お願いします。");
-    await say(0, 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。');
-    present = first_stage["tsukami"];
+    if (first_stage["tsukami"].length >= 10) {
+        var text = 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。';
+        present = first_stage["tsukami"];
+    }
+    else {
+        var text = 'あーありがとうございますー。ね、今、何もいただけませんでしたけどもね。';
+        present = '何ももらえませんでした';
+    }
+    await say(0, text);
     display_message('neta_info', get_neta_info());
     await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
     rally_num++;
@@ -154,11 +162,20 @@ async function tsukami(first_stage){
 
 async function introduction(first_stage){
     // 導入
+    if (first_stage["category"] == '') {
+        no_manzai();
+        return;
+    }
     await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
     category = first_stage["category"];
     display_message('neta_info', get_neta_info());
     await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
     rally_num++;
+}
+async function no_manzai() {
+    await say(1, 'うちのおかんがね、最近はあんまり物忘れをしないらしくてね');
+    await say(0, 'ほな、漫才にならんやないかい！');
+    finish();
 }
 
 async function print_stage(stage_obj){
@@ -250,7 +267,10 @@ async function show_next() {
     if (stage == -3) {
         generate_share_button();
         await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
-        if (inf) await showMessage();
+        if (inf) {
+            await pause(3);
+            await showMessage();
+        }
         return;
     }
 

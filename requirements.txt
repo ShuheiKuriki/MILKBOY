@@ -33,5 +33,6 @@ whitenoise
 wikipedia
 requests
 waitress
+spacy
 ginza
 ja-ginza

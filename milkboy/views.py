@@ -1,4 +1,4 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http.response import JsonResponse
 from .coreAI import generate_neta_list

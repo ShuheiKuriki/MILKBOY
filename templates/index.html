@@ -122,13 +122,23 @@
                             <label class="text-white">漫才ネタのお題（空欄はランダム）</label>
                             <input type="text" class="form-control" id="theme" value='' placeholder="お題を入力（迷ったら空欄で）">
                         </div>
-                        <div class="my-4 col-8 mx-auto">
+                        <div class="my-3 col-8 mx-auto">
                             <label class="text-white">ネタの長さ</label>
                             <select class="form-control input-sm" id="length" placeholder="4" value="4">
                                     <option value='0'>つかみだけ</option>
                                     <option value='2'>短め</option>
                                     <option value='4' selected="selected">普通</option>
                                     <option value='6'>長め</option>
+                            </select>
+                        </div>
+                        <div class="my-3 col-8 mx-auto">
+                            <label class="text-white">読み上げスピード</label>
+                            <select class="form-control input-sm" id="speed" placeholder="1.1" value="1.1">
+                                    <option value='0.7'>ゆっくり</option>
+                                    <option value='0.9'>ややゆっくり</option>
+                                    <option value='1.1' selected="selected">普通</option>
+                                    <option value='1.3'>やや早い</option>
+                                    <option value='1.5'>早い</option>
                             </select>
                         </div>
                         <div class="checkbox my-5 col-8 mx-auto">
