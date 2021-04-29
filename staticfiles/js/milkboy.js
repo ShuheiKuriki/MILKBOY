@@ -100,7 +100,7 @@ function get_tweet_text() {
 function generate_share_button() {
     const baseUrl = 'https://twitter.com/intent/tweet?';
     const text = ['text', get_tweet_text()];
-    const hashtags = ['hashtags', ['HackDay2021'].join(',')];
+    const hashtags = ['hashtags', ['AIミルクボーイ','HackDay2021'].join(',')];
     const url = ['url', location.protocol + '//' + location.host];
     const query = new URLSearchParams([text, hashtags, url]).toString();
     const shareUrl = `${baseUrl}${query}`;
