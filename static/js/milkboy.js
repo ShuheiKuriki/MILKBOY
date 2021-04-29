@@ -102,10 +102,8 @@ function get_neta_info() {
 }
 
 function get_tweet_text() {
-    var res = '';
-    var dic = {'お題': theme, 'カテゴリー': category, 'いただいたもの': present, 'おとん': father}
-    for (var key in dic) if (dic[key]!='？？') res += key + '：' + dic[key] + '\n';
-    res += '\n'
+    var res = '今、' + present + 'をいただきましたけどもね...\n';
+    res += 'うちのおかんがね、好きな' + category + 'があるらしいんやけど、その名前を忘れたらしくてね...\n';
     return res;
 }
 
