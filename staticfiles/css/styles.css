@@ -11,8 +11,8 @@ body{
 }
 
 .box {
-    width: 86vw;
-    height: 24vw;
+    width: 90vw;
+    height: 25vw;
     max-width: 860px;
     max-height: 240px;
 }
@@ -37,8 +37,8 @@ body{
 
 #komaba, #utsumi {
     text-align:  center;
-    width: 42vw;
-    height: 18vw;
+    width: 46vw;
+    height: 20vw;
     max-width: 420px;
     max-height: 180px;
     margin: 0 auto;
@@ -48,7 +48,7 @@ body{
 
 #neta_info {
     background-color: rgba(255, 255, 255, 0.3);
-    font-size: min(2vw, 15px);
+    font-size: max(10px, min(2vw, 15px));
     border-radius: 10px;
     padding: 10px;
 }
