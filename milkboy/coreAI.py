@@ -464,7 +464,7 @@ def choose_anti_themes(theme, cat, catmems, num):
         if mem2 not in theme2 and theme2 not in mem2 and \
                 mem2 not in cat2 and cat2 not in mem2:
             catmem_list.append(mem)
-    return random.sample(catmem_list, max(min(len(catmem_list), num), 1))
+    return random.sample(catmem_list, min(len(catmem_list), num))
 
 
 def make_random():
@@ -529,9 +529,17 @@ if __name__ == "__main__":
     args = sys.argv
     input_theme = args[1] if len(args) > 1 else 'random'
     print(input_theme)
-    number = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
     import time
-    t = time.time()
-    generated = generate_neta_list(input_theme=input_theme, seed_num=number, stage_max=0)
-    pprint(generated)
-    print(time.time()-t)
+    start = time.time()
+    t = start
+    power = 0
+    for i in range(1, 101):
+        number = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
+        generated = generate_neta_list(input_theme=input_theme, seed_num=number, stage_max=4)
+        pprint(generated)
+        new_t = time.time()
+        total = new_t-start
+        power += (new_t - t) ** 2
+        print(total / i)
+        print((power/i - (total/i)**2)**0.5)
+        t = new_t

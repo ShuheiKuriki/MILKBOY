@@ -46,6 +46,16 @@ async function demo() {
     await start();
 }
 
+async function repeat_start() {
+    await pause(3);
+    if (!next) return;
+    seed = Math.floor( Math.random() * 100000 );
+    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("skip").style.display = "block";
+    location.href = '#neta';
+    await start();
+}
+
 async function start() {
     await stop();
 
@@ -60,6 +70,7 @@ async function start() {
 
     stage = 0;
     need_neta = true;
+    next = true;
     rally_num = -2;
     await pause(0.5);
     await show_next();
@@ -143,18 +154,24 @@ async function say(pearson, text){
 async function tsukami(first_stage){
     // つかみネタ
     await say(0, '整いました');
+    if (!next) return;
     await say(0, "どうもーミルクボーイです。お願いします。");
+    if (!next) return;
+
     if (first_stage["tsukami"].length >= 10) {
-        var text = 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。';
+        var text1 = 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。';
+        var text2 = 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。';
         present = first_stage["tsukami"];
     }
     else {
-        var text = 'あーありがとうございますー。ね、今、何もいただけませんでしたけどもね。';
+        var text1 = 'あーありがとうございますー。ね、今、何もいただけませんでしたけどもね。';
+        var text2 = '何ももらえなくてもね、聞いてもらえるだけありがたいですよ。いうとりますけどもね。';
         present = '何ももらえませんでした';
     }
-    await say(0, text);
+    await say(0, text1);
+    if (!next) return;
     display_message('neta_info', get_neta_info());
-    await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
+    await say(0, text2);
     rally_num++;
     if (stage_max == 0) await finish();
     return;
@@ -167,11 +184,13 @@ async function introduction(first_stage){
         return;
     }
     await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
+    if (!next) return;
     category = first_stage["category"];
     display_message('neta_info', get_neta_info());
     await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
     rally_num++;
 }
+
 async function no_manzai() {
     await say(1, 'うちのおかんがね、最近はあんまり物忘れをしないらしくてね');
     await say(0, 'ほな、漫才にならんやないかい！');
@@ -183,6 +202,7 @@ async function print_stage(stage_obj){
         case 0:
             // 正しい特徴
             await say(1, stage_obj["featX"]);
+            if (!next) return;
             await say(0, stage_obj["featX_reply"]);
             if (stage==0) {
                 theme = stage_obj["theme"];
@@ -194,6 +214,7 @@ async function print_stage(stage_obj){
         case 1:
             // 誤った特徴
             await say(1, stage_obj["anti_featX"])
+            if (!next) return;
             await say(0, stage_obj["anti_featX_reply"]);
             if (stage_obj["next_is_last"]) {
                 stage = -1;
@@ -218,12 +239,14 @@ async function drop(last_stage){
     switch (rally_num) {
         case 0:
             await say(1, last_stage["featX"]);
+            if (!next) return;
             await say(0, last_stage["featX_reply"]);
             rally_num++;
             return;
 
         case 1:
             await say(1, last_stage["anti_featX"]);
+            if (!next) return;
             await say(0, last_stage["anti_featX_reply"]);
             father = last_stage["anti_theme"];
             display_message('neta_info', get_neta_info());
@@ -232,7 +255,9 @@ async function drop(last_stage){
 
         case 2:
             await say(1, last_stage["conjunction"]);
+            if (!next) return;
             await say(0, "いや、絶対ちゃうやろ！");
+            if (!next) return;
             await say(0, "もうええわ。どうもありがとうございました。");
             stage = -3;
             return;
@@ -247,30 +272,24 @@ async function finish() {
 
 async function stop() {
     next = false;
-    for (var i=0; i<10; i++) {
-        speechSynthesis.cancel();
-        await pause(0.15);
-    }
+    speechSynthesis.cancel();
+
     for (var i=0; i<2; i++) {
         var div = document.getElementById(name2[i]);
         div.innerHTML = "";
     }
-    next = true;
 }
 
 function skip() {
-    console.log('skip');
     speechSynthesis.cancel();
     return;
 }
+
 async function show_next() {
     if (stage == -3) {
         generate_share_button();
         await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
-        if (inf) {
-            await pause(3);
-            await showMessage();
-        }
+        if (inf) repeat_start();
         return;
     }
 
