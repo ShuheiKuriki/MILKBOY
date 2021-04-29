@@ -41,7 +41,7 @@ async function demo() {
     location.href = '#neta';
     inputValue = 'コーンフレーク';
     stage_max = 3;
-    seed = Math.floor( Math.random() * 100000 );;
+    seed = 3;
     await start();
 }
 
