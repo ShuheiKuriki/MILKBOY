@@ -13,6 +13,7 @@ var inputValue = "";
 var seed = 0;
 var inf = false;
 var speed = 1.1;
+var vol = 0.6;
 
 var theme = '？？';
 var category = '？？';
@@ -24,6 +25,7 @@ async function showMessage(){
     stage_max = document.getElementById("length").value;
     inf = document.getElementById("repeat").checked;
     speed = document.getElementById("speed").value;
+    vol = document.getElementById("volume").value;
     seed = Math.floor( Math.random() * 100000 );
     document.getElementById("neta_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
@@ -102,8 +104,9 @@ function get_neta_info() {
 }
 
 function get_tweet_text() {
-    var res = '今、' + present + 'をいただきましたけどもね...\n';
-    res += 'うちのおかんがね、好きな' + category + 'があるらしいんやけど、その名前を忘れたらしくてね...\n';
+    var res = 'いま「' + present + '」をいただきましたけどもね、\n\n';
+    res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね\n\n';
+    res += '続きはこちら→'
     return res;
 }
 
@@ -136,6 +139,8 @@ async function say(pearson, text){
     const uttr = new SpeechSynthesisUtterance(text);
     uttr.voice = ja_voices[pearson];
     uttr.rate = speed;
+    uttr.volume = vol;
+    console.log(uttr.volume);
     speechSynthesis.speak(uttr);
 
     var i = 0;

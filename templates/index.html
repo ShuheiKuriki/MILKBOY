@@ -122,6 +122,7 @@
                             <label class="text-white">漫才ネタのお題（空欄はランダム）</label>
                             <input type="text" class="form-control" id="theme" value='' placeholder="お題を入力（迷ったら空欄で）">
                         </div>
+                        <button type="button" onclick="showMessage()" class="btn btn-lg btn-danger my-4">決定して漫才を聞く</button>
                         <div class="my-3 col-8 mx-auto">
                             <label class="text-white">ネタの長さ</label>
                             <select class="form-control input-sm" id="length" placeholder="4" value="4">
@@ -141,12 +142,19 @@
                                     <option value='1.5'>早い</option>
                             </select>
                         </div>
+                        <div class="my-3 col-8 mx-auto">
+                            <label class="text-white">音量</label>
+                            <select class="form-control input-sm" id="volume" placeholder="0.6" value="0.6">
+                                    <option value='0.2'>小さめ</option>
+                                    <option value='0.6' selected="selected">普通</option>
+                                    <option value='1'>大きめ</option>
+                            </select>
+                        </div>
                         <div class="checkbox my-5 col-8 mx-auto">
                             <label class="form-control">リピート
                                 <input id="repeat" type="checkbox" value=''>
                             </label>
                         </div>
-                        <button type="button" onclick="showMessage()" class="btn btn-lg btn-danger my-4">決定して漫才を聞く</button>
                     </div>
                 </form>
                 <div class="text-white-50 text-center mx-auto description">※お題ランダム(空欄)+リピートとすると<br>新しいネタが流れ続けておすすめです！<br>
