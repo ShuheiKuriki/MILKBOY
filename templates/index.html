@@ -59,20 +59,26 @@
                     </h2>
                     <h2 class="text-white mx-auto mt-5">
                         Wikipediaから自動生成した</h2>
-                    <h2 class="text-white mx-auto">ミルクボーイ風漫才を聞くことができます</h2>
-                    <h2 class="text-white mx-auto m-4">まずはランダムなお題で試してみましょう！</h2>
-                    <button type='button' class="btn btn-lg btn-primary" onclick="default_show()">
-                        MILKBOY風漫才を聞く
-                    </button>
+                    <h2 class="text-white mx-auto mb-5">ミルクボーイ風漫才を聞くことができます！！</h2>
+                    <div class="mt-5 mb-4">
+                        <button type='button' class="btn btn-lg btn-success" onclick="demo()">
+                        初めての方（デモ）
+                        </button>
+                    </div>
+                    <div class="my-4">
+                        <button type='button' class="btn btn-lg btn-primary" onclick="go_form()">
+                            二回目以降の方
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
         <div class="masthead" id="neta">
             <div id="container">
                 <h2><br></br></h2>
-                <div class='container' style="max-width: 630px;">
-                    <div class="mx-auto mt-3 description" id="neta_info">
-                        お題：？？　カテゴリー：？？<br></br>いただいたもの：？？　おとん：？？
+                <div class='container' style="max-width: 540px;">
+                    <div class="mt-3" id="neta_info">
+                        いただいたもの：？？<br>カテゴリー：？？<br>お題：？？<br>おとん：？？
                     </div>
                 </div>
                 <div class="box mx-auto mt-3" id="container1">
@@ -85,6 +91,7 @@
                     <div class="row">
                         <div class="ml-auto col-auto text-center">
                             <a type="button" class="btn btn btn-primary" id="neta_share_button" href="#neta">ネタをシェア</a>
+                            <button type="button" class="btn btn btn-secondary" id="skip" onclick="skip()">スキップ</button>
                         </div>
                         <div class="mr-auto col-auto text-center">
                             <button type="button" onclick="go_form()" class="btn btn btn-danger">次のネタを聞く</button>

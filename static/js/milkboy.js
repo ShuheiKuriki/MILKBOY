@@ -12,6 +12,7 @@ var next = true;
 var inputValue = "";
 var seed = 0;
 var inf = false;
+var speed = 1.2;
 
 var theme = '？？';
 var category = '？？';
@@ -22,21 +23,25 @@ async function showMessage(){
     inputValue = document.getElementById("theme").value;
     stage_max = document.getElementById("length").value;
     inf = document.getElementById("length").checked;
+    seed = Math.floor( Math.random() * 100000 );
     document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("skip").style.display = "block";
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
     location.href = '#neta';
     await start();
 }
 
-async function default_show() {
+async function demo() {
     document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("skip").style.display = "block";
     document.getElementById("top").style.display = "none";
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
     location.href = '#neta';
-    inputValue = '';
-    stage_max = 4;
+    inputValue = 'コーンフレーク';
+    stage_max = 3;
+    seed = Math.floor( Math.random() * 100000 );;
     await start();
 }
 
@@ -52,7 +57,6 @@ async function start() {
     display_message(name2[0], "最大で10秒ほどお待ちください");
     display_message('neta_info', get_neta_info());
 
-    seed = Math.floor( Math.random() * 100000 );
     stage = 0;
     need_neta = true;
     rally_num = -2;
@@ -82,11 +86,11 @@ function display_message(id, text) {
 }
 
 function get_neta_info() {
-    return 'お題：' + theme + '　カテゴリー：' + category + '<br>いただいたもの：' + present + '　おとん：' + father;
+    return 'いただいたもの：' + present + '<br>カテゴリー：' + category + '<br>お題：' + theme + '<br>おとん：' + father;
 }
 
 function get_tweet_text() {
-    var res = '面白かったネタ情報\n\n';
+    var res = '';
     var dic = {'お題': theme, 'カテゴリー': category, 'いただいたもの': present, 'おとん': father}
     for (var key in dic) if (dic[key]!='？？') res += key + '：' + dic[key] + '\n';
     res += '\n'
@@ -100,6 +104,7 @@ function generate_share_button() {
     const url = ['url', location.protocol + '//' + location.host];
     const query = new URLSearchParams([text, hashtags, url]).toString();
     const shareUrl = `${baseUrl}${query}`;
+    document.getElementById("skip").style.display = 'none';
     var target = document.getElementById("neta_share_button");
     console.log(target.href);
     target.style.display = "block";
@@ -120,6 +125,7 @@ async function say(pearson, text){
 
     const uttr = new SpeechSynthesisUtterance(text);
     uttr.voice = ja_voices[pearson];
+    uttr.rate = speed;
     speechSynthesis.speak(uttr);
 
     var i = 0;
@@ -235,6 +241,11 @@ async function stop() {
     next = true;
 }
 
+function skip() {
+    console.log('skip');
+    speechSynthesis.cancel();
+    return;
+}
 async function show_next() {
     if (stage == -3) {
         generate_share_button();

@@ -8,7 +8,6 @@ html{
 
 body{
 	font-family: Verdana, Arial;
-	font-size: 14px;
 }
 
 .box {
@@ -49,9 +48,13 @@ body{
 
 #neta_info {
     background-color: rgba(255, 255, 255, 0.3);
-    text-align: center;
+    font-size: min(1.5vw, 15px);
     border-radius: 10px;
     padding: 10px;
+}
+
+.description {
+    font-size: min(2vw, 20px);
 }
 
 #form, #neta, #neta_share_button {
