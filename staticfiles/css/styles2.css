@@ -9646,7 +9646,7 @@ body {
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 1.3rem;
   line-height: 1.3rem;
-  letter-spacing: 0.2rem;
+  letter-spacing: 0.1rem;
   background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
