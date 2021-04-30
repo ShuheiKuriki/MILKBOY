@@ -81,6 +81,7 @@ async function start() {
 async function go_top() {
     await stop();
     document.getElementById("top").style.display = "block";
+    document.getElementById("about").style.display = "block";
     document.getElementById("neta").style.display = "none";
     document.getElementById("form").style.display = "none";
     location.href = '#top';
@@ -91,7 +92,17 @@ async function go_form() {
     document.getElementById("form").style.display = "block";
     document.getElementById("neta").style.display = "none";
     document.getElementById("top").style.display = "none";
+    document.getElementById("about").style.display = "none";
     location.href = '#form';
+}
+
+async function go_about() {
+    await stop();
+    document.getElementById("form").style.display = "none";
+    document.getElementById("neta").style.display = "none";
+    document.getElementById("top").style.display = "block";
+    document.getElementById("about").style.display = "block";
+    location.href = '#about';
 }
 
 function display_message(id, text) {

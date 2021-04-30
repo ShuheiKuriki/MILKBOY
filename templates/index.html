@@ -40,18 +40,19 @@
         <!-- Navigation-->
         <nav class="navbar fixed-top" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="javascript:go_top()">MILKBOY Core AI</a>
-        <!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
-        <!--                    Menu-->
-        <!--                    <i class="fas fa-bars"></i>-->
-        <!--                </button>-->
-        <!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
-        <!--                    <ul class="navbar-nav ml-auto">-->
-        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
-        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
-        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
-        <!--                    </ul>-->
-        <!--                </div>-->
+                <a class="navbar-brand js-scroll-trigger" href="javascript:go_top()">MILKBOY CORE AI</a>
+                <a class="navbar-brand js-scroll-trigger" href="javascript:go_about()">About</a>
+<!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                    Menu-->
+<!--                    <i class="fas fa-bars"></i>-->
+<!--                </button>-->
+<!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
+<!--                    <ul class="navbar-nav ml-auto">-->
+<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
+<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
+<!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
             </div>
         </nav>
         <!-- Masthead-->
@@ -86,6 +87,42 @@
                 </div>
             </div>
         </header>
+        <!-- About-->
+        <section class="about-section" id="about">
+            <div class="container">
+                <div class="row mx-4">
+                    <div class="col-lg-8 mx-auto">
+                        <h3 class="text-white mb-4 text-center">ミルクボーイ風自動漫才アプリ</h3>
+                        <p class="text-white-50 text-center">
+                            このアプリはテーマを与えるだけで、<br>
+                            大人気お笑いコンビ「ミルクボーイ」風のネタを自動的に生成し、 <br>
+                            漫才風に読み上げてくれます。<br></br>
+
+                            ミルクボーイの偉業は「漫才のフレームワークを作ったこと」にあると言われます。<br>
+                            これによりある種「漫才の量産化」が可能となったわけですが、<br>
+                            それでも面白いネタを考えるには人による労力とセンスが必要です。<br></br>
+
+                            我々は技術の力でこの問題に挑みました。<br>
+                            すなわち、この「漫才のフレームワーク」に合わせ、<br>
+                            フリー百科事典Wikipediaの当該テーマページから<br>
+                            適切なルールに基づいて文章を引用することにより、 <br>
+                            <span class=text-primary>全自動で無限にネタを生成できる</span>システムを作りました。<br>
+                            もはや、最初に与えるテーマですらランダムに生成することが可能です。<br></br>
+
+                            そして、このシステムを<span class=text-primary>「MILKBOY CORE AI」</span>と命名し、<br>
+                            アプリとしてリリースするにいたりました。<br></br>
+
+                            ※この作品はHack Day 2021という技術ハッカソンにおいて、<br>
+                            お笑いコンビミルクボーイを敬愛するチームメンバーによって作られました。<br>
+                            この場を借りてミルクボーイへの敬意を表させていただきます。
+                        </p>
+                        <div class="text-center">
+                            <button type='button' class="btn btn-lg btn-secondary text-center my-4" onclick="go_form()">全自動で生成されるネタを聞く</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <div class="masthead" id="neta">
             <div id="container">
                 <h3><br></br></h3>
@@ -118,7 +155,7 @@
             <h5><br></br></h5>
             <div class='container' style="max-width: 630px;">
                 <h4 class="text-center mt-5">お題を決めて</h4>
-                <h4 class="text-center mb-5">決定ボタンを押してください</h4>
+                <h4 class="text-center mb-5">決定を押してください</h4>
                 <form class='text-center'>
                     <div class="form-group mx-auto container">
                         <div class="my-4">
