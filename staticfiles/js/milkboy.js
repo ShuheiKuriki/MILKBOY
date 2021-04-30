@@ -104,8 +104,8 @@ function get_neta_info() {
 }
 
 function get_tweet_text() {
-    var res = 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
-    res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
+    var res = 'いま「' + present + '」をいただきましたけどもね、・・・\n\n';
+    res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね、・・・\n\n';
     res += '続きはこちらから→'
     return res;
 }
@@ -140,7 +140,6 @@ async function say(pearson, text){
     uttr.voice = ja_voices[pearson];
     uttr.rate = speed;
     uttr.volume = vol;
-    console.log(uttr.volume);
     speechSynthesis.speak(uttr);
 
     var i = 0;
