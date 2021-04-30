@@ -27,5 +27,5 @@ def stage(request):
 
         for result in result_list:
             GLOBAL_DICTS[(data['input_theme'], data['seed'], data['stage_max'])][result['stage']] = result
-
+    print(GLOBAL_DICTS[k][data['stage']])
     return JsonResponse(GLOBAL_DICTS[k][data['stage']])
