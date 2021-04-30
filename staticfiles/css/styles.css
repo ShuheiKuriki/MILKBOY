@@ -6,10 +6,6 @@ html{
 	height: 100%;
 }
 
-body{
-	font-family: Verdana, Arial;
-}
-
 .box {
     width: 90vw;
     height: 25vw;
@@ -47,6 +43,7 @@ body{
 }
 
 #neta_info {
+    font-family: 'Noto Sans JP', sans-serif;
     background-color: rgba(255, 255, 255, 0.3);
     font-size: max(10px, min(2vw, 15px));
     border-radius: 10px;
@@ -54,9 +51,11 @@ body{
 }
 
 .description {
+    font-family: 'Noto Sans JP', sans-serif;
     font-size: max(10px, min(2vw, 20px));
 }
 
 #form, #neta, #neta_share_button {
     display: none;
+    font-family: 'Noto Sans JP', sans-serif;
 }

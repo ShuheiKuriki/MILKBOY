@@ -106,15 +106,15 @@ function get_neta_info() {
 function get_tweet_text() {
     var res = 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
     res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
-    res += '続き→'
+    res += '続きはこちら→'
     return res;
 }
 
 function generate_share_button() {
     const baseUrl = 'https://twitter.com/intent/tweet?';
     const text = ['text', get_tweet_text()];
-    const hashtags = ['hashtags', ['AIミルクボーイ'].join(',')];
-    const url = ['url', location.protocol + '//' + location.host];
+    const hashtags = ['hashtags', ['ミルクボーイ','AI'].join(',')];
+    const url = ['url', 'https://www.milkboy-core-ai.tech'];
     const query = new URLSearchParams([text, hashtags, url]).toString();
     const shareUrl = `${baseUrl}${query}`;
     document.getElementById("skip").style.display = 'none';
