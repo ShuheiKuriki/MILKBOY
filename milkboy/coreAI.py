@@ -380,7 +380,22 @@ def feat_to_script(sent, is_anti, theme):
                 f"それがわからないねん。オカンが言うには、[{res}]らしいねん。",
                 f"まだ、わからんねん。オカン、[{res}]って言ってたねん。"
                 ])
-            sent = random.choice(re.split("[。、]", sent)[:-1]) if len(sent) > 30 else sent
+            if len(sent) > 30:
+                root = False
+                doc = nlp(sent)
+                sent = ''
+                cand = []
+                for token in doc:
+                    if token.dep_ == 'ROOT':
+                        root = True
+                    if token.pos_ == 'PUNCT':
+                        if root:
+                            cand.append(sent)
+                        root = False
+                        sent = ''
+                    else:
+                        sent += token.orth_
+                sent = random.choice(cand)
             if len(sent) > 30:
                 text2 = f"ほな[{theme}]とちがうか。"
             else:
@@ -467,8 +482,8 @@ def choose_anti_themes(theme, cat, catmems, num):
     return random.sample(catmem_list, min(len(catmem_list), num))
 
 
-def make_random():
-    """上手くいかなかった時の対処"""
+def tsukami_only():
+    """つかみだけ"""
     return [
         {
             "input_theme": "",
@@ -493,7 +508,7 @@ def generate_neta_list(input_theme, seed_num, stage_max):
     全体処理
     """
     if stage_max == 0:
-        return make_random()
+        return tsukami_only()
     random.seed(seed_num)
     np.random.seed(seed_num)
     if input_theme in ['', 'random']:
@@ -533,7 +548,7 @@ if __name__ == "__main__":
     start = time.time()
     t = start
     power = 0
-    for i in range(1, 101):
+    for i in range(1, 2):
         number = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
         generated = generate_neta_list(input_theme=input_theme, seed_num=number, stage_max=4)
         pprint(generated)
