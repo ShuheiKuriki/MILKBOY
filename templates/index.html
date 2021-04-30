@@ -20,11 +20,11 @@
         <meta property="og:locale" content="ja_JP">
         <meta property="og:title" content="MILKBOY風自動漫才アプリ">
         <meta property="og:description" content="Wikipediaの情報から自動生成したミルクボーイ風漫才を無限に聞くことができます！">
-        <meta property="og:url" content="https://milkboy-core-ai.herokuapp.com/">
-        <meta property="og:image" content="https://milkboy-core-ai.herokuapp.com/static/img/thumbnail.png">
-        <meta content="https://milkboy-core-ai.herokuapp.com/" name="twitter:url">
+        <meta property="og:url" content="http://www.milkboy-core-ai.tech/">
+        <meta property="og:image" content="http://www.milkboy-core-ai.tech/static/img/thumbnail.png">
+        <meta content="http://www.milkboy-core-ai.tech/" name="twitter:url">
         <meta content="MILKBOY風自動漫才アプリ" name="twitter:title">
-        <meta content="https://milkboy-core-ai.herokuapp.com/static/img/thumbnail.png" name="twitter:image">
+        <meta content="http://www.milkboy-core-ai.tech/static/img/thumbnail.png" name="twitter:image">
         <meta content="summary_large_image" name="twitter:card">
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
         <link href="{% static 'css/styles2.css' %}" rel="stylesheet" />
@@ -60,17 +60,17 @@
                     <h1 class="mx-auto mt-5 text-uppercase">MILKBOY</h1>
                     <h2 class="text-white-30 mx-auto mt-2 mb-5">
                         <span class=text-white-75>M</span>anzai
-                        <span class=text-white-75>I</span>ntelligence using
+                        <span class=text-white-75>I</span>ntelligence using <br>
                         <span class=text-white-75>L</span>inguistic
-                        <span class=text-white-75>K</span>nowledge
+                        <span class=text-white-75>K</span>nowledge<br>
                         <span class=text-white-75>B</span>uilt in an
                         <span class=text-white-75>O</span>nline-hackathon by
                         <span class=text-white-75>Y</span>ahoo!
                         <br></br>
                     </h2>
-                    <h2 class="text-white mx-auto mt-5">
-                        ミルクボーイ風漫才で</h2>
-                    <h2 class="text-white mx-auto mb-5">新しい笑いを無限にお届けします</h2>
+                    <h3 class="text-white mx-auto mt-5">
+                        ミルクボーイ風漫才で</h3>
+                    <h3 class="text-white mx-auto mb-5">新しい笑いを無限にお届けします</h3>
                     <div class="mt-5 mb-4">
                         <button type='button' class="btn btn-lg btn-light" onclick="demo()">
                         初めての方（デモ）
@@ -114,7 +114,8 @@
         <div class="" id="form">
             <h5><br></br></h5>
             <div class='container' style="max-width: 630px;">
-                <h4 class="text-center text-white-50 my-5">お題を決めて<br></br>決定ボタンを押してください</h4>
+                <h4 class="text-center text-white-50 mt-5">お題を決めて</h4>
+                <h4 class="text-center text-white-50 mb-5">決定ボタンを押してください</h4>
                 <form class='text-center'>
                     <div class="form-group mx-auto container">
                         <div class="my-4">
@@ -164,30 +165,21 @@
         <!-- Footer-->
         <footer class="footer bg-black small text-center text-white-50 content-center">
             <div class="container">
-                <h3>このアプリをシェアする</h3>
-                <div class="row">
-                    <div class="ml-auto mr-2 my-4">
-                        <a href="https://twitter.com/intent/tweet?url=https://milkboy-core-ai.herokuapp.com/&text=ミルクボーイ風漫才で笑いを無限に届けるAIアプリ&hashtags=ミルクボーイ,AIミルクボーイ,HackDay2021"
+                <h4>このアプリをシェアする</h4>
+                <div class="row my-4">
+                    <div class="ml-auto mr-2">
+                        <a href="https://twitter.com/intent/tweet?url=http://www.milkboy-core-ai.tech/&text=ミルクボーイ風漫才で笑いを無限に届けるAIアプリ&hashtags=ミルクボーイ,AIミルクボーイ,HackDay2021"
                         class="twitter-share-button" data-show-count="false">Tweet</a>
                     </div>
-                    <div class="fb-share-button my-4 mx-2"
-                                 data-href="https://milkboy-core-ai.herokuapp.com"
-                                 data-layout="button" data-size="small">
+                    <div class="col-auto fb-share-button" data-href="http://www.milkboy-core-ai.tech"
+                         data-layout="button" data-size="small">
                         <a target="_blank"
-                                   href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmilkboy-core-ai.herokuapp.com%2F&amp;src=sdkpreparse"
-                        class="fb-xfbml-parse-ignore">シェア</a>
+                           href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.milkboy-core-ai.tech%2F&amp;src=sdkpreparse"
+                           class="fb-xfbml-parse-ignore">シェア</a>
                     </div>
-                    <div class="my-4 mx-2">
-                        <a href="https://b.hatena.ne.jp/entry/s/milkboy-core-ai.herokuapp.com"
-                                   class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label"
-                                   data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加">
-                            <img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png"
-                                         alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" />
-                        </a>
-                    </div>
-                    <div class="mr-auto my-4 ml-2">
+                    <div class="mr-auto ml-2">
                         <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3"
-                                     data-url="https://milkboy-core-ai.herokuapp.com" data-color="default"
+                                     data-url="http://www.milkboy-core-ai.tech" data-color="default"
                                      data-size="small" data-count="false" style="display: none;">
                         </div>
                     </div>
@@ -195,8 +187,9 @@
                 Copyright © Team-rejected 2021
             </div>
         </footer>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="K8x7J7Fr"></script>
-        <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="e7bSsmhA"></script>
+<!--        <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>-->
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
         <!-- Bootstrap core JS-->
