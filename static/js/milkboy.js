@@ -104,16 +104,16 @@ function get_neta_info() {
 }
 
 function get_tweet_text() {
-    var res = 'いま「' + present + '」をいただきましたけどもね、・・・\n\n';
-    res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね、・・・\n\n';
-    res += '続きはこちらから→'
+    var res = 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
+    res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
+    res += '続き→'
     return res;
 }
 
 function generate_share_button() {
     const baseUrl = 'https://twitter.com/intent/tweet?';
     const text = ['text', get_tweet_text()];
-    const hashtags = ['hashtags', ['AIミルクボーイ','HackDay2021'].join(',')];
+    const hashtags = ['hashtags', ['AIミルクボーイ'].join(',')];
     const url = ['url', location.protocol + '//' + location.host];
     const query = new URLSearchParams([text, hashtags, url]).toString();
     const shareUrl = `${baseUrl}${query}`;
@@ -312,9 +312,9 @@ async function show_next() {
     return;
 }
 
-function getJSON() {
+async function getJSON() {
     var req = new XMLHttpRequest();           // XMLHttpRequest オブジェクトを生成する
-    req.onreadystatechange = function () {    // XMLHttpRequest オブジェクトの状態が変化した際に呼び出されるイベントハンドラ
+    req.onload = function () {    // XMLHttpRequest オブジェクトの状態が変化した際に呼び出されるイベントハンドラ
         if (req.readyState == 4 && req.status == 200) { // サーバーからのレスポンスが完了し、かつ、通信が正常に終了した場合
             cur_stage_obj = JSON.parse(req.responseText);
             console.log(req.responseText);
@@ -322,10 +322,13 @@ function getJSON() {
             need_neta = false;
             if (next) show_next();
         }
+        else {
+            say(0, 'エラーが発生したため、「次のネタ」ボタンを押してやりなおしてください');
+        }
     };
 
-    console.log(BASE_URL + "?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max)
+    console.log(BASE_URL + "?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max);
 
-    req.open("GET", BASE_URL + "?input_theme=" + inputValue + "&stage=" + stage + "&seed=" + seed+ "&stage_max=" + stage_max, false); // HTTPメソッドとアクセスするサーバーの　URL　を指定
+    req.open("GET", BASE_URL + "?input_theme=" + inputValue + "&stage=" + stage + "&seed=" + seed+ "&stage_max=" + stage_max, true); // HTTPメソッドとアクセスするサーバーの　URL　を指定
     req.send(null);  // 実際にサーバーへリクエストを送信
 }
