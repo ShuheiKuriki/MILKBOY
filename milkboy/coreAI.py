@@ -412,12 +412,10 @@ def feat_to_script(sent, is_anti, theme):
     return text, text2
 
 
-def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max):
+def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds):
     """
     全ステージを生成
     """
-    if len(anti_themes) == 0:
-        return tsukami_only()
     # 特徴文生成
     feats, anti_feats = make_all_feats(cat, theme, anti_themes[:-1])
     # print(feats)
@@ -466,12 +464,7 @@ def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max):
         }
     )
     stage_dicts[0]['tsukami'] = get_tsukami()
-    if len(anti_themes) == 1:
-        stage_dicts[0]['pred1'] = stage_dicts[0]['pred2'] = ''
-    elif len(anti_themes) == 2:
-        stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = anti_themes[0], ''
-    else:
-        stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = random.sample(anti_themes[:-1], 2)
+    stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = preds[0], preds[1]
     return stage_dicts
 
 
@@ -487,7 +480,13 @@ def choose_anti_themes(theme, cat, catmems, num):
         if mem2 not in theme2 and theme2 not in mem2 and \
                 mem2 not in cat2 and cat2 not in mem2:
             catmem_list.append(mem)
-    return random.sample(catmem_list, min(len(catmem_list), num))
+    if len(catmem_list) == 0:
+        preds = ["", ""]
+    elif len(catmem_list) == 1:
+        preds = [catmem_list[0], '']
+    else:
+        preds = random.sample(catmem_list, 2)
+    return random.sample(catmem_list, min(len(catmem_list), num)), preds
 
 
 def tsukami_only():
@@ -541,10 +540,10 @@ def generate_neta_list(input_theme, seed_num, stage_max):
                 pass
         else:
             return generate_neta_list(input_theme, seed_num, stage_max)
-    anti_themes = choose_anti_themes(theme, cat, catmems, stage_max)
+    anti_themes, preds = choose_anti_themes(theme, cat, catmems, stage_max)
     # print("choose_anti_themes:", time.time()-t)
     if len(anti_themes):
-        return generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max)
+        return generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds)
     return generate_neta_list(input_theme, seed_num, stage_max)
 
 

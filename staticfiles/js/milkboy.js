@@ -200,6 +200,22 @@ async function introduction(first_stage){
     if (!next) return;
     category = first_stage["category"];
     display_message('neta_info', get_neta_info());
+
+    switch (first_stage["pred1"]) {
+        case '':
+            break;
+
+        default:
+            await say(0, '好きな' + first_stage["category"] + '忘れてもうて。どうなってんねんそれ。');
+            if (first_stage["pred2"]=='') {
+                var preds = first_stage["pred1"];
+            }
+            else {
+                var preds = first_stage["pred1"] + '」か「' + first_stage["pred2"];
+            }
+            await say(0, 'ほんでもおかんが好きな' + first_stage["category"] + 'なんて、「' + preds + '」くらいでしょう。');
+            await say(1, 'それが違うらしいねんな');
+    }
     await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
     rally_num++;
 }
