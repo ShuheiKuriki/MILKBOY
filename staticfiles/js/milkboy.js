@@ -41,10 +41,11 @@ async function demo() {
     document.getElementById("top").style.display = "none";
     document.getElementById("neta").style.display = "block";
     document.getElementById("form").style.display = "none";
+    document.getElementById("about").style.display = "none";
     location.href = '#neta';
     inputValue = 'コーンフレーク';
     stage_max = 3;
-    seed = 3;
+    seed = 5;
     await start();
 }
 
