@@ -214,7 +214,7 @@ def shape_text(sent, cat, words, subwords, first=False):
     if len(sent) == 0 or sent[-1] == '、':
         return '', False
     pre = ['これ', 'それ', 'この', 'その', 'あの', 'ここ', 'そこ', 'こう', 'そう', '以上', '上記']
-    post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '述べる', 'ISBN', '出典']
+    post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '記述', '述べる', 'ISBN', '出典']
     for word in post:
         if word in sent:
             return False, False
