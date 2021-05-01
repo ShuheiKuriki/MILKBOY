@@ -478,7 +478,7 @@ def choose_anti_themes(theme, cat, catmems, num):
     for mem in catmems:
         mem2 = re.sub(" ", "", re.sub("\(.+?\)", '', mem))
         if mem2 not in theme2 and theme2 not in mem2 and \
-                mem2 not in cat2 and cat2 not in mem2:
+                mem2 not in cat2 and cat2 not in mem2 and ':' not in mem2:
             catmem_list.append(mem)
     if len(catmem_list) == 0:
         preds = ["", ""]
