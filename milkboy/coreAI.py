@@ -416,6 +416,8 @@ def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max):
     """
     全ステージを生成
     """
+    if len(anti_themes) == 0:
+        return tsukami_only()
     # 特徴文生成
     feats, anti_feats = make_all_feats(cat, theme, anti_themes[:-1])
     # print(feats)
@@ -464,6 +466,12 @@ def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max):
         }
     )
     stage_dicts[0]['tsukami'] = get_tsukami()
+    if len(anti_themes) == 1:
+        stage_dicts[0]['pred1'] = stage_dicts[0]['pred2'] = ''
+    elif len(anti_themes) == 2:
+        stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = anti_themes[0], ''
+    else:
+        stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = random.sample(anti_themes[:-1], 2)
     return stage_dicts
 
 
