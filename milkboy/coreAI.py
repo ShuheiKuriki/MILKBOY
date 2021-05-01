@@ -152,12 +152,12 @@ def choose_cat(word_key, soup=None):
     big_cats.sort()
 
     if len(small_cats) > 0:
-        ind = np.random.binomial(len(small_cats)-1, 0.5)
+        ind = np.random.binomial(len(small_cats)-1, 0.4)
         # if ind >= len(small_cats): ind = 0
         return small_cats[ind]
     if len(big_cats) == 0: return False
     # if ind >= len(big_cats): ind = 0
-    ind = np.random.binomial(len(big_cats)-1, 0.5)
+    ind = np.random.binomial(len(big_cats)-1, 0.4)
     return big_cats[ind][1:]
 
 
