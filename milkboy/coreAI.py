@@ -386,9 +386,9 @@ def feat_to_script(sent, is_anti, theme):
                 sent = ''
                 cand = []
                 for token in doc:
-                    if token.dep_ == 'ROOT':
+                    if token.dep_ in ['advcl', 'ROOT']:
                         root = True
-                    if token.pos_ == 'PUNCT':
+                    if token.orth_ in ['、', '。']:
                         if root:
                             cand.append(sent)
                         root = False
