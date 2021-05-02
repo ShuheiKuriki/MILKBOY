@@ -152,7 +152,7 @@ function get_neta_info() {
 function get_tweet_text() {
     var res = '';
     if (genre != '') {
-        res = 'ジャンル:' + genre + '<br>';
+        res = 'ジャンル:' + genre + '\n';
     }
     res += 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
     res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
