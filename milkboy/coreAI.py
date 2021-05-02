@@ -24,9 +24,10 @@ CAT_MEM_MAX = 1000
 CAT_NUM_MAX = 6
 PTAGS_MAX = 15
 RANDOM_WIKI = 'https://ja.wikipedia.org/wiki/Special:Random'
+BASE_WIKI = 'https://ja.wikipedia.org/wiki/'
 
 
-def get_tsukami():
+def get_tsukami(article=None):
     pattern = [
         {"POS": {"IN": ["NUM", "NOUN", "PROPN", "ADV"]}, "OP": "+"},
         {"TEXT": {"IN": ["の", "な"]}},
@@ -40,7 +41,8 @@ def get_tsukami():
     # t = time.time()
     tsukami = ''
     while len(tsukami) < 10:
-        ptags = BeautifulSoup(requests.get(RANDOM_WIKI).text, "html.parser").find_all('p')
+        url = RANDOM_WIKI if article is None else BASE_WIKI + article
+        ptags = BeautifulSoup(requests.get(url).text, "html.parser").find_all('p')
         max_len = 0
         for ptag in ptags:
             text = ptag.getText()
@@ -59,7 +61,7 @@ def get_tsukami():
 
 def get_catinfo(url):
     """
-    カテゴリーに属する記事数を数える。handlerに与えて非同期処理する
+    カテゴリーに属する記事数と、そのうち条件を満たすもののリスト。handlerに与えて非同期処理する
     """
     # t1 = time.time()
     # print('start:',t1-t)
@@ -81,6 +83,60 @@ def get_catinfo(url):
     # t3 = time.time()
     # print("end", t3-t2, len(res))
     return sent, catmems
+
+
+def get_subcat(cat, sub=True):
+    url = 'https://ja.wikipedia.org/wiki/Category:' + cat
+    text = requests.get(url).text
+    # t2 = time.time()
+    # print("mid", t2-t1, len(text))
+    soup = BeautifulSoup(text, "html.parser").find(id='mw-subcategories')
+    if soup is None:
+        return None
+    subcats = []
+    groups = soup.find_all('ul')
+    for group in groups:
+        infos = group.find_all(class_='CategoryTreeItem')
+        for info in infos:
+            title = info.find_all('span')[-1]['title']
+            nums = list(map(int, re.findall(r'\d+', title)))
+            if (sub and nums[0] >= 3) or (not sub and CAT_MEM_MIN <= nums[1] <= CAT_MEM_MAX):
+                subcats.append(info.find('a').getText())
+    if len(subcats) == 0:
+        return None
+    return random.choice(subcats)
+
+
+def get_pages(cat):
+    url = 'https://ja.wikipedia.org/wiki/Category:' + cat
+    text = requests.get(url).text
+    # t2 = time.time()
+    # print("mid", t2-t1, len(text))
+    soup = BeautifulSoup(text, "html.parser").find('div', id='mw-pages')
+    catmems = []
+    groups = soup.find_all(class_="mw-category-group")
+    for group in groups:
+        if re.fullmatch('[ぁ-ゟa-zA-Z]+', group.find('h3').getText()):
+            pages = group.find_all('a')
+            for page in pages:
+                catmems.append(page.getText())
+    return catmems
+
+
+def genre_mode(genre):
+    while True:
+        cat = get_subcat(genre, sub=True)
+        if random.randint(0, 1):
+            cat = get_subcat(cat, sub=True)
+            if cat is None:
+                continue
+        cat = get_subcat(cat, sub=False)
+        if cat is not None:
+            break
+    cat_mems = get_pages(cat)
+    article = random.choice(cat_mems)
+    tsukami = get_tsukami(article)
+    return cat, cat_mems, tsukami
 
 
 def get_soup(url):
@@ -349,7 +405,7 @@ def make_all_feats(cat, theme, anti_themes):
     urls = [f'https://ja.wikipedia.org/wiki/{theme}']
     for anti in anti_themes:
         urls.append(f'https://ja.wikipedia.org/wiki/{anti}')
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     soups = loop.run_until_complete(handler(loop, urls, get_soup))
     anti_feats = []
     # num = len(anti_themes)
@@ -412,7 +468,7 @@ def feat_to_script(sent, is_anti, theme):
     return text, text2
 
 
-def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds):
+def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami=None):
     """
     全ステージを生成
     """
@@ -463,7 +519,7 @@ def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, p
             "conjunction": f"申し訳ないなと思って。オトンがいうには、[{anti_themes[-1]}] ちゃうかって。"
         }
     )
-    stage_dicts[0]['tsukami'] = get_tsukami()
+    stage_dicts[0]['tsukami'] = get_tsukami() if tsukami is None else tsukami
     stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = preds[0], preds[1]
     return stage_dicts
 
@@ -510,7 +566,7 @@ def tsukami_only():
     ]
 
 
-def generate_neta_list(input_theme, seed_num, stage_max):
+def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
     """
     全体処理
     """
@@ -518,6 +574,16 @@ def generate_neta_list(input_theme, seed_num, stage_max):
         return tsukami_only()
     random.seed(seed_num)
     np.random.seed(seed_num)
+    if genre is not None:
+        cat, catmems, tsukami = genre_mode(genre)
+        theme = random.choice(catmems)
+        print(cat, theme)
+        anti_themes, preds = choose_anti_themes(theme, cat, catmems, stage_max)
+        if len(anti_themes) == 0:
+            return generate_neta_list(input_theme, seed_num, stage_max, genre)
+        res = generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami)
+        pprint(res)
+        return res
     if input_theme in ['', 'random']:
         while True:
             try:

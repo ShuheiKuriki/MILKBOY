@@ -1,4 +1,4 @@
-const BASE_URL = location.protocol + "//" + location.host + "/milkboy/stage"
+const BASE_URL = location.protocol + "//" + location.host + "/milkboy/"
 const name = ["UTSUMI", "KOMABA"];
 const name2 = ["utsumi", "komaba"];
 const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
@@ -8,8 +8,10 @@ var need_neta = true;
 var rally_num = -2;
 var cur_stage_obj = null;
 var next = true;
+var request_url = BASE_URL;
 
 var inputValue = "";
+var genre = '';
 var seed = 0;
 var inf = false;
 var speed = 1.1;
@@ -20,8 +22,23 @@ var category = '？？';
 var present = '？？';
 var father = '？？';
 
-async function showMessage(){
+async function start_manzai(){
     inputValue = document.getElementById("theme").value;
+    stage_max = document.getElementById("length").value;
+    inf = document.getElementById("repeat").checked;
+    speed = document.getElementById("speed").value;
+    vol = document.getElementById("volume").value;
+    seed = Math.floor( Math.random() * 100000 );
+    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("skip").style.display = "block";
+    document.getElementById("neta").style.display = "block";
+    document.getElementById("form").style.display = "none";
+    location.href = '#neta';
+    await start();
+}
+
+async function start_genre(){
+    genre = document.getElementById("genre").value;
     stage_max = document.getElementById("length").value;
     inf = document.getElementById("repeat").checked;
     speed = document.getElementById("speed").value;
@@ -106,17 +123,38 @@ async function go_about() {
     location.href = '#about';
 }
 
+async function genre_mode() {
+    document.getElementById("theme_mode").style.display = "none";
+    document.getElementById("genre_mode").style.display = "block";
+    location.href = '#form';
+}
+
+async function theme_mode() {
+    document.getElementById("theme_mode").style.display = "block";
+    document.getElementById("genre_mode").style.display = "none";
+    location.href = '#form';
+}
+
 function display_message(id, text) {
     document.getElementById(id).innerHTML = text;
     console.log(text);
 }
 
 function get_neta_info() {
-    return 'いただいたもの：' + present + '<br>カテゴリー：' + category + '<br>お題：' + theme + '<br>おとん：' + father;
+    var res = '';
+    if (genre != '') {
+        res = 'ジャンル:' + genre + '<br>';
+    }
+    res += 'いただいたもの：' + present + '<br>カテゴリー：' + category + '<br>お題：' + theme + '<br>おとん：' + father;
+    return res;
 }
 
 function get_tweet_text() {
-    var res = 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
+    var res = '';
+    if (genre != '') {
+        res = 'ジャンル:' + genre + '<br>';
+    }
+    res += 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
     res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
     res += '続きはこちら→'
     return res;
@@ -354,9 +392,13 @@ async function getJSON() {
             say(0, 'エラーが発生したため、「次のネタ」ボタンを押してやりなおしてください');
         }
     };
-
-    console.log(BASE_URL + "?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max);
-
-    req.open("GET", BASE_URL + "?input_theme=" + inputValue + "&stage=" + stage + "&seed=" + seed+ "&stage_max=" + stage_max, true); // HTTPメソッドとアクセスするサーバーの　URL　を指定
+    if (genre=='') {
+        request_url = BASE_URL + "stage?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max
+    }
+    else {
+        request_url = BASE_URL + "genre?stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max + "&genre=" + genre
+    }
+    console.log(request_url);
+    req.open("GET", request_url, true); // HTTPメソッドとアクセスするサーバーの　URL　を指定
     req.send(null);  // 実際にサーバーへリクエストを送信
 }

@@ -154,15 +154,40 @@
         <div id="form">
             <h5><br></br></h5>
             <div class='container' style="max-width: 630px;">
-                <h4 class="text-center mt-5">お題を決めて</h4>
-                <h4 class="text-center mb-5">決定を押してください</h4>
                 <form class='text-center'>
                     <div class="form-group mx-auto container">
-                        <div class="my-4">
-                            <label class="text-white">漫才ネタのお題（空欄はランダム）</label>
-                            <input type="text" class="form-control" id="theme" value='' placeholder="お題を入力（迷ったら空欄で）">
+                        <div id="theme_mode">
+                            <h4 class="text-center mt-5">お題を決めて</h4>
+                            <h4 class="text-center mb-5">決定を押してください</h4>
+                            <div class="my-4">
+                                <label class="text-white">漫才ネタのお題（空欄はランダム）</label>
+                                <input type="text" class="form-control" id="theme" value='' placeholder="お題を入力（迷ったら空欄で）">
+                            </div>
+                            <div class="text-center my-3">
+                                <button type="button" onclick="start_manzai()" class="btn btn-lg btn-danger">決定して漫才を聞く</button>
+                            </div>
+                            <div class="text-center my-3">
+                                <button type="button" onclick="genre_mode()" class="btn btn-success">ジャンルモードへ</button>
+                            </div>
                         </div>
-                        <button type="button" onclick="showMessage()" class="btn btn-lg btn-danger my-3">決定して漫才を聞く</button>
+                        <div id="genre_mode">
+                            <h4 class="text-center mt-5">ジャンルを決めて</h4>
+                            <h4 class="text-center mb-5">決定を押してください</h4>
+                            <div class="my-4">
+                                <label class="text-white">漫才ネタのジャンル</label>
+                                <select class="form-control input-sm" id="genre">
+                                    {% for genre in genres %}
+                                        <option value='{{genre}}'>{{genre}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="text-center my-3">
+                                <button type="button" onclick="start_genre()" class="btn btn-lg btn-danger">決定して漫才を聞く</button>
+                            </div>
+                            <div class="text-center my-3">
+                                <button type="button" onclick="theme_mode()" class="btn btn-success">テーマモードへ</button>
+                            </div>
+                        </div>
                         <div class="my-3 col-8 mx-auto">
                             <label class="text-white">ネタの長さ</label>
                             <select class="form-control input-sm" id="length" placeholder="4" value="4">

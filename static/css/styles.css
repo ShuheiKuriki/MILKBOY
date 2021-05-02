@@ -55,7 +55,7 @@ html{
     font-size: max(10px, min(1.5vw, 15px));
 }
 
-#form, #neta, #neta_share_button {
+#form, #neta, #neta_share_button, #genre_mode {
     display: none;
     font-family: 'Noto Sans JP', sans-serif;
 }
