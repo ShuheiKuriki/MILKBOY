@@ -27,7 +27,7 @@ RANDOM_WIKI = 'https://ja.wikipedia.org/wiki/Special:Random'
 BASE_WIKI = 'https://ja.wikipedia.org/wiki/'
 
 
-def get_tsukami(article=None):
+def get_tsukami(article):
     pattern = [
         {"POS": {"IN": ["NUM", "NOUN", "PROPN", "ADV"]}, "OP": "+"},
         {"TEXT": {"IN": ["の", "な"]}},
@@ -41,7 +41,7 @@ def get_tsukami(article=None):
     # t = time.time()
     tsukami = ''
     while len(tsukami) < 10:
-        url = RANDOM_WIKI if article is None else BASE_WIKI + article
+        url = BASE_WIKI + article
         ptags = BeautifulSoup(requests.get(url).text, "html.parser").find_all('p')
         max_len = 0
         for ptag in ptags:
@@ -100,7 +100,7 @@ def get_subcat(cat, sub=True):
         for info in infos:
             title = info.find_all('span')[-1]['title']
             nums = list(map(int, re.findall(r'\d+', title)))
-            if (sub and nums[0] >= 3) or (not sub and CAT_MEM_MIN <= nums[1] <= CAT_MEM_MAX):
+            if (sub and nums[0] >= 1) or (not sub and CAT_MEM_MIN <= nums[1] <= CAT_MEM_MAX):
                 subcats.append(info.find('a').getText())
     if len(subcats) == 0:
         return None
@@ -134,9 +134,7 @@ def genre_mode(genre):
         if cat is not None:
             break
     cat_mems = get_pages(cat)
-    article = random.choice(cat_mems)
-    tsukami = get_tsukami(article)
-    return cat, cat_mems, tsukami
+    return cat, cat_mems
 
 
 def get_soup(url):
@@ -468,7 +466,7 @@ def feat_to_script(sent, is_anti, theme):
     return text, text2
 
 
-def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami=None):
+def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami):
     """
     全ステージを生成
     """
@@ -519,7 +517,7 @@ def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, p
             "conjunction": f"申し訳ないなと思って。オトンがいうには、[{anti_themes[-1]}] ちゃうかって。"
         }
     )
-    stage_dicts[0]['tsukami'] = get_tsukami() if tsukami is None else tsukami
+    stage_dicts[0]['tsukami'] = tsukami
     stage_dicts[0]['pred1'], stage_dicts[0]['pred2'] = preds[0], preds[1]
     return stage_dicts
 
@@ -537,12 +535,14 @@ def choose_anti_themes(theme, cat, catmems, num):
                 mem2 not in cat2 and cat2 not in mem2 and ':' not in mem2:
             catmem_list.append(mem)
     if len(catmem_list) == 0:
-        preds = ["", ""]
-    elif len(catmem_list) == 1:
+        return None, None, None
+    article = random.choice(catmem_list)
+    tsukami = get_tsukami(article)
+    if len(catmem_list) == 1:
         preds = [catmem_list[0], '']
     else:
         preds = random.sample(catmem_list, 2)
-    return random.sample(catmem_list, min(len(catmem_list), num)), preds
+    return random.sample(catmem_list, min(len(catmem_list), num)), preds, tsukami
 
 
 def tsukami_only():
@@ -575,11 +575,11 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
     random.seed(seed_num)
     np.random.seed(seed_num)
     if genre is not None:
-        cat, catmems, tsukami = genre_mode(genre)
+        cat, catmems = genre_mode(genre)
         theme = random.choice(catmems)
         print(cat, theme)
-        anti_themes, preds = choose_anti_themes(theme, cat, catmems, stage_max)
-        if len(anti_themes) == 0:
+        anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
+        if anti_themes is None:
             return generate_neta_list(input_theme, seed_num, stage_max, genre)
         res = generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami)
         pprint(res)
@@ -606,10 +606,10 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
                 pass
         else:
             return generate_neta_list(input_theme, seed_num, stage_max)
-    anti_themes, preds = choose_anti_themes(theme, cat, catmems, stage_max)
+    anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
     # print("choose_anti_themes:", time.time()-t)
     if len(anti_themes):
-        return generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds)
+        return generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami)
     return generate_neta_list(input_theme, seed_num, stage_max)
 
 
