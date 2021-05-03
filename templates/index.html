@@ -166,7 +166,7 @@
                             <div class="text-center my-3">
                                 <button type="button" onclick="start_manzai()" class="btn btn-lg btn-danger">決定して漫才を聞く</button>
                             </div>
-                            <div class="text-center my-3">
+                            <div class="text-center my-4">
                                 <button type="button" onclick="genre_mode()" class="btn-lg btn-success">ジャンルモードへ</button>
                             </div>
                         </div>
@@ -184,18 +184,9 @@
                             <div class="text-center my-3">
                                 <button type="button" onclick="start_genre()" class="btn btn-lg btn-danger">決定して漫才を聞く</button>
                             </div>
-                            <div class="text-center my-3">
+                            <div class="text-center my-4">
                                 <button type="button" onclick="theme_mode()" class="btn-lg btn-success">テーマモードへ</button>
                             </div>
-                        </div>
-                        <div class="my-3 col-8 mx-auto">
-                            <label class="text-white">ネタの長さ</label>
-                            <select class="form-control input-sm" id="length" placeholder="4" value="4">
-                                    <option value='0'>つかみだけ</option>
-                                    <option value='2'>短め</option>
-                                    <option value='4' selected="selected">普通</option>
-                                    <option value='6'>長め</option>
-                            </select>
                         </div>
                         <div class="my-3 col-8 mx-auto">
                             <label class="text-white">読み上げスピード</label>
@@ -215,15 +206,28 @@
                                     <option value='1'>大きめ</option>
                             </select>
                         </div>
-                        <div class="checkbox my-5 col-8 mx-auto">
+                        <div class="my-3 col-8 mx-auto">
+                            <label class="text-white">ネタの長さ</label>
+                            <select class="form-control input-sm" id="length" placeholder="4" value="4">
+                                <option value='0'>つかみだけ</option>
+                                <option value='2'>短め</option>
+                                <option value='4' selected="selected">普通</option>
+                                <option value='6'>長め</option>
+                            </select>
+                            <div class="text-white-50 text-center mx-auto description mt-3">
+                                ※ネタの長さを指定しても、<br>ネタに必要な情報が足りない場合、<br>短くなることがあります。ご了承ください。
+                                <br></br></div>
+                        </div>
+                        <div class="checkbox my-2 col-8 mx-auto">
                             <label class="form-control">リピート
                                 <input id="repeat" type="checkbox" value=''>
                             </label>
+                            <div class="text-white-50 text-center mx-auto description">
+                                ※お題ランダムかジャンルモードで<br>リピートとすると新しいネタが<br>流れ続けておすすめです！<br>
+                                作業用BGM等としてご活用ください<br></br></div>
                         </div>
                     </div>
                 </form>
-                <div class="text-white-50 text-center mx-auto description">※お題ランダムかジャンルモードでリピートとすると<br>新しいネタが流れ続けておすすめです！<br>
-                    作業用BGM等としてご活用ください<br></br></div>
                 <div class="text-white-50 text-center mx-auto description">※Internet Explolerなど一部のWebブラウザでは、<br>
                     音が出ない場合がございます。その場合はお手数ですが、<br>別のWebブラウザで再度お試しください。</div>
 
