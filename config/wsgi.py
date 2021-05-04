@@ -9,10 +9,8 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 
 import os
 import time
-import schedule
 import threading
 import requests
-from twitter import Twitter, OAuth
 
 from django.core.wsgi import get_wsgi_application
 
