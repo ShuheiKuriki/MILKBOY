@@ -115,11 +115,14 @@ def get_pages(cat):
     soup = BeautifulSoup(text, "html.parser").find('div', id='mw-pages')
     catmems = []
     groups = soup.find_all(class_="mw-category-group")
+    cat2 = re.sub(" ", "", re.sub("\(.+?\)", '', cat))
     for group in groups:
         if re.fullmatch('[ぁ-ゟa-zA-Z]+', group.find('h3').getText()):
             pages = group.find_all('a')
             for page in pages:
-                catmems.append(page.getText())
+                mem = re.sub(" ", "", re.sub("\(.+?\)", '', page.getText()))
+                if mem not in cat2 and cat2 not in mem and 'Template:' not in mem:
+                    catmems.append(page.getText())
     return catmems
 
 
@@ -177,7 +180,9 @@ def choose_cat(word_key, soup=None):
         li_text = li.getText()
 
         # 不適切なカテゴリーの除外
-        if "曖昧さ回避" in li_text or li_text in prohibit \
+        if "曖昧さ回避" in li_text:
+            continue
+        if li_text in prohibit \
                 or word_key in li_text or word in li_text \
                 or li_text in word_key or li_text in word:
             continue
@@ -282,7 +287,8 @@ def shape_text(sent, cat, words, subwords, first=False):
     if first:
         for token in tokens:
             if token.orth_ in pre: return False, False
-            if token.pos_ == 'PUNCT': break
+            if token.pos_ == 'PUNCT':
+                break
             if token.dep_ == 'nsubj' and token.pos_ == 'PROPN' and token.orth_ not in words+subwords:
                 if token.head.i >= len(tokens)-7:
                     return False, False
@@ -532,7 +538,7 @@ def choose_anti_themes(theme, cat, catmems, num):
     for mem in catmems:
         mem2 = re.sub(" ", "", re.sub("\(.+?\)", '', mem))
         if mem2 not in theme2 and theme2 not in mem2 and \
-                mem2 not in cat2 and cat2 not in mem2 and ':' not in mem2:
+                mem2 not in cat2 and cat2 not in mem2 and 'Template:' not in mem2:
             catmem_list.append(mem)
     if len(catmem_list) == 0:
         return None, None, None

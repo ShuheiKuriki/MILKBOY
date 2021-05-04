@@ -12,6 +12,7 @@ import time
 import schedule
 import threading
 import requests
+from twitter import Twitter, OAuth
 
 from django.core.wsgi import get_wsgi_application
 
@@ -21,9 +22,16 @@ application = get_wsgi_application()
 
 def always():
     while True:
-        time.sleep(1000)
-        requests.get("https://milkboy-core-ai.herokuapp.com/")
-        print('wake up!')
+        time.sleep(300)
+        api = Twitter(
+            auth=OAuth(
+                os.environ["TW_TOKEN"],
+                os.environ["TW_TOKEN_SECRET"],
+                os.environ["TW_CONSUMER_KEY"],
+                os.environ["TW_CONSUMER_SECRET"]
+            )
+        )
+        requests.get("https://www.milkboy-core-ai.tech/tweet")
 
 t = threading.Thread(target=always)
 t.start()

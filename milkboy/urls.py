@@ -5,6 +5,7 @@ app_name = 'milkboy'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('stage', views.stage),
-    path('genre', views.genre)
+    path('theme', views.theme),
+    path('genre', views.genre),
+    path('tweet', views.tweet)
 ]

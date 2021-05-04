@@ -51,6 +51,11 @@ DATABASES = {
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
+TW_CONSUMER_KEY = os.environ['TW_CONSUMER_KEY']
+TW_CONSUMER_SECRET = os.environ('TW_CONSUMER_SECRET')
+TW_TOKEN = os.environ('TW_TOKEN')
+TW_TOKEN_SECRET = os.environ('TW_TOKEN_SECRET ')
+
 import django_heroku
 
     # Static files (CSS, JavaScript, Images)
