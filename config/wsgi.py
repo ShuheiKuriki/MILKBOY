@@ -21,7 +21,7 @@ application = get_wsgi_application()
 def always():
     while True:
         time.sleep(300)
-        requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet")
+        requests.get("https://milkboy-core-ai.herokuapp.com/milkboy/tweet")
 
 t = threading.Thread(target=always)
 t.start()
