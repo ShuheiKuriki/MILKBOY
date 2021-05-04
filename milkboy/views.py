@@ -93,7 +93,7 @@ def tweet(request):
             else:
                 neta_list = generate_neta_list('', seed, stage_max, genre_name)
             stage_num = len(neta_list)
-            if time.time() - start_t > 30:
+            if time.time() - start_t > 15:
                 return render(request, 'index.html', {'genres': GENRES})
         except:
             continue
@@ -106,7 +106,6 @@ def tweet(request):
     text1, text2 = tsukami_script(genre_name, first_stage['tsukami'])
     data = t.statuses.update(status=text1)
     data = t.statuses.update(status=text2, in_reply_to_status_id=data['id'])
-    time.sleep(1)
     # 導入
     text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
     data = t.statuses.update(status=text1, in_reply_to_status_id=data['id'])
@@ -119,12 +118,12 @@ def tweet(request):
         data = t.statuses.update(status=feat, in_reply_to_status_id=data['id'])
         feat_reply = f"内海「{neta['featX_reply']}」"
         data = t.statuses.update(status=feat_reply, in_reply_to_status_id=data['id'])
-        time.sleep(1)
+
         anti_feat = f"駒場「{neta['anti_featX']}」"
         data = t.statuses.update(status=anti_feat, in_reply_to_status_id=data['id'])
         anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
         data = t.statuses.update(status=anti_feat_reply, in_reply_to_status_id=data['id'])
-        time.sleep(1)
+
         if i == stage_num-2:
             continue
         text = f"駒場「{neta['conjunction']}」"
@@ -132,7 +131,6 @@ def tweet(request):
             text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
             text += "内海「もうええわ、どうもありがとうございました。」"
         data = t.statuses.update(status=text, in_reply_to_status_id=data['id'])
-        time.sleep(1)
 
     return render(request, 'index.html', {'genres': GENRES})
 
