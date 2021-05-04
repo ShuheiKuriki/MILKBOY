@@ -2,6 +2,8 @@ import os
 import django_heroku
 import dj_database_url
 
+from .common import *
+
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
