@@ -1,3 +1,4 @@
+import os
 import random
 import time
 from django.shortcuts import render
@@ -5,7 +6,6 @@ from django.http import HttpResponse
 from django.http.response import JsonResponse
 from .coreAI import generate_neta_list
 from collections import defaultdict
-from config.settings import dev
 from twitter import Twitter, OAuth
 GLOBAL_DICTS = defaultdict(lambda: {})
 
@@ -59,8 +59,9 @@ def genre(request):
     return JsonResponse(GLOBAL_DICTS[k][data['stage']])
 
 
-def tweet(request, api=None):
+def tweet(request):
     try:
+        from config.settings import dev
         t = Twitter(
             auth=OAuth(
                 dev.TW_TOKEN,
@@ -69,8 +70,15 @@ def tweet(request, api=None):
                 dev.TW_CONSUMER_SECRET
             )
         )
-    except ValueError:
-        t = api
+    except ImportError:
+        t = Twitter(
+            auth=OAuth(
+                os.environ["TW_TOKEN"],
+                os.environ["TW_TOKEN_SECRET"],
+                os.environ["TW_CONSUMER_KEY"],
+                os.environ["TW_CONSUMER_SECRET"]
+            )
+        )
     start_t = time.time()
     stage_max = 3
     genre_name = random.choice(GENRES + ['random']*5)

@@ -393,7 +393,7 @@ async function getJSON() {
         }
     };
     if (genre=='') {
-        request_url = BASE_URL + "stage?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max
+        request_url = BASE_URL + "theme?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max
     }
     else {
         request_url = BASE_URL + "genre?stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max + "&genre=" + genre

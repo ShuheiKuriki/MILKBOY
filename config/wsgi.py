@@ -23,14 +23,6 @@ application = get_wsgi_application()
 def always():
     while True:
         time.sleep(300)
-        api = Twitter(
-            auth=OAuth(
-                os.environ["TW_TOKEN"],
-                os.environ["TW_TOKEN_SECRET"],
-                os.environ["TW_CONSUMER_KEY"],
-                os.environ["TW_CONSUMER_SECRET"]
-            )
-        )
         requests.get("https://www.milkboy-core-ai.tech/tweet")
 
 t = threading.Thread(target=always)
