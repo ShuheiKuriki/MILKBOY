@@ -71,12 +71,13 @@ def tweet(request):
             )
         )
     except ImportError:
+        from config.settings import prod
         t = Twitter(
             auth=OAuth(
-                os.environ["TW_TOKEN"],
-                os.environ["TW_TOKEN_SECRET"],
-                os.environ["TW_CONSUMER_KEY"],
-                os.environ["TW_CONSUMER_SECRET"]
+                prod.TW_TOKEN,
+                prod.TW_TOKEN_SECRET,
+                prod.TW_CONSUMER_KEY,
+                prod.TW_CONSUMER_SECRET
             )
         )
     start_t = time.time()
