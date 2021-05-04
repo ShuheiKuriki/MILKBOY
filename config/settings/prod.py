@@ -1,5 +1,7 @@
-from .common import *
 import os
+import django_heroku
+import dj_database_url
+
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
@@ -44,7 +46,6 @@ LOGGING = {
     },
 }
 
-import dj_database_url
 DATABASES = {
     'default': dj_database_url.config()
 }
@@ -52,14 +53,10 @@ DATABASES = {
 SECRET_KEY = os.environ['SECRET_KEY']
 
 TW_CONSUMER_KEY = os.environ['TW_CONSUMER_KEY']
-TW_CONSUMER_SECRET = os.environ('TW_CONSUMER_SECRET')
-TW_TOKEN = os.environ('TW_TOKEN')
-TW_TOKEN_SECRET = os.environ('TW_TOKEN_SECRET ')
+TW_CONSUMER_SECRET = os.environ['TW_CONSUMER_SECRET']
+TW_TOKEN = os.environ['TW_TOKEN']
+TW_TOKEN_SECRET = os.environ['TW_TOKEN_SECRET ']
 
-import django_heroku
-
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 django_heroku.settings(locals(), staticfiles=False)
 
