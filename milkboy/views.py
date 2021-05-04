@@ -80,6 +80,7 @@ def tweet(request):
                 prod.TW_CONSUMER_SECRET
             )
         )
+        print('made_api')
     start_t = time.time()
     stage_max = 3
     genre_name = random.choice(GENRES + ['random']*5)
