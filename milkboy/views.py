@@ -93,7 +93,7 @@ def tweet(request):
                 neta_list = generate_neta_list('', seed, stage_max, genre_name)
             stage_num = len(neta_list)
             if time.time() - start_t > 30:
-                return HttpResponse('tweet failed')
+                return render(request, 'index.html', {'genres': GENRES})
         except:
             continue
         first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
@@ -133,7 +133,7 @@ def tweet(request):
         data = t.statuses.update(status=text, in_reply_to_status_id=data['id'])
         time.sleep(1)
 
-    return HttpResponse("sucessfully tweeted")
+    return render(request, 'index.html', {'genres': GENRES})
 
 
 def tsukami_script(genre_name, tsukami):

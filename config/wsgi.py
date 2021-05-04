@@ -23,6 +23,7 @@ def always():
     while True:
         time.sleep(300)
         requests.get("https://milkboy-core-ai.herokuapp.com/milkboy/tweet/")
+        print('tweeted')
 
 
 t = threading.Thread(target=always)
