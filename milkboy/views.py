@@ -101,7 +101,6 @@ def tweet(request):
             continue
         first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
         pred1, pred2 = first_stage['pred1'], first_stage['pred2']
-        print('pred', pred1, pred2)
         if pred1 != '' and pred2 != '':
             break
     # つかみ
