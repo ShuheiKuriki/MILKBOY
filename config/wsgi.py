@@ -25,6 +25,7 @@ def always():
             req = requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet")
             if req.status_code == requests.codes.ok:
                 break
+            time.sleep(20)
         print('tried to access')
         time.sleep(100)
 

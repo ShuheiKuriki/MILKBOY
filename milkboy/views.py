@@ -95,12 +95,13 @@ def tweet(request):
                 neta_list = generate_neta_list('', seed, stage_max, genre_name)
             stage_num = len(neta_list)
             if time.time() - start_t > 15:
-                return render(request, 'index.html', {'genres': GENRES})
+                return HttpResponse('')
         except:
             continue
         first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
         pred1 = first_stage['pred1']
         pred2 = first_stage['pred2']
+        print('pred', pred1, pred2)
         if pred1 != '' and pred2 != '':
             break
     # つかみ
@@ -133,7 +134,7 @@ def tweet(request):
             text += "内海「もうええわ、どうもありがとうございました。」"
         data = t.statuses.update(status=text, in_reply_to_status_id=data['id'])
     print('last of tweet func')
-    return render(request, 'index.html', {'genres': GENRES})
+    return HttpResponse('')
 
 
 def tsukami_script(genre_name, tsukami):
