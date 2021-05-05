@@ -13,6 +13,7 @@ import threading
 import requests
 
 from django.core.wsgi import get_wsgi_application
+from milkboy.views import auto_reply
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
 
@@ -31,4 +32,6 @@ def always():
 
 
 t = threading.Thread(target=always)
+t2 = threading.Thread(target=auto_reply)
 t.start()
+t2.start()
