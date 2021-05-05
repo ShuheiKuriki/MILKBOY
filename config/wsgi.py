@@ -22,13 +22,13 @@ application = get_wsgi_application()
 
 def always():
     while True:
+        time.sleep(3600)
         while True:
-            requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet")
-            # if req.status_code == requests.codes.ok:
-            break
+            req = requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet")
+            if req.status_code == requests.codes.ok:
+                break
             # time.sleep(20)
         print('tried to access')
-        time.sleep(3600)
 
 
 t = threading.Thread(target=always)

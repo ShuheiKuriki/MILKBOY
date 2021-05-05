@@ -27,7 +27,7 @@ RANDOM_WIKI = 'https://ja.wikipedia.org/wiki/Special:Random'
 BASE_WIKI = 'https://ja.wikipedia.org/wiki/'
 
 
-def get_tsukami(article):
+def get_tsukami(article=''):
     pattern = [
         {"POS": {"IN": ["NUM", "NOUN", "PROPN", "ADV"]}, "OP": "+"},
         {"TEXT": {"IN": ["の", "な"]}},
@@ -41,7 +41,7 @@ def get_tsukami(article):
     # t = time.time()
     tsukami = ''
     while len(tsukami) < 10:
-        url = BASE_WIKI + article
+        url = BASE_WIKI + article if article != '' else RANDOM_WIKI
         ptags = BeautifulSoup(requests.get(url).text, "html.parser").find_all('p')
         max_len = 0
         for ptag in ptags:
