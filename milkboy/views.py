@@ -132,7 +132,7 @@ def tweet(request):
             text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
             text += "内海「もうええわ、どうもありがとうございました。」"
         data = t.statuses.update(status=text, in_reply_to_status_id=data['id'])
-
+    print('last of tweet func')
     return render(request, 'index.html', {'genres': GENRES})
 
 
