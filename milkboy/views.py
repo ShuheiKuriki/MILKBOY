@@ -166,7 +166,7 @@ def auto_reply():
             continue
         # つかみ
         text1, text2 = tsukami_script('', first_stage['tsukami'])
-        data = api.statuses.update(status=f"@{tweet['user']} {text1}", in_reply_to_status_id=tweet['id_str'])
+        data = api.statuses.update(status=f"@{tweet['user']}\n{text1}", in_reply_to_status_id=tweet['id_str'])
         data = api.statuses.update(status=text2, in_reply_to_status_id=data['id'])
         # 導入
         text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
