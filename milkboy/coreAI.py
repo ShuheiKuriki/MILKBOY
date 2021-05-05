@@ -586,6 +586,7 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
         print(cat, theme)
         anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
         if anti_themes is None:
+            print('retry')
             return generate_neta_list(input_theme, seed_num, stage_max, genre)
         res = generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami)
         pprint(res)
@@ -596,6 +597,7 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
                 soup = BeautifulSoup(requests.get(RANDOM_WIKI).text, "html.parser")
                 theme = soup.find('head').find('title').getText().replace(' - Wikipedia', '')
                 cat, catmems = choose_cat(theme, soup)
+                print(cat, catmems)
                 break
             except:
                 pass
@@ -614,7 +616,8 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
             return generate_neta_list(input_theme, seed_num, stage_max)
     anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
     # print("choose_anti_themes:", time.time()-t)
-    if len(anti_themes):
+    if len(anti_themes) > 0:
+        print('last of func')
         return generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, preds, tsukami)
     return generate_neta_list(input_theme, seed_num, stage_max)
 
