@@ -106,7 +106,9 @@ def tweet(request):
             break
     # つかみ
     text1, text2 = tsukami_script(genre_name, first_stage['tsukami'])
+    print(text1)
     data = t.statuses.update(status=text1)
+    print(data)
     data = t.statuses.update(status=text2, in_reply_to_status_id=data['id'])
     # 導入
     text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
