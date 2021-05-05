@@ -28,7 +28,7 @@ def always():
             break
             # time.sleep(20)
         print('tried to access')
-        time.sleep(1800)
+        time.sleep(3600)
 
 
 t = threading.Thread(target=always)
