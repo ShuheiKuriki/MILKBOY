@@ -1,6 +1,7 @@
 import os
 import random
 import time
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http.response import JsonResponse
@@ -99,14 +100,12 @@ def tweet(request):
         except:
             continue
         first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
-        pred1 = first_stage['pred1']
-        pred2 = first_stage['pred2']
+        pred1, pred2 = first_stage['pred1'], first_stage['pred2']
         print('pred', pred1, pred2)
         if pred1 != '' and pred2 != '':
             break
     # つかみ
     text1, text2 = tsukami_script(genre_name, first_stage['tsukami'])
-    print(t.statuses)
     data = t.statuses.update(status=text1)
     data = t.statuses.update(status=text2, in_reply_to_status_id=data['id'])
     # 導入
@@ -139,7 +138,9 @@ def tweet(request):
 
 
 def tsukami_script(genre_name, tsukami):
-    text = f"ジャンル: {genre_name}\n\n"
+    dt_now = datetime.datetime.now()
+    text = dt_now.strftime('%m月%d日 %H:%M:%S') + "\n\n"
+    text += f"ジャンル: {genre_name}\n\n"
     text += "内海「どうもーミルクボーイです。お願いします。」\n\n"
 
     text2 = "内海「あーありがとうございますー。"

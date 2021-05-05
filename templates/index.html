@@ -1,67 +1,65 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-        <meta charset="utf-8" />
-        <title>無限MILKBOY</title>
-        <meta name="description" content="このサイトでは、Wikipediaの情報から自動生成したミルクボーイ風漫才を無限に聞くことができます！" />
-        <meta name="keywords" content="AIミルクボーイ,ミルクボーイ,MILKBOY,Manzai Intelligence,漫才知能,漫才アプリ,Wikipedia"/>
-        <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="author" content=""/>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <meta property="og:type" content="website">
-        <meta property="og:locale" content="ja_JP">
-        <meta property="og:title" content="MILKBOY風自動漫才アプリ">
-        <meta property="og:description" content="Wikipediaの情報から自動生成したミルクボーイ風漫才を無限に聞くことができます！">
-        <meta property="og:url" content="https://www.milkboy-core-ai.tech/">
-        <meta property="og:image" content="https://www.milkboy-core-ai.tech/static/img/thumbnail.png">
-        <meta content="https://www.milkboy-core-ai.tech/" name="twitter:url">
-        <meta content="MILKBOY風自動漫才アプリ" name="twitter:title">
-        <meta content="https://www.milkboy-core-ai.tech/static/img/thumbnail.png" name="twitter:image">
-        <meta content="summary_large_image" name="twitter:card">
-        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-        <link href="{% static 'css/styles2.css' %}" rel="stylesheet" />
-        <script type="text/javascript" src="{% static 'js/milkboy.js' %}"></script>
-<!--        <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>-->
+    <head>
+            <meta charset="utf-8" />
+            <title>無限MILKBOY</title>
+            <meta name="description" content="このサイトでは、Wikipediaの情報から自動生成したミルクボーイ風漫才を無限に聞くことができます！" />
+            <meta name="keywords" content="AIミルクボーイ,ミルクボーイ,MILKBOY,Manzai Intelligence,漫才知能,漫才アプリ,Wikipedia"/>
+            <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            <meta name="author" content=""/>
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">
+            <!-- Font Awesome icons (free version)-->
+            <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
+            <!-- Google fonts-->
+            <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+            <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+            <!-- Core theme CSS (includes Bootstrap)-->
+            <meta property="og:type" content="website">
+            <meta property="og:locale" content="ja_JP">
+            <meta property="og:title" content="MILKBOY風自動漫才アプリ">
+            <meta property="og:description" content="Wikipediaの情報から自動生成したミルクボーイ風漫才を無限に聞くことができます！">
+            <meta property="og:url" content="https://www.milkboy-core-ai.tech/">
+            <meta property="og:image" content="https://www.milkboy-core-ai.tech/static/img/thumbnail.png">
+            <meta content="https://www.milkboy-core-ai.tech/" name="twitter:url">
+            <meta content="MILKBOY風自動漫才アプリ" name="twitter:title">
+            <meta content="https://www.milkboy-core-ai.tech/static/img/thumbnail.png" name="twitter:image">
+            <meta content="summary_large_image" name="twitter:card">
+            <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+            <link href="{% static 'css/styles2.css' %}" rel="stylesheet" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <!--  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/yui/2.9.0/reset/reset-min.css">-->
     </head>
-<body id="page-top">
-<!--        <div id="fb-root"></div>-->
-<!-- Navigation-->
-<nav class="navbar fixed-top" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="javascript:go_top()">MILKBOY CORE AI</a>
-        <a class="navbar-brand js-scroll-trigger" href="javascript:go_about()">About</a>
-        <!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
-        <!--                    Menu-->
-        <!--                    <i class="fas fa-bars"></i>-->
-        <!--                </button>-->
-        <!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
-        <!--                    <ul class="navbar-nav ml-auto">-->
-        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
-        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
-        <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
-        <!--                    </ul>-->
-        <!--                </div>-->
-    </div>
-</nav>
-<!-- Masthead-->
-<header class="masthead" id="top">
-    <div class="container d-flex h-100">
-        <div class="mx-auto text-center">
-            <h2><br></br><br></br><br></br></h2>
-            <h1 class="mx-auto mt-4 text-uppercase">MILKBOY</h1>
-            <h2 class="text-white-30 mx-auto mt-2 mb-5">
+    <body id="page-top">
+        <!--        <div id="fb-root"></div>-->
+        <!-- Navigation-->
+        <nav class="navbar fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="javascript:go_top()">MILKBOY CORE AI</a>
+                <a class="navbar-brand js-scroll-trigger" href="javascript:go_about()">About</a>
+                <!--                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
+                <!--                    Menu-->
+                <!--                    <i class="fas fa-bars"></i>-->
+                <!--                </button>-->
+                <!--                <div class="collapse navbar-collapse" id="navbarResponsive">-->
+                <!--                    <ul class="navbar-nav ml-auto">-->
+                <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>-->
+                <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>-->
+                <!--                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>-->
+                <!--                    </ul>-->
+                <!--                </div>-->
+            </div>
+        </nav>
+        <!-- Masthead-->
+        <header class="masthead" id="top">
+            <div class="container d-flex h-100">
+                <div class="mx-auto text-center">
+                    <h2><br></br><br></br><br></br></h2>
+                    <h1 class="mx-auto mt-4 text-uppercase">MILKBOY</h1>
+                    <h2 class="text-white-30 mx-auto mt-2 mb-5">
                         <span class=text-white-75>M</span>anzai
                         <span class=text-white-75>I</span>ntelligence using <br>
                         <span class=text-white-75>L</span>inguistic
@@ -71,26 +69,26 @@
                         <span class=text-white-75>Y</span>ahoo!
                         <br></br>
                     </h2>
-            <h3 class="text-white mx-auto mt-5">
+                    <h3 class="text-white mx-auto mt-5">
                         ミルクボーイ風漫才で</h3>
-            <h3 class="text-white mx-auto mb-5">新しい笑いを無限に届けます</h3>
-            <div class="mt-5 mb-4">
-                <button type='button' class="btn btn-lg btn-light" onclick="demo()">
-                        初めての方（デモ）
+                    <h3 class="text-white mx-auto mb-5">新しい笑いを無限に届けます</h3>
+                    <div class="mt-5 mb-4">
+                        <button type='button' class="btn btn-lg btn-light" onclick="demo()">
+                            初めての方（デモ）
                         </button>
-            </div>
-            <div class="my-4">
-                <button type='button' class="btn btn-lg btn-secondary" onclick="go_form()">
+                    </div>
+                    <div class="my-4">
+                        <button type='button' class="btn btn-lg btn-secondary" onclick="go_form()">
                             ２回目以降の方
                         </button>
+                    </div>
+                    <div class="text-white-50 text-center mx-auto description">※Internet Explorerなど一部のWebブラウザでは、<br>
+                        音が出ない場合がございます。その場合はお手数ですが、<br>別のWebブラウザで再度お試しください。</div>
+                </div>
             </div>
-            <div class="text-white-50 text-center mx-auto description">※Internet Explorerなど一部のWebブラウザでは、<br>
-                音が出ない場合がございます。その場合はお手数ですが、<br>別のWebブラウザで再度お試しください。</div>
-        </div>
-    </div>
         </header>
-<!-- About-->
-<section class="about-section" id="about">
+        <!-- About-->
+        <section class="about-section" id="about">
             <div class="container">
                 <div class="row mx-4">
                     <div class="col-lg-8 mx-auto">
@@ -125,7 +123,7 @@
                 </div>
             </div>
         </section>
-<div id="neta">
+        <div id="neta">
             <div id="container">
                 <h3><br></br></h3>
                 <div class='container' style="max-width: 540px;">
@@ -153,7 +151,7 @@
                 <div class="description text-center text-white mt-3">※音声が途切れた場合、<br>そのまま待つかスキップを押してください</div>
             </div>
         </div>
-<div id="form">
+        <div id="form">
             <h5><br></br></h5>
             <div class='container' style="max-width: 630px;">
                 <form class='text-center mx-auto'>
@@ -178,7 +176,7 @@
                             <label class="text-white">漫才ネタのジャンル</label>
                             <select class="form-control input-sm" id="genre">
                                 {% for genre in genres %}
-                                    <option value='{{genre}}'>{{genre}}</option>
+                                <option value='{{genre}}'>{{genre}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -218,7 +216,7 @@
                         <div class="text-white-50 text-center mx-auto description mt-3">
                             ※ネタの長さを指定しても、<br>ネタに必要な情報が足りない場合、<br>短くなることがあります。ご了承ください。
                             <br></br></div>
-                        </div>
+                    </div>
                     <div class="checkbox mt-2 col-8 mx-auto">
                         <label class="form-control">リピート
                             <input id="repeat" type="checkbox" value=''>
@@ -240,25 +238,26 @@
                         <a href="https://twitter.com/intent/tweet?url=https://www.milkboy-core-ai.tech/&text=ミルクボーイ風漫才で笑いを無限に届けるAIアプリ&hashtags=ミルクボーイ,AIミルクボーイ,HackDay2021"
                         class="twitter-share-button" data-show-count="false">Tweet</a>
                     </div>
-<!--                    <div class="col-auto fb-share-button" data-href="https://www.milkboy-core-ai.tech"-->
-<!--                         data-layout="button" data-size="small">-->
-<!--                        <a target="_blank"-->
-<!--                           href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.milkboy-core-ai.tech%2F&amp;src=sdkpreparse"-->
-<!--                           class="fb-xfbml-parse-ignore">シェア</a>-->
-<!--                    </div>-->
+                    <!--                    <div class="col-auto fb-share-button" data-href="https://www.milkboy-core-ai.tech"-->
+                    <!--                         data-layout="button" data-size="small">-->
+                    <!--                        <a target="_blank"-->
+                    <!--                           href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.milkboy-core-ai.tech%2F&amp;src=sdkpreparse"-->
+                    <!--                           class="fb-xfbml-parse-ignore">シェア</a>-->
+                    <!--                    </div>-->
                     <div class="mr-auto ml-2">
                         <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3"
-                                     data-url="https://www.milkboy-core-ai.tech" data-color="default"
-                                     data-size="small" data-count="false" style="display: none;">
+                                             data-url="https://www.milkboy-core-ai.tech" data-color="default"
+                                             data-size="small" data-count="false" style="display: none;">
                         </div>
                     </div>
                 </div>
                 © 2021 Team-rejected
             </div>
         </footer>
-<!--        <div id="fb-root"></div>-->
-<!--        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="e7bSsmhA"></script>-->
-<!--        <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>-->
+        <!--        <div id="fb-root"></div>-->
+        <!--        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v10.0" nonce="e7bSsmhA"></script>-->
+        <!--        <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>-->
+        <script type="text/javascript" src="{% static 'js/milkboy.js' %}"></script>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
         <!-- Bootstrap core JS-->
