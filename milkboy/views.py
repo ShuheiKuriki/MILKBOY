@@ -70,7 +70,8 @@ def tweet(request):
                 dev.TW_CONSUMER_SECRET
             )
         )
-    except ImportError:
+        print('this is from dev')
+    except:
         from config.settings import prod
         t = Twitter(
             auth=OAuth(
@@ -80,7 +81,7 @@ def tweet(request):
                 prod.TW_CONSUMER_SECRET
             )
         )
-        print('made_api')
+        print('this is from prod')
     start_t = time.time()
     stage_max = 3
     genre_name = random.choice(GENRES + ['random']*5)

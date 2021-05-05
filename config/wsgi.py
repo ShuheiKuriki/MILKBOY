@@ -23,7 +23,7 @@ def always():
     while True:
         time.sleep(300)
         requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet/")
-        print('tweeted')
+        print('tried to access')
 
 
 t = threading.Thread(target=always)
