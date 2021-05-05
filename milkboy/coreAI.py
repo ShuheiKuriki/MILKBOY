@@ -552,14 +552,14 @@ def choose_anti_themes(theme, cat, catmems, num):
     return random.sample(catmem_list, min(len(catmem_list), num)), preds, tsukami
 
 
-def tsukami_only():
+def tsukami_only(tsukami, seed_num):
     """つかみだけ"""
     return [
         {
             "input_theme": "",
             "theme": "",
             "stage": -1,
-            "seed": 0,
+            "seed": seed_num,
             "next_is_last": True,
             "category": "",
             "anti_theme": "",
@@ -568,7 +568,7 @@ def tsukami_only():
             "anti_featX": "",
             "anti_featX_reply": "",
             "conjunction": "",
-            "tsukami": get_tsukami()
+            "tsukami": tsukami
         }
     ]
 
@@ -577,15 +577,15 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
     """
     全体処理
     """
-    if stage_max == 0:
-        return tsukami_only()
-    random.seed(seed_num)
     np.random.seed(seed_num)
     if genre is not None:
         cat, catmems = genre_mode(genre)
         theme = random.choice(catmems)
         print(cat, theme)
         anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
+        if stage_max == 0:
+            return tsukami_only(tsukami, seed_num)
+        random.seed(seed_num)
         if anti_themes is None:
             print('retry')
             return generate_neta_list(input_theme, seed_num, stage_max, genre)
@@ -616,6 +616,8 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
         else:
             return generate_neta_list(input_theme, seed_num, stage_max)
     anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
+    if stage_max == 0:
+        return tsukami_only(tsukami, seed_num)
     # print("choose_anti_themes:", time.time()-t)
     if len(anti_themes) > 0:
         print('last of generate_neta_list')
