@@ -145,21 +145,25 @@ def auto_reply():
         start_t = time.time()
         stage_max = 3
         theme = tweet['text'].split()[-1]
-        if '@' in theme or len(theme) > 10:
-            return HttpResponse('')
+        if '@' in theme or len(theme) > 15:
+            continue
+        tle = False
         while True:
             try:
                 seed = random.randint(0, 100000)
                 neta_list = generate_neta_list(theme, seed, stage_max)
                 stage_num = len(neta_list)
                 if time.time() - start_t > 15:
-                    return HttpResponse('')
+                    tle = True
+                    break
             except:
                 continue
             first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
             pred1, pred2 = first_stage['pred1'], first_stage['pred2']
             if pred1 != '' and pred2 != '':
                 break
+        if tle:
+            continue
         # つかみ
         text1, text2 = tsukami_script('', first_stage['tsukami'])
         data = api.statuses.update(status=text1, in_reply_to_status_id=tweet['id_str'])
@@ -189,7 +193,7 @@ def auto_reply():
                 text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
                 text += "内海「もうええわ、どうもありがとうございました。」"
             data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
-        return HttpResponse('')
+    return HttpResponse('')
 
 
 def tsukami_script(genre_name, tsukami):
