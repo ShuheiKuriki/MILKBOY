@@ -140,6 +140,7 @@ def tweet(request):
 def auto_reply():
     api = Twitter(auth=get_auth())
     twitter_stream = TwitterStream(auth=get_auth())
+    print('activate auto reply')
     for tweet in twitter_stream.statuses.filter(language='ja', track='@milkboy_core_ai テーマ'):
         start_t = time.time()
         stage_max = 3
