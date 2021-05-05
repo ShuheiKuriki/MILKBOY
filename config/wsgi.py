@@ -21,9 +21,9 @@ application = get_wsgi_application()
 
 def always():
     while True:
-        time.sleep(300)
-        requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet/")
+        requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet")
         print('tried to access')
+        time.sleep(300)
 
 
 t = threading.Thread(target=always)
