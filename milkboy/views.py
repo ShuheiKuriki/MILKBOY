@@ -1,4 +1,3 @@
-import os
 import random
 import time
 import datetime
@@ -197,10 +196,10 @@ def auto_reply():
                             in_reply_to_status_id=tweet['id_str'])
 
 
-def tsukami_script(word, tsukami, Theme=False):
+def tsukami_script(word, tsukami, is_theme=False):
     dt_now = datetime.datetime.now()
     text = dt_now.strftime('%m月%d日 %H:%M:%S') + "\n\n"
-    if Theme:
+    if is_theme:
         text += f"テーマ: {word}\n\n"
     else:
         text += f"ジャンル: {word}\n\n"
