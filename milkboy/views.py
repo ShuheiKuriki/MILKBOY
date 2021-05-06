@@ -193,7 +193,6 @@ def auto_reply():
                 text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
                 text += "内海「もうええわ、どうもありがとうございました。」"
             data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
-    return HttpResponse('')
 
 
 def tsukami_script(genre_name, tsukami):

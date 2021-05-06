@@ -22,8 +22,10 @@ application = get_wsgi_application()
 
 def always():
     while True:
-        time.sleep(3600)
         while True:
+            for i in range(6):
+                time.sleep(600)
+                requests.get("https://www.milkboy-core-ai.tech")
             req = requests.get("https://www.milkboy-core-ai.tech/milkboy/tweet")
             if req.status_code == requests.codes.ok:
                 break
