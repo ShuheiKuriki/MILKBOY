@@ -165,9 +165,9 @@ def auto_reply():
         if tle:
             continue
         # つかみ
-        text1, text2 = tsukami_script('', first_stage['tsukami'])
-        data = api.statuses.update(status=f"@{tweet['user']['screen_name']}\n{text1}", in_reply_to_status_id=tweet['id_str'])
-        data = api.statuses.update(status=text2, in_reply_to_status_id=data['id'])
+        text1, text2 = tsukami_script(theme, first_stage['tsukami'], True)
+        first_tweet = api.statuses.update(status=text1)
+        data = api.statuses.update(status=text2, in_reply_to_status_id=first_tweet['id'])
         # 導入
         text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
         data = api.statuses.update(status=text1, in_reply_to_status_id=data['id'])
@@ -193,13 +193,17 @@ def auto_reply():
                 text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
                 text += "内海「もうええわ、どうもありがとうございました。」"
             data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
+        api.statuses.update(status=f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n{first_tweet['url']}",
+                            in_reply_to_status_id=tweet['id_str'])
 
 
-def tsukami_script(genre_name, tsukami):
+def tsukami_script(word, tsukami, Theme=False):
     dt_now = datetime.datetime.now()
     text = dt_now.strftime('%m月%d日 %H:%M:%S') + "\n\n"
-    if genre_name != '':
-        text += f"ジャンル: {genre_name}\n\n"
+    if Theme:
+        text += f"テーマ: {word}\n\n"
+    else:
+        text += f"ジャンル: {word}\n\n"
     text += "内海「どうもーミルクボーイです。お願いします。」\n\n"
 
     text2 = "内海「あーありがとうございますー。"
