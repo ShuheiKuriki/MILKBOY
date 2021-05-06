@@ -100,11 +100,12 @@ def tweet(request):
         except:
             continue
         first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
+        theme = first_stage['theme']
         pred1, pred2 = first_stage['pred1'], first_stage['pred2']
         if pred1 != '' and pred2 != '':
             break
     # つかみ
-    text1, text2 = tsukami_script(genre_name, first_stage['tsukami'])
+    text1, text2 = tsukami_script(theme, first_stage['tsukami'])
     data = api.statuses.update(status=text1)
     data = api.statuses.update(status=text2, in_reply_to_status_id=data['id'])
     # 導入
@@ -196,13 +197,10 @@ def auto_reply():
                             in_reply_to_status_id=tweet['id_str'])
 
 
-def tsukami_script(word, tsukami, is_theme=False):
+def tsukami_script(word, tsukami):
     dt_now = datetime.datetime.now()
     text = dt_now.strftime('%m月%d日 %H:%M:%S') + "\n\n"
-    if is_theme:
-        text += f"テーマ: {word}\n\n"
-    else:
-        text += f"ジャンル: {word}\n\n"
+    text += f"テーマ: {word}\n\n"
     text += "内海「どうもーミルクボーイです。お願いします。」\n\n"
 
     text2 = "内海「あーありがとうございますー。"
