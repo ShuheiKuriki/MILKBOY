@@ -165,7 +165,7 @@ def auto_reply():
         if tle:
             continue
         # つかみ
-        text1, text2 = tsukami_script(theme, first_stage['tsukami'], True)
+        text1, text2 = tsukami_script(theme, first_stage['tsukami'])
         print(text1)
         first_tweet = api.statuses.update(status=text1)
         data = api.statuses.update(status=text2, in_reply_to_status_id=first_tweet['id'])
