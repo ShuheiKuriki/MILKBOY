@@ -160,6 +160,7 @@ def auto_reply():
                 continue
             first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
             pred1, pred2 = first_stage['pred1'], first_stage['pred2']
+            print(pred1)
             if pred1 != '' and pred2 != '':
                 break
         if tle:
@@ -167,7 +168,6 @@ def auto_reply():
         # つかみ
         text1, text2 = tsukami_script(theme, first_stage['tsukami'])
         first_tweet = api.statuses.update(status=text1)
-        print(first_tweet)
         data = api.statuses.update(status=text2, in_reply_to_status_id=first_tweet['id'])
         # 導入
         text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
@@ -194,7 +194,9 @@ def auto_reply():
                 text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
                 text += "内海「もうええわ、どうもありがとうございました。」"
             data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
-        api.statuses.update(status=f"@{tweet['user']['screen_name']}\nネタを投稿しました！\nhttps://twitter.com/milkboy_core_ai/status/{first_tweet['id']}",
+        api.statuses.update(status=f"@{tweet['user']['screen_name']}\n"
+                                   f"ネタを投稿しました！\n"
+                                   f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}",
                             in_reply_to_status_id=tweet['id_str'])
 
 
