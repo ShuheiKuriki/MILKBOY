@@ -159,7 +159,6 @@ def auto_reply():
             except:
                 continue
             first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
-            print(first_stage)
             pred1, pred2 = first_stage['pred1'], first_stage['pred2']
             if pred1 != '' and pred2 != '':
                 break
