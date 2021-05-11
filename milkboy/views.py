@@ -85,7 +85,7 @@ def tweet(request):
     api = Twitter(auth=get_auth())
     start_t = time.time()
     stage_max = 3
-    genre_name = random.choice(GENRES + ['random']*5)
+    genre_name = random.choice(GENRES + ['random']*3)
     print(genre_name)
     while True:
         try:
