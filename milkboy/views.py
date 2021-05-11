@@ -153,7 +153,7 @@ def auto_reply():
                 seed = random.randint(0, 100000)
                 neta_list = generate_neta_list(theme, seed, stage_max)
                 stage_num = len(neta_list)
-                if time.time() - start_t > 15:
+                if time.time() - start_t > 30:
                     tle = True
                     break
             except:
