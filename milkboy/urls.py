@@ -7,5 +7,4 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('theme', views.theme),
     path('genre', views.genre),
-    path('tweet', views.tweet)
 ]
