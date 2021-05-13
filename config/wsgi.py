@@ -239,6 +239,7 @@ def always():
     schedule.every().day.at("18:00").do(tweet)
     schedule.every().day.at("21:00").do(tweet)
     schedule.every().day.at("00:00").do(tweet)
+    auto_reply()
     while True:
         for i in range(9):
             schedule.run_pending()
@@ -248,6 +249,4 @@ def always():
 
 
 t = threading.Thread(target=always)
-t2 = threading.Thread(target=auto_reply)
 t.start()
-t2.start()
