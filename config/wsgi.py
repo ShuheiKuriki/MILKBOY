@@ -117,6 +117,7 @@ def auto_reply():
     for tweet in twitter_stream.statuses.filter(language='ja', track='@milkboy_core_ai テーマ'):
         start_t = time.time()
         stage_max = 3
+        print(tweet)
         theme = tweet['text'].split()[-1]
         if '@' in theme or len(theme) > 15:
             continue
@@ -207,6 +208,7 @@ def always():
         while res != 'success':
             time.sleep(10)
             res = tweet()
+        print(res)
         for i in range(9):
             time.sleep(1200)
             req = requests.get("https://www.milkboy-core-ai.tech")
