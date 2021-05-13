@@ -166,6 +166,7 @@ def multiple_tweets(texts, data):
         else:
             data = update_status(text, data['id'])
             text = tweet_text
+    data = update_status(text, data['id'])
     return data
 
 
