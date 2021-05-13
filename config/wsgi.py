@@ -119,7 +119,7 @@ def auto_reply():
         stage_max = 3
         print(tweet)
         theme = tweet['text'].split()[-1]
-        if '@' in theme or len(theme) > 15:
+        if '@' in theme or len(theme) > 30:
             continue
         tle = False
         while True:
@@ -204,11 +204,6 @@ def introduction(category, pred1, pred2):
 
 def always():
     while True:
-        res = 'fail'
-        while res != 'success':
-            time.sleep(10)
-            res = tweet()
-        print(res)
         for i in range(9):
             time.sleep(1200)
             req = requests.get("https://www.milkboy-core-ai.tech")
@@ -216,6 +211,11 @@ def always():
                 print('succesfully accessed')
             else:
                 print('access failed')
+        res = 'fail'
+        while res != 'success':
+            time.sleep(10)
+            res = tweet()
+        print(res)
 
 
 t = threading.Thread(target=always)
