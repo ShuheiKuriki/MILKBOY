@@ -75,25 +75,25 @@ def tweet():
             break
     # つかみ
     text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-    data = api.statuses.update(status=text1)
-    data = api.statuses.update(status=text2, in_reply_to_status_id=data['id'])
+    data = update_status(api, text1)
+    data = update_status(api, text2, data['id'])
     # 導入
     text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-    data = api.statuses.update(status=text1, in_reply_to_status_id=data['id'])
-    data = api.statuses.update(status=text2, in_reply_to_status_id=data['id'])
-    data = api.statuses.update(status=text3, in_reply_to_status_id=data['id'])
+    data = update_status(api, text1, data['id'])
+    data = update_status(api, text2, data['id'])
+    data = update_status(api, text3, data['id'])
 
     for i in range(stage_num):
         neta = neta_list[i] if i < stage_num-1 else neta_list[-1]
         feat = f"駒場「{neta['featX']}」"
-        data = api.statuses.update(status=feat, in_reply_to_status_id=data['id'])
+        data = update_status(api, feat, data['id'])
         feat_reply = f"内海「{neta['featX_reply']}」"
-        data = api.statuses.update(status=feat_reply, in_reply_to_status_id=data['id'])
+        data = update_status(api, feat_reply, data['id'])
 
         anti_feat = f"駒場「{neta['anti_featX']}」"
-        data = api.statuses.update(status=anti_feat, in_reply_to_status_id=data['id'])
+        data = update_status(api, anti_feat, data['id'])
         anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
-        data = api.statuses.update(status=anti_feat_reply, in_reply_to_status_id=data['id'])
+        data = update_status(api, anti_feat_reply, data['id'])
 
         if i == stage_num-2:
             continue
@@ -101,7 +101,7 @@ def tweet():
         if i == stage_num-1:
             text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
             text += "内海「もうええわ、どうもありがとうございました。」"
-        data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
+        data = update_status(api, text, data['id'])
     print('last of tweet func')
     return 'success'
 
@@ -118,60 +118,84 @@ def auto_reply():
         start_t = time.time()
         stage_max = 3
         print(tweet)
-        theme = tweet['text'].split()[-1]
-        if '@' in theme or len(theme) > 30:
-            continue
-        tle = False
-        while True:
-            try:
-                seed = random.randint(0, 100000)
-                neta_list = generate_neta_list(theme, seed, stage_max)
-                stage_num = len(neta_list)
-                if time.time() - start_t > 30:
-                    tle = True
+        try:
+            theme = tweet['text'].split()[-1]
+            if '@' in theme or len(theme) > 30:
+                continue
+            tle = False
+            while True:
+                try:
+                    seed = random.randint(0, 100000)
+                    neta_list = generate_neta_list(theme, seed, stage_max)
+                    stage_num = len(neta_list)
+                    if time.time() - start_t > 30:
+                        tle = True
+                        break
+                except:
+                    continue
+                first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
+                pred1, pred2 = first_stage['pred1'], first_stage['pred2']
+                print(pred1)
+                if pred1 != '' and pred2 != '':
                     break
-            except:
+            if tle:
                 continue
-            first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
-            pred1, pred2 = first_stage['pred1'], first_stage['pred2']
-            print(pred1)
-            if pred1 != '' and pred2 != '':
-                break
-        if tle:
+            # つかみ
+            text1, text2 = tsukami_script(theme, first_stage['tsukami'])
+            first_tweet = update_status(api, text1)
+            data = update_status(api, text2, first_tweet['id'])
+            # 導入
+            text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
+            data = update_status(api, text1, data['id'])
+            data = update_status(api, text2, data['id'])
+            data = update_status(api, text3, data['id'])
+
+            for i in range(stage_num):
+                neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
+                feat = f"駒場「{neta['featX']}」"
+                data = update_status(api, feat, data['id'])
+                feat_reply = f"内海「{neta['featX_reply']}」"
+                data = update_status(api, feat_reply, data['id'])
+
+                anti_feat = f"駒場「{neta['anti_featX']}」"
+                data = update_status(api, anti_feat, data['id'])
+                anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
+                data = update_status(api, anti_feat_reply, data['id'])
+
+                if i == stage_num - 2:
+                    continue
+                text = f"駒場「{neta['conjunction']}」"
+                if i == stage_num - 1:
+                    text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
+                    text += "内海「もうええわ、どうもありがとうございました。」"
+                data = update_status(api, text, data['id'])
+            reply_text = f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n"
+            reply_text += f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}"
+            update_status(api, reply_text, tweet['id_str'])
+        except:
             continue
-        # つかみ
-        text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-        first_tweet = api.statuses.update(status=text1)
-        data = api.statuses.update(status=text2, in_reply_to_status_id=first_tweet['id'])
-        # 導入
-        text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-        data = api.statuses.update(status=text1, in_reply_to_status_id=data['id'])
-        data = api.statuses.update(status=text2, in_reply_to_status_id=data['id'])
-        data = api.statuses.update(status=text3, in_reply_to_status_id=data['id'])
 
-        for i in range(stage_num):
-            neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
-            feat = f"駒場「{neta['featX']}」"
-            data = api.statuses.update(status=feat, in_reply_to_status_id=data['id'])
-            feat_reply = f"内海「{neta['featX_reply']}」"
-            data = api.statuses.update(status=feat_reply, in_reply_to_status_id=data['id'])
 
-            anti_feat = f"駒場「{neta['anti_featX']}」"
-            data = api.statuses.update(status=anti_feat, in_reply_to_status_id=data['id'])
-            anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
-            data = api.statuses.update(status=anti_feat_reply, in_reply_to_status_id=data['id'])
-
-            if i == stage_num - 2:
-                continue
-            text = f"駒場「{neta['conjunction']}」"
-            if i == stage_num - 1:
-                text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
-                text += "内海「もうええわ、どうもありがとうございました。」"
-            data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
-        api.statuses.update(status=f"@{tweet['user']['screen_name']}\n"
-                                   f"ネタを投稿しました！\n"
-                                   f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}",
-                            in_reply_to_status_id=tweet['id_str'])
+def update_status(api, tweet_text, reply_id=None):
+    max_len = 130
+    texts = []
+    if len(tweet_text) > max_len:
+        left = 0
+        right = max_len
+        texts.append(tweet_text[left:right])
+        while right < len(tweet_text):
+            left += max_len
+            right += max_len
+            texts.append(tweet_text[left:right])
+    else:
+        texts.append(tweet_text)
+    if reply_id is None:
+        data = api.statuses.update(status=texts[0])
+    else:
+        data = api.statuses.update(status=texts[0], in_reply_to_status_id=reply_id)
+    for text in texts[1:]:
+        data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
+    return data
 
 
 def tsukami_script(word, tsukami):
