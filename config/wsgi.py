@@ -244,7 +244,7 @@ def always():
             schedule.run_pending()
             time.sleep(1200)
             req = requests.get("https://www.milkboy-core-ai.tech")
-            print('succesfully accessed' if req.status_code == requests.codes.ok else 'access failed')
+            print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
 
 
 t = threading.Thread(target=always)
