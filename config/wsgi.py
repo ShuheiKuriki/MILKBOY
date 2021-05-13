@@ -11,6 +11,7 @@ import os
 import time
 import datetime
 import random
+import schedule
 import threading
 import requests
 
@@ -48,62 +49,67 @@ def get_auth():
 
 def tweet():
     api = Twitter(auth=get_auth())
-    start_t = time.time()
-    stage_max = 3
-    genre_name = random.choice(GENRES + ['random']*3)
-    print(genre_name)
-    theme = pred1 = pred2 = ''
-    first_stage = {}
-    neta_list = []
-    stage_num = 3
-    while True:
-        try:
-            seed = random.randint(0, 100000)
-            if genre_name == 'random':
-                neta_list = generate_neta_list('random', seed, stage_max)
-            else:
-                neta_list = generate_neta_list('', seed, stage_max, genre_name)
-            stage_num = len(neta_list)
-            if time.time() - start_t > 30:
-                return 'fail'
-        except:
-            continue
-        first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
-        theme = first_stage['theme']
-        pred1, pred2 = first_stage['pred1'], first_stage['pred2']
-        if pred1 != '' and pred2 != '':
-            break
-    # つかみ
-    text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-    data = update_status(api, text1)
-    data = update_status(api, text2, data['id'])
-    # 導入
-    text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-    data = update_status(api, text1, data['id'])
-    data = update_status(api, text2, data['id'])
-    data = update_status(api, text3, data['id'])
+    res = 'fail'
+    while res != 'success':
+        time.sleep(10)
+        start_t = time.time()
+        stage_max = 3
+        genre_name = random.choice(GENRES + ['random']*3)
+        print(genre_name)
+        theme = pred1 = pred2 = ''
+        first_stage = {}
+        neta_list = []
+        stage_num = 3
+        while True:
+            try:
+                seed = random.randint(0, 100000)
+                if genre_name == 'random':
+                    neta_list = generate_neta_list('random', seed, stage_max)
+                else:
+                    neta_list = generate_neta_list('', seed, stage_max, genre_name)
+                stage_num = len(neta_list)
+                if time.time() - start_t > 30:
+                    continue
+            except:
+                continue
+            first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
+            theme = first_stage['theme']
+            pred1, pred2 = first_stage['pred1'], first_stage['pred2']
+            if pred1 != '' and pred2 != '':
+                break
+        # つかみ
+        text1, text2 = tsukami_script(theme, first_stage['tsukami'])
+        data = update_status(api, text1)
+        data = update_status(api, text2, data['id'])
+        # 導入
+        text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
+        data = update_status(api, text1, data['id'])
+        data = update_status(api, text2, data['id'])
+        data = update_status(api, text3, data['id'])
 
-    for i in range(stage_num):
-        neta = neta_list[i] if i < stage_num-1 else neta_list[-1]
-        feat = f"駒場「{neta['featX']}」"
-        data = update_status(api, feat, data['id'])
-        feat_reply = f"内海「{neta['featX_reply']}」"
-        data = update_status(api, feat_reply, data['id'])
+        for i in range(stage_num):
+            neta = neta_list[i] if i < stage_num-1 else neta_list[-1]
+            feat = f"駒場「{neta['featX']}」"
+            data = update_status(api, feat, data['id'])
+            feat_reply = f"内海「{neta['featX_reply']}」"
+            data = update_status(api, feat_reply, data['id'])
 
-        anti_feat = f"駒場「{neta['anti_featX']}」"
-        data = update_status(api, anti_feat, data['id'])
-        anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
-        data = update_status(api, anti_feat_reply, data['id'])
+            anti_feat = f"駒場「{neta['anti_featX']}」"
+            data = update_status(api, anti_feat, data['id'])
+            anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
+            data = update_status(api, anti_feat_reply, data['id'])
 
-        if i == stage_num-2:
-            continue
-        text = f"駒場「{neta['conjunction']}」"
-        if i == stage_num-1:
-            text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
-            text += "内海「もうええわ、どうもありがとうございました。」"
-        data = update_status(api, text, data['id'])
-    print('last of tweet func')
-    return 'success'
+            if i == stage_num-2:
+                continue
+            text = f"駒場「{neta['conjunction']}」"
+            if i == stage_num-1:
+                text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
+                text += "内海「もうええわ、どうもありがとうございました。」"
+            data = update_status(api, text, data['id'])
+        print('last of tweet func')
+        res = 'success'
+    print(res)
+    return
 
 
 def auto_reply():
@@ -227,19 +233,18 @@ def introduction(category, pred1, pred2):
 
 
 def always():
+    schedule.every().day.at("09:00").do(tweet)
+    schedule.every().day.at("12:00").do(tweet)
+    schedule.every().day.at("15:00").do(tweet)
+    schedule.every().day.at("18:00").do(tweet)
+    schedule.every().day.at("21:00").do(tweet)
+    schedule.every().day.at("24:00").do(tweet)
     while True:
         for i in range(9):
+            schedule.run_pending()
             time.sleep(1200)
             req = requests.get("https://www.milkboy-core-ai.tech")
-            if req.status_code == requests.codes.ok:
-                print('succesfully accessed')
-            else:
-                print('access failed')
-        res = 'fail'
-        while res != 'success':
-            time.sleep(10)
-            res = tweet()
-        print(res)
+            print('succesfully accessed' if req.status_code == requests.codes.ok else 'access failed')
 
 
 t = threading.Thread(target=always)
