@@ -78,34 +78,39 @@ def tweet():
             if pred1 != '' and pred2 != '':
                 break
         # つかみ
+        tweet_texts = []
         text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-        data = update_status(api, text1)
-        data = update_status(api, text2, data['id'])
+        tweet_texts.append(text1)
+        tweet_texts.append(text2)
         # 導入
         text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-        data = update_status(api, text1, data['id'])
-        data = update_status(api, text2, data['id'])
-        data = update_status(api, text3, data['id'])
+        tweet_texts.append(text1)
+        tweet_texts.append(text2)
+        tweet_texts.append(text3)
 
         for i in range(stage_num):
             neta = neta_list[i] if i < stage_num-1 else neta_list[-1]
-            feat = f"駒場「{neta['featX']}」"
-            data = update_status(api, feat, data['id'])
-            feat_reply = f"内海「{neta['featX_reply']}」"
-            data = update_status(api, feat_reply, data['id'])
-
-            anti_feat = f"駒場「{neta['anti_featX']}」"
-            data = update_status(api, anti_feat, data['id'])
-            anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
-            data = update_status(api, anti_feat_reply, data['id'])
-
+            tweet_texts.append(f"駒場「{neta['featX']}」")
+            tweet_texts.append(f"内海「{neta['featX_reply']}」")
+            tweet_texts.append(f"駒場「{neta['anti_featX']}」")
+            tweet_texts.append(f"内海「{neta['anti_featX_reply']}」")
             if i == stage_num-2:
                 continue
-            text = f"駒場「{neta['conjunction']}」"
+            tweet_texts.append(f"駒場「{neta['conjunction']}」\n\n")
             if i == stage_num-1:
-                text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
-                text += "内海「もうええわ、どうもありがとうございました。」"
-            data = update_status(api, text, data['id'])
+                tweet_texts.append("内海「いや、絶対ちゃうやろ。」\n\n")
+                tweet_texts.append("内海「もうええわ、どうもありがとうございました。」\n\n")
+
+        data = update_status(api, tweet_texts[0])
+        text = ''
+        for tweet_text in tweet_texts[1:]:
+            if len(text+tweet_text) <= 130:
+                text += tweet_text
+            elif len(text) == 0:
+                data = update_status(api, tweet_text, data['id'])
+            else:
+                data = update_status(api, text, data['id'])
+                text = tweet_text
         print('last of tweet func')
         res = 'success'
     print(res)
@@ -147,34 +152,41 @@ def auto_reply():
             if tle:
                 continue
             # つかみ
+            tweet_texts = []
             text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-            first_tweet = update_status(api, text1)
-            data = update_status(api, text2, first_tweet['id'])
+            tweet_texts.append(text1)
+            tweet_texts.append(text2)
             # 導入
             text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-            data = update_status(api, text1, data['id'])
-            data = update_status(api, text2, data['id'])
-            data = update_status(api, text3, data['id'])
+            tweet_texts.append(text1)
+            tweet_texts.append(text2)
+            tweet_texts.append(text3)
 
             for i in range(stage_num):
                 neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
-                feat = f"駒場「{neta['featX']}」"
-                data = update_status(api, feat, data['id'])
-                feat_reply = f"内海「{neta['featX_reply']}」"
-                data = update_status(api, feat_reply, data['id'])
-
-                anti_feat = f"駒場「{neta['anti_featX']}」"
-                data = update_status(api, anti_feat, data['id'])
-                anti_feat_reply = f"内海「{neta['anti_featX_reply']}」"
-                data = update_status(api, anti_feat_reply, data['id'])
-
+                tweet_texts.append(f"駒場「{neta['featX']}」")
+                tweet_texts.append(f"内海「{neta['featX_reply']}」")
+                tweet_texts.append(f"駒場「{neta['anti_featX']}」")
+                tweet_texts.append(f"内海「{neta['anti_featX_reply']}」")
                 if i == stage_num - 2:
                     continue
-                text = f"駒場「{neta['conjunction']}」"
+                tweet_texts.append(f"駒場「{neta['conjunction']}」\n\n")
                 if i == stage_num - 1:
-                    text += "\n\n内海「いや、絶対ちゃうやろ。」\n\n"
-                    text += "内海「もうええわ、どうもありがとうございました。」"
-                data = update_status(api, text, data['id'])
+                    tweet_texts.append("内海「いや、絶対ちゃうやろ。」\n\n")
+                    tweet_texts.append("内海「もうええわ、どうもありがとうございました。」\n\n")
+
+            first_tweet = update_status(api, tweet_texts[0])
+            text = ''
+            for i, tweet_text in enumerate(tweet_texts[1:]):
+                if len(text + tweet_text) <= 130:
+                    text += tweet_text
+                elif i == 0:
+                    data = update_status(api, tweet_text, first_tweet['id'])
+                elif len(text) == 0:
+                    data = update_status(api, tweet_text, data['id'])
+                else:
+                    data = update_status(api, text, data['id'])
+                    text = tweet_text
             reply_text = f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n"
             reply_text += f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}"
             update_status(api, reply_text, tweet['id_str'])
@@ -217,18 +229,18 @@ def tsukami_script(word, tsukami):
     else:
         text2 += 'ね、今、何もいただけませんでしたけどもね。'
         text2 += '何ももらえなくてもね、聞いてもらえるだけ'
-    text2 += 'ありがたいですよ。いうとりますけどもね。」\n'
+    text2 += 'ありがたいですよ。いうとりますけどもね。」\n\n'
     return text, text2
 
 
 def introduction(category, pred1, pred2):
     text = '駒場「うちのおかんがね、好きな[' + category + ']があるらしいんやけど、その名前をちょっと忘れたらしくてね。」\n\n'
-    text += '内海「好きな[' + category + ']忘れてもうて。どうなってんねんそれ。'
+    text += '内海「好きな[' + category + ']忘れてもうて。どうなってんねんそれ。\n\n'
 
     text2 = '内海「ほんでもおかんが好きな[' + category + ']なんて、[' + pred1 + ']か[' + pred2 + ']くらいでしょう。」\n\n'
-    text2 += '駒場「それが違うらしいねんな」'
+    text2 += '駒場「それが違うらしいねんな」\n\n'
 
-    text3 = '内海「ほんだら俺がね、おかんの好きな[' + category + ']一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。」'
+    text3 = '内海「ほんだら俺がね、おかんの好きな[' + category + ']一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。」\n\n'
     return text, text2, text3
 
 
