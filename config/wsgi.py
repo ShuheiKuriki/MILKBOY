@@ -48,7 +48,6 @@ def get_auth():
 
 
 def tweet():
-    api = Twitter(auth=get_auth())
     res = 'fail'
     while res != 'success':
         time.sleep(10)
@@ -78,39 +77,22 @@ def tweet():
             if pred1 != '' and pred2 != '':
                 break
         # つかみ
-        tweet_texts = []
         text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-        tweet_texts.append(text1)
-        tweet_texts.append(text2)
+        first_tweet = update_status(text1)
+        data = update_status(text2, first_tweet['id'])
         # 導入
-        text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-        tweet_texts.append(text1)
-        tweet_texts.append(text2)
-        tweet_texts.append(text3)
-
+        texts = introduction(first_stage['category'], pred1, pred2)
+        data = multiple_tweets(texts, data)
         for i in range(stage_num):
-            neta = neta_list[i] if i < stage_num-1 else neta_list[-1]
-            tweet_texts.append(f"駒場「{neta['featX']}」")
-            tweet_texts.append(f"内海「{neta['featX_reply']}」")
-            tweet_texts.append(f"駒場「{neta['anti_featX']}」")
-            tweet_texts.append(f"内海「{neta['anti_featX_reply']}」")
-            if i == stage_num-2:
-                continue
-            tweet_texts.append(f"駒場「{neta['conjunction']}」\n\n")
-            if i == stage_num-1:
-                tweet_texts.append("内海「いや、絶対ちゃうやろ。」\n\n")
-                tweet_texts.append("内海「もうええわ、どうもありがとうございました。」\n\n")
-
-        data = update_status(api, tweet_texts[0])
-        text = ''
-        for tweet_text in tweet_texts[1:]:
-            if len(text+tweet_text) <= 130:
-                text += tweet_text
-            elif len(text) == 0:
-                data = update_status(api, tweet_text, data['id'])
-            else:
-                data = update_status(api, text, data['id'])
-                text = tweet_text
+            neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
+            feat_text = [f"駒場「{neta['featX']}」\n\n", f"内海「{neta['featX_reply']}」\n\n",
+                         f"駒場「{neta['anti_featX']}」\n\n", f"内海「{neta['anti_featX_reply']}」\n\n"]
+            if i != stage_num - 2:
+                feat_text.append(f"駒場「{neta['conjunction']}」\n\n")
+            if i == stage_num - 1:
+                feat_text.append("内海「いや、絶対ちゃうやろ。」\n\n")
+                feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
+            data = multiple_tweets(feat_text, data)
         print('last of tweet func')
         res = 'success'
     print(res)
@@ -118,7 +100,6 @@ def tweet():
 
 
 def auto_reply():
-    api = Twitter(auth=get_auth())
     twitter_stream = TwitterStream(auth=get_auth())
     theme = pred1 = pred2 = ''
     first_stage = {}
@@ -152,49 +133,43 @@ def auto_reply():
             if tle:
                 continue
             # つかみ
-            tweet_texts = []
             text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-            tweet_texts.append(text1)
-            tweet_texts.append(text2)
+            first_tweet = update_status(text1)
+            data = update_status(text2, first_tweet['id'])
             # 導入
-            text1, text2, text3 = introduction(first_stage['category'], pred1, pred2)
-            tweet_texts.append(text1)
-            tweet_texts.append(text2)
-            tweet_texts.append(text3)
-
+            texts = introduction(first_stage['category'], pred1, pred2)
+            data = multiple_tweets(texts, data)
             for i in range(stage_num):
                 neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
-                tweet_texts.append(f"駒場「{neta['featX']}」")
-                tweet_texts.append(f"内海「{neta['featX_reply']}」")
-                tweet_texts.append(f"駒場「{neta['anti_featX']}」")
-                tweet_texts.append(f"内海「{neta['anti_featX_reply']}」")
-                if i == stage_num - 2:
-                    continue
-                tweet_texts.append(f"駒場「{neta['conjunction']}」\n\n")
+                feat_text = [f"駒場「{neta['featX']}」\n\n", f"内海「{neta['featX_reply']}」\n\n",
+                             f"駒場「{neta['anti_featX']}」\n\n", f"内海「{neta['anti_featX_reply']}」\n\n"]
+                if i != stage_num - 2:
+                    feat_text.append(f"駒場「{neta['conjunction']}」\n\n")
                 if i == stage_num - 1:
-                    tweet_texts.append("内海「いや、絶対ちゃうやろ。」\n\n")
-                    tweet_texts.append("内海「もうええわ、どうもありがとうございました。」\n\n")
-
-            first_tweet = update_status(api, tweet_texts[0])
-            text = ''
-            for i, tweet_text in enumerate(tweet_texts[1:]):
-                if len(text + tweet_text) <= 130:
-                    text += tweet_text
-                elif i == 0:
-                    data = update_status(api, tweet_text, first_tweet['id'])
-                elif len(text) == 0:
-                    data = update_status(api, tweet_text, data['id'])
-                else:
-                    data = update_status(api, text, data['id'])
-                    text = tweet_text
+                    feat_text.append("内海「いや、絶対ちゃうやろ。」\n\n")
+                    feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
+                data = multiple_tweets(feat_text, data)
             reply_text = f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n"
             reply_text += f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}"
-            update_status(api, reply_text, tweet['id_str'])
+            update_status(reply_text, tweet['id_str'])
         except:
             continue
 
 
-def update_status(api, tweet_text, reply_id=None):
+def multiple_tweets(texts, data):
+    text = ''
+    for tweet_text in texts:
+        if len(text + tweet_text) <= 130:
+            text += tweet_text
+        elif len(text) == 0:
+            data = update_status(tweet_text, data['id'])
+        else:
+            data = update_status(text, data['id'])
+            text = tweet_text
+    return data
+
+
+def update_status(tweet_text, reply_id=None):
     max_len = 130
     texts = []
     if len(tweet_text) > max_len:
@@ -208,11 +183,11 @@ def update_status(api, tweet_text, reply_id=None):
     else:
         texts.append(tweet_text)
     if reply_id is None:
-        data = api.statuses.update(status=texts[0])
+        data = API.statuses.update(status=texts[0])
     else:
-        data = api.statuses.update(status=texts[0], in_reply_to_status_id=reply_id)
+        data = API.statuses.update(status=texts[0], in_reply_to_status_id=reply_id)
     for text in texts[1:]:
-        data = api.statuses.update(status=text, in_reply_to_status_id=data['id'])
+        data = API.statuses.update(status=text, in_reply_to_status_id=data['id'])
     return data
 
 
@@ -260,5 +235,6 @@ def always():
             print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
 
 
+API = Twitter(auth=get_auth())
 t = threading.Thread(target=always)
 t.start()
