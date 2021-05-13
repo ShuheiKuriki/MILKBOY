@@ -238,7 +238,7 @@ def always():
     schedule.every().day.at("15:00").do(tweet)
     schedule.every().day.at("18:00").do(tweet)
     schedule.every().day.at("21:00").do(tweet)
-    schedule.every().day.at("24:00").do(tweet)
+    schedule.every().day.at("00:00").do(tweet)
     while True:
         for i in range(9):
             schedule.run_pending()
