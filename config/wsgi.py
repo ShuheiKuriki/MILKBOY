@@ -49,6 +49,7 @@ def get_auth():
 
 def tweet():
     res = 'fail'
+    print(res)
     while res != 'success':
         time.sleep(10)
         start_t = time.time()
@@ -220,21 +221,20 @@ def introduction(category, pred1, pred2):
     return text, text2, text3
 
 
-def always():
+def daily():
     schedule.every().day.at("09:00").do(tweet)
     schedule.every().day.at("12:00").do(tweet)
     schedule.every().day.at("15:00").do(tweet)
     schedule.every().day.at("18:00").do(tweet)
     schedule.every().day.at("21:00").do(tweet)
-    auto_reply()
     while True:
-        for i in range(9):
-            schedule.run_pending()
-            time.sleep(1200)
-            req = requests.get("https://www.milkboy-core-ai.tech")
-            print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
+        schedule.run_pending()
+        auto_reply()
+        time.sleep(300)
+        req = requests.get("https://www.milkboy-core-ai.tech")
+        print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
 
 
 API = Twitter(auth=get_auth())
-t = threading.Thread(target=always)
+t = threading.Thread(target=daily)
 t.start()
