@@ -229,12 +229,18 @@ def daily():
     schedule.every().day.at("21:00").do(tweet)
     while True:
         schedule.run_pending()
-        auto_reply()
         time.sleep(300)
         req = requests.get("https://www.milkboy-core-ai.tech")
         print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
 
 
+def always():
+    while True:
+        auto_reply()
+
+
 API = Twitter(auth=get_auth())
 t = threading.Thread(target=daily)
+t2 = threading.Thread(target=always)
 t.start()
+t2.start()
