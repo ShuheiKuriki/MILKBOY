@@ -272,8 +272,10 @@ def shape_text(sent, cat, words, subwords, first=False):
     sent = sent.replace(' ', '').replace('　', '')
     if len(sent) == 0 or sent[-1] == '、':
         return '', False
+    # 一文目の禁止ワード
     pre = ['これ', 'それ', 'この', 'その', 'あの', 'ここ', 'そこ', 'こう', 'そう', '以上', '上記']
-    post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '記述', '述べる', 'ISBN', '出典']
+    # 全てに共通する禁止ワード
+    post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '記述', '述べる', 'ISBN', '出典', '本項']
     for word in post:
         if word in sent:
             return False, False
@@ -286,7 +288,8 @@ def shape_text(sent, cat, words, subwords, first=False):
         tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
     if first:
         for token in tokens:
-            if token.orth_ in pre: return False, False
+            if token.orth_ in pre:
+                return False, False
             if token.pos_ == 'PUNCT':
                 break
             if token.dep_ == 'nsubj' and token.pos_ == 'PROPN' and token.orth_ not in words+subwords:
