@@ -288,7 +288,6 @@ def shape_text(sent, cat, words, subwords, first=False):
         if tokens[0].pos_ == 'CCONJ':
             tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
         for token in tokens:
-            print(token.orth_)
             for pr in pre:
                 if pr in token.orth_:
                     return False, False
@@ -368,8 +367,8 @@ def make_feats(cat, word_key, soup, num, true_word=None):
         for extra in extras: text = re.sub(extra, '', text)
         if len(text) < 5: continue
         doc = text.split('。')
-        for sent in doc:
-            sent, flag2 = shape_text(sent, cat, replace_words, replace_subwords, first)
+        for i, sent in enumerate(doc):
+            sent, flag2 = shape_text(sent, cat, replace_words, replace_subwords, i == 0)
             if sent is False: break
             if len(sent) == 0: continue
             if first_feat == '' and feat == '':
