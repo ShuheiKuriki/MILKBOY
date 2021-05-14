@@ -288,6 +288,7 @@ def shape_text(sent, cat, words, subwords, first=False):
         if tokens[0].pos_ == 'CCONJ':
             tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
         for token in tokens:
+            print(token.orth_)
             for pr in pre:
                 if pr in token.orth_:
                     return False, False
