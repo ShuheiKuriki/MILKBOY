@@ -280,16 +280,17 @@ def shape_text(sent, cat, words, subwords, first=False):
         if word in sent:
             return False, False
     tokens = nlp(sent)
-    if first and tokens[0].pos_ == ['ADP', 'SCONJ']:
-        return False, False
     if tokens[-1].pos_ == ['PUNCT', 'ADP', 'SCONJ']:
         return False, False
-    if first and tokens[0].pos_ == 'CCONJ':
-        tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
     if first:
+        if tokens[0].pos_ == ['ADP', 'SCONJ']:
+            return False, False
+        if tokens[0].pos_ == 'CCONJ':
+            tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
         for token in tokens:
-            if token.orth_ in pre:
-                return False, False
+            for pr in pre:
+                if pr in token.orth_:
+                    return False, False
             if token.pos_ == 'PUNCT':
                 break
             if token.dep_ == 'nsubj' and token.pos_ == 'PROPN' and token.orth_ not in words+subwords:
