@@ -275,14 +275,14 @@ def shape_text(sent, cat, words, subwords, first=False):
     # 一文目の禁止ワード
     pre = ['これ', 'それ', 'この', 'その', 'あの', 'ここ', 'そこ', 'こう', 'そう', '以上', '上記']
     # 全てに共通する禁止ワード
-    post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '記述', '述べる', 'ISBN', '出典', '本項']
+    post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '記述', '述べる', 'ISBN', '出典', '本項', '\\']
     for word in post:
         if word in sent:
             return False, False
     tokens = nlp(sent)
-    if first and tokens[0].pos_ == 'ADP':
+    if first and tokens[0].pos_ == ['ADP', 'SCONJ']:
         return False, False
-    if tokens[-1].pos_ == ['PUNCT', 'ADP']:
+    if tokens[-1].pos_ == ['PUNCT', 'ADP', 'SCONJ']:
         return False, False
     if first and tokens[0].pos_ == 'CCONJ':
         tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
