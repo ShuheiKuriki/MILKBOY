@@ -282,7 +282,7 @@ def shape_text(sent, cat, words, subwords, first=False):
     tokens = nlp(sent)
     if first and tokens[0].pos_ == 'ADP':
         return False, False
-    if tokens[-1].pos_ == 'PUNCT':
+    if tokens[-1].pos_ == ['PUNCT', 'ADP']:
         return False, False
     if first and tokens[0].pos_ == 'CCONJ':
         tokens = tokens[2:] if tokens[1].pos_ == 'PUNCT' else tokens[1:]
