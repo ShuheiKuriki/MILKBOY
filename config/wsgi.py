@@ -16,13 +16,33 @@ import threading
 import requests
 
 from django.core.wsgi import get_wsgi_application
-from milkboy.views import GENRES
 from milkboy.coreAI import generate_neta_list
 from twitter import Twitter, TwitterStream, OAuth
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
 
 application = get_wsgi_application()
+
+GENRE_dic = {'日本の映画': 1,
+             '日本の漫画': 1,
+             'アニメ': 1,
+             '日本のゲーム': 1,
+             '日本の歴史': 1,
+             '日本の地理': 1,
+             '日本のスポーツ': 1,
+             '日本の音楽': 1,
+             '日本の人物_(分野別)': 3,
+             '日本の人物_(職業別)': 3,
+             '物質': 1,
+             '物理現象': 1,
+             '数学的対象': 1,
+             '計算機科学': 1,
+             'random': 5}
+
+GENRES = []
+for k, v in GENRE_dic.items():
+    for _ in range(v):
+        GENRES.append(k)
 
 
 def get_auth():
@@ -54,7 +74,7 @@ def tweet():
         time.sleep(10)
         start_t = time.time()
         stage_max = 3
-        genre_name = random.choice(GENRES + ['random']*3)
+        genre_name = random.choice(GENRES)
         print(genre_name)
         theme = pred1 = pred2 = ''
         first_stage = {}
