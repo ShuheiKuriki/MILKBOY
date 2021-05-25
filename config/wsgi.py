@@ -242,7 +242,6 @@ def introduction(category, pred1, pred2):
 
 
 def daily():
-    schedule.every().day.at("06:00").do(tweet)
     schedule.every().day.at("09:00").do(tweet)
     schedule.every().day.at("12:00").do(tweet)
     schedule.every().day.at("15:00").do(tweet)
