@@ -16,11 +16,13 @@ https://hackday.jp/　
 (https://github.com/team-rejected/MILKBOY_web がオリジナル)
 
 その後、個人開発にて
+
 - アルゴリズム改善・ひたすらバグ修正
 - デザイン
 - 機能追加（ランダムモード、ジャンルモード、デモモードなど）
 - twitter bot開発
-を行い公開。
+
+を行い公開。開発期間は2,3週間ほど。
 
 ##使用技術
 主要言語 : Python, javascript
