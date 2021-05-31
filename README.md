@@ -4,13 +4,15 @@ M1王者ミルクボーイ風AI漫才アプリ「無限ミルクボーイ」
 お題を与えるとWikipediaから適切な情報を抜き出してきて自動でネタを作り、音声読み上げしてくれます。
 お題をノンジャンルでランダムに生成したり、ジャンルを指定してネタを作ることも可能。
 
-定期的にネタをツイートするtwitter botもあり。
+定期的にネタをツイートするTwitter botもあり。
 
 - 公開url : https://www.milkboy-core-ai.tech/
-- twitter bot : https://twitter.com/milkboy_core_ai
+- Twitter bot : https://twitter.com/milkboy_core_ai
 
 ## 開発経緯
-Yahoo!Japanハッカソン　HackDay2021　https://hackday.jp/　にて、4人でチーム開発し2日間でとりあえず動くだけのプロトタイプを作成
+Yahoo!Japanハッカソン　HackDay2021
+https://hackday.jp/　
+にて、4人でチーム開発し2日間でとりあえず動くだけのプロトタイプを作成
 https://github.com/team-rejected/MILKBOY_web がオリジナル
 
 その後、個人開発にて
