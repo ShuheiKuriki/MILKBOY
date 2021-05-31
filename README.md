@@ -13,14 +13,14 @@ M1王者ミルクボーイ風AI漫才アプリ「無限ミルクボーイ」
 Yahoo!Japanハッカソン　HackDay2021
 https://hackday.jp/　
 にて、4人でチーム開発し2日間でとりあえず動くだけのプロトタイプを作成
-https://github.com/team-rejected/MILKBOY_web がオリジナル
+(https://github.com/team-rejected/MILKBOY_web がオリジナル)
 
 その後、個人開発にて
 - アルゴリズム改善・ひたすらバグ修正
 - デザイン
 - 機能追加（ランダムモード、ジャンルモード、デモモードなど）
 - twitter bot開発
-を行う。
+を行い公開。
 
 ##使用技術
 主要言語 : Python, javascript
