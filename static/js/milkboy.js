@@ -62,7 +62,7 @@ async function demo() {
     location.href = '#neta';
     inputValue = 'コーンフレーク';
     stage_max = 3;
-    seed = 5;
+    seed = 4;
     await start();
 }
 
@@ -207,7 +207,7 @@ async function tsukami(first_stage){
     // つかみネタ
     await say(0, '整いました');
     if (!next) return;
-    await say(0, "どうもーミルクボーイです。お願いします。");
+    await say(0, "どうもーAIミルクボーイです。お願いします。");
     if (!next) return;
 
     if (first_stage["tsukami"].length >= 10) {
