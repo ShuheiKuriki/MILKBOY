@@ -10,7 +10,7 @@ M1王者ミルクボーイ風AI漫才アプリ「無限ミルクボーイ」
 - Twitter bot : https://twitter.com/milkboy_core_ai
 
 ## 開発経緯
-Yahoo!Japanハッカソン　HackDay2021
+Yahoo!JapanハッカソンHackDay2021
 https://hackday.jp/　
 にて、4人でチーム開発し2日間でとりあえず動くだけのプロトタイプを作成
 (https://github.com/team-rejected/MILKBOY_web がオリジナル)
