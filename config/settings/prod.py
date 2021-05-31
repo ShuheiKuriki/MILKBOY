@@ -59,7 +59,7 @@ TW_TOKEN = os.environ['TW_TOKEN']
 TW_TOKEN_SECRET = os.environ['TW_TOKEN_SECRET']
 
 
-django_heroku.settings(locals(), staticfiles=False)
+django_heroku.settings(locals(), staticfiles=True)
 
 CORS_REPLACE_HTTPS_REFERER = True
 HOST_SCHEME = "https://"
