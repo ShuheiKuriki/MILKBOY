@@ -24,14 +24,14 @@ https://hackday.jp/　
 
 を行い公開。開発期間は2,3週間ほど。
 
-##使用技術
-主要言語 : Python, javascript
-Webフレームワーク : Django
-JSライブラリ : なし
-データベース : なし
-デザイン : Bootstrap(デザインテンプレート使用)
-デプロイ先 : heroku
-その他 : Twiiter API, Wikipediaスクレイピング, 自然言語処理
+## 使用技術
+- 主要言語 : Python, javascript
+- Webフレームワーク : Django
+- JSライブラリ : なし
+- データベース : なし
+- デザイン : Bootstrap(デザインテンプレート使用)
+- デプロイ先 : heroku
+- その他 : Twiiter API, Wikipediaスクレイピング, 自然言語処理
 
 
 ## 開発環境
