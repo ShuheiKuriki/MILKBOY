@@ -61,8 +61,8 @@ async function demo() {
     document.getElementById("about").style.display = "none";
     location.href = '#neta';
     inputValue = 'コーンフレーク';
-    stage_max = 3;
-    seed = 12;
+    stage_max = 4;
+    seed = 5;
     await start();
 }
 
