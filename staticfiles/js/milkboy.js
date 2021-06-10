@@ -62,7 +62,7 @@ async function demo() {
     location.href = '#neta';
     inputValue = 'カラオケ';
     stage_max = 4;
-    seed = 0;
+    seed = 6;
     await start();
 }
 
