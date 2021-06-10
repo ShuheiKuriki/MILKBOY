@@ -60,9 +60,9 @@ async function demo() {
     document.getElementById("form").style.display = "none";
     document.getElementById("about").style.display = "none";
     location.href = '#neta';
-    inputValue = 'コーンフレーク';
+    inputValue = 'カラオケ';
     stage_max = 4;
-    seed = 15;
+    seed = 0;
     await start();
 }
 
@@ -85,7 +85,7 @@ async function start() {
     father = '？？';
 
     await say(0, 'ネタを生成中です。');
-    display_message(name2[0], "最大で10秒ほどお待ちください");
+    display_message(name2[0], "10秒ほどお待ちください");
     display_message('neta_info', get_neta_info());
 
     stage = 0;
