@@ -74,7 +74,7 @@ def tweet():
     while res != 'success':
         time.sleep(10)
         start_t = time.time()
-        stage_max = 3
+        stage_max = 5
         genre_name = random.choice(GENRES)
         print(genre_name)
         theme = pred1 = pred2 = ''

@@ -84,7 +84,7 @@ async function start() {
     present = '？？';
     father = '？？';
 
-    await say(0, 'ネタを生成中です。');
+    await say(0, 'ネタを作っています。');
     display_message(name2[0], "10秒ほどお待ちください");
     display_message('neta_info', get_neta_info());
 
