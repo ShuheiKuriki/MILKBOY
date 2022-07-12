@@ -127,10 +127,14 @@ def auto_reply():
     first_stage = {}
     neta_list = []
     stage_num = 3
+    prev_t = -1
     print('activate auto reply')
     for tweet in twitter_stream.statuses.filter(language='ja', track='@milkboy_core_ai テーマ'):
-        start_t = time.time()
-        stage_max = 3
+        now_t = time.time()
+        # 前回反応してから30秒以内の場合、反応しない
+        if now_t - prev_t < 30: continue
+        prev_t = now_t
+        stage_max = 5
         print(tweet)
         try:
             theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
@@ -142,7 +146,7 @@ def auto_reply():
                     seed = random.randint(0, 100000)
                     neta_list = generate_neta_list(theme, seed, stage_max)
                     stage_num = len(neta_list)
-                    if time.time() - start_t > 60:
+                    if time.time() - prev_t > 60:
                         tle = True
                         break
                 except:
