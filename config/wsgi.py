@@ -133,7 +133,7 @@ def auto_reply():
         stage_max = 3
         print(tweet)
         try:
-            theme = tweet['text'].split()[-1]
+            theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
             if '@' in theme or len(theme) > 30:
                 continue
             tle = False
