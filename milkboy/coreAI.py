@@ -305,37 +305,32 @@ def shape_text(sent, cat, words, subwords, first=False):
 
 
 def shape_soup(soup, true_word):
-    # 余分なpタグを個別に除外
-    extras = ['table', 'small', 'sup']
+    # 余分なタグを個別に除外
+    extras = ['table', 'small', 'sup', 'header']
     for extra in extras:
         for ex in soup.find_all(extra):
             ex.decompose()
     try:
-        soup.find('span', {"id": 'coordinates'}).decompose()
-    except:
-        pass
-    try:
         soup.find('div', {"class": 'thumb'}).decompose()
-    except:
+    except AttributeError:
         pass
     try:
-        soup.find('li', {"class": 'gallery'}).decompose()
-    except:
+        soup.find('li', {"class": 'gallerybox'}).decompose()
+    except AttributeError:
         pass
     texts = soup.find_all('p')[:PTAGS_MAX]
     # feat_X用にpタグが少ない場合はliタグも追加
     if len(texts) < 5 and true_word is None:
         try:
             soup.find('div', {"role": 'navigation'}).decompose()
-        except:
+        except AttributeError:
             pass
+        for ol in soup.find_all('ol', class_='references'):
+            ol.decompose()
         try:
-            for ol in soup.find_all('ol', class_='references'):
-                ol.decompose()
-        except:
+            soup.find('div', {'id': 'catlinks'}).decompose()
+        except AttributeError:
             pass
-        soup.find('div', {'id': 'catlinks'}).decompose()
-        soup.find('div', {'id': 'mw-panel'}).decompose()
         soup.find('footer').decompose()
         soup.find('nav').decompose()
         texts += soup.find_all('li')[:PTAGS_MAX]
