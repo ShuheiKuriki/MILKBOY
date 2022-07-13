@@ -138,22 +138,24 @@ def auto_reply():
         print(tweet)
         try:
             theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
+            print(theme)
             if '@' in theme or len(theme) > 30:
                 continue
             tle = False
             while True:
                 try:
                     seed = random.randint(0, 100000)
+                    print(f"seed:{seed}")
                     neta_list = generate_neta_list(theme, seed, stage_max)
                     stage_num = len(neta_list)
-                    if time.time() - prev_t > 60:
+                    if time.time() - prev_t > 100:
                         tle = True
                         break
                 except:
                     continue
                 first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
                 pred1, pred2 = first_stage['pred1'], first_stage['pred2']
-                print(pred1)
+                print(pred1, pred2)
                 if pred1 != '' and pred2 != '':
                     break
             if tle:
