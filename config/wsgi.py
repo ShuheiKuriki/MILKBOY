@@ -50,6 +50,15 @@ for k, v in GENRE_dic.items():
 
 def get_auth():
     try:
+        from config.settings import prod
+        auth = OAuth(
+            prod.TW_TOKEN,
+            prod.TW_TOKEN_SECRET,
+            prod.TW_CONSUMER_KEY,
+            prod.TW_CONSUMER_SECRET
+        )
+        print('this is from prod')
+    except KeyError:
         from config.settings import dev
         auth = OAuth(
             dev.TW_TOKEN,
@@ -58,19 +67,6 @@ def get_auth():
             dev.TW_CONSUMER_SECRET
         )
         print('this is from dev')
-    except ModuleNotFoundError:
-        try:
-            from config.settings import prod
-            auth = OAuth(
-                prod.TW_TOKEN,
-                prod.TW_TOKEN_SECRET,
-                prod.TW_CONSUMER_KEY,
-                prod.TW_CONSUMER_SECRET
-            )
-            print('this is from prod')
-        except ModuleNotFoundError:
-            auth = ""
-            print('failed import settings file')
     return auth
 
 
