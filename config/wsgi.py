@@ -23,22 +23,24 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
 
 application = get_wsgi_application()
 
-GENRE_dic = {'日本の映画': 1,
-             '日本の漫画': 1,
-             'アニメ': 1,
-             '日本のゲーム': 1,
-             '日本の歴史': 1,
-             '日本の地理': 1,
-             '日本のスポーツ': 1,
-             '日本の音楽': 1,
-             '日本語の語句': 1,
-             '日本の人物_(分野別)': 2,
-             '日本の人物_(職業別)': 2,
-             '物質': 1,
-             '物理現象': 1,
-             '数学的対象': 1,
-             '計算機科学': 1,
-             'random': 5}
+GENRE_dic = {
+    '日本の映画': 1,
+    '日本の漫画': 1,
+    'アニメ': 1,
+    '日本のゲーム': 1,
+    '日本の歴史': 1,
+    '日本の地理': 1,
+    '日本のスポーツ': 1,
+    '日本の音楽': 1,
+    '日本語の語句': 1,
+    '日本の人物_(分野別)': 2,
+    '日本の人物_(職業別)': 2,
+    '物質': 1,
+    '物理現象': 1,
+    '数学的対象': 1,
+    '計算機科学': 1,
+    'random': 5
+}
 
 GENRES = []
 for k, v in GENRE_dic.items():
@@ -56,42 +58,44 @@ def get_auth():
             dev.TW_CONSUMER_SECRET
         )
         print('this is from dev')
-    except:
-        from config.settings import prod
-        auth = OAuth(
-            prod.TW_TOKEN,
-            prod.TW_TOKEN_SECRET,
-            prod.TW_CONSUMER_KEY,
-            prod.TW_CONSUMER_SECRET
-        )
-        print('this is from prod')
+    except ModuleNotFoundError:
+        try:
+            from config.settings import prod
+            auth = OAuth(
+                prod.TW_TOKEN,
+                prod.TW_TOKEN_SECRET,
+                prod.TW_CONSUMER_KEY,
+                prod.TW_CONSUMER_SECRET
+            )
+            print('this is from prod')
+        except ModuleNotFoundError:
+            auth = ""
+            print('failed import settings file')
     return auth
 
 
-def tweet():
-    res = 'fail'
+def tweet_neta():
+    res = 'start tweet'
     print(res)
-    while res != 'success':
+    while res != 'tweet success':
         time.sleep(10)
-        start_t = time.time()
         stage_max = 5
         genre_name = random.choice(GENRES)
         print(genre_name)
         theme = pred1 = pred2 = ''
         first_stage = {}
-        neta_list = []
-        stage_num = 3
+        stage_num = 0
         while True:
-            try:
-                seed = random.randint(0, 100000)
-                if genre_name == 'random':
-                    neta_list = generate_neta_list('random', seed, stage_max)
-                else:
-                    neta_list = generate_neta_list('', seed, stage_max, genre_name)
-                stage_num = len(neta_list)
-                if time.time() - start_t > 30:
-                    continue
-            except:
+            start_t = time.time()
+            seed = random.randint(0, 100000)
+            if genre_name == 'random':
+                neta_list = generate_neta_list('random', seed, stage_max)
+            else:
+                neta_list = generate_neta_list('', seed, stage_max, genre_name)
+            if neta_list is False:
+                continue
+            stage_num = len(neta_list)
+            if time.time() - start_t > 30:
                 continue
             first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
             theme = first_stage['theme']
@@ -116,72 +120,61 @@ def tweet():
                 feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
             data = multiple_tweets(feat_text, data)
         print('last of tweet func')
-        res = 'success'
+        res = 'tweet success'
     print(res)
     return
 
 
 def auto_reply():
     twitter_stream = TwitterStream(auth=get_auth())
-    theme = pred1 = pred2 = ''
+    pred1 = pred2 = ''
     first_stage = {}
-    neta_list = []
-    stage_num = 3
-    prev_t = -1
     print('activate auto reply')
     for tweet in twitter_stream.statuses.filter(language='ja', track='@milkboy_core_ai テーマ'):
-        now_t = time.time()
-        # 前回反応してから30秒以内の場合、反応しない
-        if now_t - prev_t < 30: continue
-        prev_t = now_t
         stage_max = 5
+        stage_num = 0
+        neta_list = []
         print(tweet)
-        try:
-            theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
-            print(theme)
-            if '@' in theme or len(theme) > 30:
-                continue
-            tle = False
-            while True:
-                try:
-                    seed = random.randint(0, 100000)
-                    print(f"seed:{seed}")
-                    neta_list = generate_neta_list(theme, seed, stage_max)
-                    stage_num = len(neta_list)
-                    if time.time() - prev_t > 100:
-                        tle = True
-                        break
-                except:
-                    continue
-                first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
-                pred1, pred2 = first_stage['pred1'], first_stage['pred2']
-                print(pred1, pred2)
-                if pred1 != '' and pred2 != '':
-                    break
-            if tle:
-                continue
-            # つかみ
-            text1, text2 = tsukami_script(theme, first_stage['tsukami'])
-            first_tweet = update_status(text1)
-            data = update_status(text2, first_tweet['id'])
-            # 導入
-            texts = introduction(first_stage['category'], pred1, pred2)
-            data = multiple_tweets(texts, data)
-            for i in range(stage_num):
-                neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
-                feat_text = [f"駒場「{neta['featX']}」\n\n", f"内海「{neta['featX_reply']}」\n\n",
-                             f"駒場「{neta['anti_featX']}」\n\n", f"内海「{neta['anti_featX_reply']}」\n\n"]
-                if i != stage_num - 2:
-                    feat_text.append(f"駒場「{neta['conjunction']}」\n\n")
-                if i == stage_num - 1:
-                    feat_text.append("内海「いや、絶対ちゃうやろ。」\n\n")
-                    feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
-                data = multiple_tweets(feat_text, data)
-            reply_text = f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n"
-            reply_text += f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}"
-            update_status(reply_text, tweet['id_str'])
-        except:
+        theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
+        print(theme)
+        if '@' in theme or len(theme) > 30:
             continue
+        for _ in range(10):
+            seed = random.randint(0, 100000)
+            print(f"seed:{seed}")
+            neta_list = generate_neta_list(theme, seed, stage_max)
+            if neta_list is False:
+                continue
+            stage_num = len(neta_list)
+            first_stage = neta_list[0] if stage_num > 1 else neta_list[-1]
+            pred1, pred2 = first_stage['pred1'], first_stage['pred2']
+            print(pred1, pred2)
+            if pred1 != '' and pred2 != '':
+                break
+        else:
+            reply_text = f"@{tweet['user']['screen_name']}\n申し訳ありません。そのテーマではネタを作れませんでした。\n"
+            update_status(reply_text, tweet['id_str'])
+
+        # つかみ
+        text1, text2 = tsukami_script(theme, first_stage['tsukami'])
+        first_tweet = update_status(text1)
+        data = update_status(text2, first_tweet['id'])
+        # 導入
+        texts = introduction(first_stage['category'], pred1, pred2)
+        data = multiple_tweets(texts, data)
+        for i in range(stage_num):
+            neta = neta_list[i] if i < stage_num - 1 else neta_list[-1]
+            feat_text = [f"駒場「{neta['featX']}」\n\n", f"内海「{neta['featX_reply']}」\n\n",
+                         f"駒場「{neta['anti_featX']}」\n\n", f"内海「{neta['anti_featX_reply']}」\n\n"]
+            if i != stage_num - 2:
+                feat_text.append(f"駒場「{neta['conjunction']}」\n\n")
+            if i == stage_num - 1:
+                feat_text.append("内海「いや、絶対ちゃうやろ。」\n\n")
+                feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
+            data = multiple_tweets(feat_text, data)
+        reply_text = f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n"
+        reply_text += f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}"
+        update_status(reply_text, tweet['id_str'])
 
 
 def multiple_tweets(texts, data):
@@ -249,12 +242,9 @@ def introduction(category, pred1, pred2):
 
 
 def daily():
-    schedule.every().day.at("09:00").do(tweet)
-    schedule.every().day.at("12:00").do(tweet)
-    schedule.every().day.at("15:00").do(tweet)
-    schedule.every().day.at("18:00").do(tweet)
-    schedule.every().day.at("21:00").do(tweet)
-    schedule.every().day.at("00:00").do(tweet)
+    schedules = ["09:00", "12:00", "15:00", "18:00", "21:00"]
+    for tweet_time in schedules:
+        schedule.every().day.at(tweet_time).do(tweet_neta)
     while True:
         schedule.run_pending()
         time.sleep(300)

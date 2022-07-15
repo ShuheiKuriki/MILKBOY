@@ -48,8 +48,8 @@ def get_tsukami(article=''):
             text = ptag.getText()
             # t2 = time.time()
             doc = nlp(text)
-            for _, start, end in matcher(doc):
-                cand = doc[start:end].text
+            for _, first_ind, last_ind in matcher(doc):
+                cand = doc[first_ind:last_ind].text
                 if len(cand) > max_len:
                     tsukami = cand
                     max_len = len(cand)
@@ -70,16 +70,13 @@ def get_catinfo(url):
     # print("mid", t2-t1, len(text))
     soup = BeautifulSoup(text, "html.parser").find('div', id='mw-pages')
     catmems = []
-    try:
-        sent = soup.find('p').getText(strip=True)[:20]
-        groups = soup.find_all(class_="mw-category-group")
-        for group in groups:
-            if re.fullmatch('[ぁ-ゟa-zA-Z]+', group.find('h3').getText()):
-                mems = group.find_all('a')
-                for mem in mems:
-                    catmems.append(mem.getText())
-    except:
-        return '0', []
+    sent = soup.find('p').getText(strip=True)[:20]
+    groups = soup.find_all(class_="mw-category-group")
+    for group in groups:
+        if re.fullmatch('[ぁ-ゟa-zA-Z]+', group.find('h3').getText()):
+            mems = group.find_all('a')
+            for mem in mems:
+                catmems.append(mem.getText())
     # t3 = time.time()
     # print("end", t3-t2, len(res))
     return sent, catmems
@@ -167,7 +164,10 @@ def choose_cat(word_key, soup=None):
     if soup is None:
         url = f'https://ja.wikipedia.org/wiki/{word_key}'
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
-    li_tags = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
+    try:
+        li_tags = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
+    except AttributeError:
+        return False, False
     word = re.sub(" ", "", re.sub("\(.+?\)", '', word_key))
     # print(word)
     cnt = 0
@@ -194,7 +194,8 @@ def choose_cat(word_key, soup=None):
         url = f'https://ja.wikipedia.org/wiki/{cat_key}'
         urls.append(url)
         cnt += 1
-        if cnt == CAT_NUM_MAX: break
+        if cnt == CAT_NUM_MAX:
+            break
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -214,7 +215,8 @@ def choose_cat(word_key, soup=None):
         ind = np.random.binomial(len(small_cats)-1, 0.4)
         # if ind >= len(small_cats): ind = 0
         return small_cats[ind]
-    if len(big_cats) == 0: return False
+    if len(big_cats) == 0:
+        return False, False
     # if ind >= len(big_cats): ind = 0
     ind = np.random.binomial(len(big_cats)-1, 0.4)
     return big_cats[ind][1:]
@@ -361,17 +363,23 @@ def make_feats(cat, word_key, soup, num, true_word=None):
             text = re.sub("^.+?）は", '', text)
             text = re.sub("^.+?）とは", '', text)
             first = False
-        for extra in extras: text = re.sub(extra, '', text)
-        if len(text) < 5: continue
+        for extra in extras:
+            text = re.sub(extra, '', text)
+        if len(text) < 5:
+            continue
         doc = text.split('。')
         for i, sent in enumerate(doc):
             sent, flag2 = shape_text(sent, cat, replace_words, replace_subwords, i == 0)
-            if sent is False: break
-            if len(sent) == 0: continue
+            if sent is False:
+                break
+            if len(sent) == 0:
+                continue
             if first_feat == '' and feat == '':
-                feat += sent+'。'
-            elif len(feat)+len(sent)+1 <= FEAT_MAX: feat += sent+'。'
-            else: break
+                feat += sent + '。'
+            elif len(feat)+len(sent)+1 <= FEAT_MAX:
+                feat += sent + '。'
+            else:
+                break
             flag |= flag2
         if len(feat) >= FEAT_MIN:
             # print(feat, first_feat)
@@ -492,7 +500,8 @@ def generate_stages(input_theme, theme, anti_themes, cat, seed_num, stage_max, p
 
         while i < len(anti_feats) and anti_feats[i] == '':
             i += 1
-        if i >= len(anti_feats): break
+        if i >= len(anti_feats):
+            break
         stage_dict["anti_theme"] = anti_themes[i]
         stage_dict["anti_featX"], stage_dict["anti_featX_reply"] = feat_to_script(anti_feats[i], True, theme)
         i += 1
@@ -601,21 +610,20 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
                 cat, catmems = choose_cat(theme, soup)
                 print(cat, len(catmems))
                 break
-            except:
+            except AttributeError:
                 pass
     else:
         searched_list = wikipedia.search(input_theme)
         # print(searched_list)
         # print("search:",time.time()-t)
         for theme in searched_list:
-            try:
-                cat, catmems = choose_cat(theme)
-                # print("choose_cat:", time.time()-t)
+            cat, catmems = choose_cat(theme)
+            # print("choose_cat:", time.time()-t)
+            if cat is not False:
                 break
-            except:
-                pass
         else:
-            return generate_neta_list(input_theme, seed_num, stage_max)
+            print("ネタ作り失敗")
+            return False
     anti_themes, preds, tsukami = choose_anti_themes(theme, cat, catmems, stage_max)
     if stage_max == 0:
         return tsukami_only(tsukami, seed_num)
