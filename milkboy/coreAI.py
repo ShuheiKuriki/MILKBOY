@@ -162,21 +162,22 @@ def choose_cat(word_key, soup=None):
     テーマのカテゴリー選択
     """
     if soup is None:
-        url = f'https://ja.wikipedia.org/wiki/{word_key}'
+        url = f"https://ja.wikipedia.org/wiki/{word_key}"
+        print(url)
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
     try:
         li_tags = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
     except AttributeError:
         return False, False
-    word = re.sub(" ", "", re.sub("\(.+?\)", '', word_key))
-    # print(word)
+    word = re.sub(r" ", "", re.sub(r"\(.+?\)", "", word_key))
+    print(word)
     cnt = 0
     urls = []
     cats = []
     prohibit = ['議論が行われているページ', '告知事項があるページ', '同名の作品',
                 '提案があるページ', '質問があるページ', '確認・注意事項があるページ']
     for li in li_tags:
-        # print('start',time.time()-t)
+        # print('start', time.time()-t)
         li_text = li.getText()
 
         # 不適切なカテゴリーの除外
@@ -617,9 +618,10 @@ def generate_neta_list(input_theme, seed_num, stage_max, genre=None):
         # print(searched_list)
         # print("search:",time.time()-t)
         for theme in searched_list:
-            cat, catmems = choose_cat(theme)
-            # print("choose_cat:", time.time()-t)
-            if cat is not False:
+            print(theme)
+            category, category_elements = choose_category(theme)
+            # print("choose_category:", time.time()-t)
+            if category is not False:
                 break
         else:
             print("ネタ作り失敗")

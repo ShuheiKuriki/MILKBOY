@@ -27,6 +27,7 @@ requests-oauthlib
 schedule
 six
 soupsieve
+spacy
 sqlparse
 urllib3
 whitenoise

@@ -4,7 +4,7 @@ const name2 = ["utsumi", "komaba"];
 const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
 var stage = 0;
-var need_neta = true;
+var need_story = true;
 var rally_num = -2;
 var cur_stage_obj = null;
 var next = true;
@@ -29,11 +29,11 @@ async function start_manzai(){
     speed = document.getElementById("speed").value;
     vol = document.getElementById("volume").value;
     seed = Math.floor( Math.random() * 100000 );
-    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
-    document.getElementById("neta").style.display = "block";
+    document.getElementById("story").style.display = "block";
     document.getElementById("form").style.display = "none";
-    location.href = '#neta';
+    location.href = '#story';
     await start();
 }
 
@@ -44,22 +44,22 @@ async function start_genre(){
     speed = document.getElementById("speed").value;
     vol = document.getElementById("volume").value;
     seed = Math.floor( Math.random() * 100000 );
-    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
-    document.getElementById("neta").style.display = "block";
+    document.getElementById("story").style.display = "block";
     document.getElementById("form").style.display = "none";
-    location.href = '#neta';
+    location.href = '#story';
     await start();
 }
 
 async function demo() {
-    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
     document.getElementById("top").style.display = "none";
-    document.getElementById("neta").style.display = "block";
+    document.getElementById("story").style.display = "block";
     document.getElementById("form").style.display = "none";
     document.getElementById("about").style.display = "none";
-    location.href = '#neta';
+    location.href = '#story';
     inputValue = 'カラオケ';
     stage_max = 4;
     seed = 6;
@@ -70,9 +70,9 @@ async function repeat_start() {
     await pause(3);
     if (!next) return;
     seed = Math.floor( Math.random() * 100000 );
-    document.getElementById("neta_share_button").style.display = "none";
+    document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
-    location.href = '#neta';
+    location.href = '#story';
     await start();
 }
 
@@ -86,10 +86,10 @@ async function start() {
 
     await say(0, 'ネタを生成中です。');
     display_message(name2[0], "10秒ほどお待ちください");
-    display_message('neta_info', get_neta_info());
+    display_message('story_info', get_story_info());
 
     stage = 0;
-    need_neta = true;
+    need_story = true;
     next = true;
     rally_num = -2;
     await pause(0.5);
@@ -100,7 +100,7 @@ async function go_top() {
     await stop();
     document.getElementById("top").style.display = "block";
     document.getElementById("about").style.display = "block";
-    document.getElementById("neta").style.display = "none";
+    document.getElementById("story").style.display = "none";
     document.getElementById("form").style.display = "none";
     location.href = '#top';
 }
@@ -108,7 +108,7 @@ async function go_top() {
 async function go_form() {
     await stop();
     document.getElementById("form").style.display = "block";
-    document.getElementById("neta").style.display = "none";
+    document.getElementById("story").style.display = "none";
     document.getElementById("top").style.display = "none";
     document.getElementById("about").style.display = "none";
     location.href = '#form';
@@ -117,7 +117,7 @@ async function go_form() {
 async function go_about() {
     await stop();
     document.getElementById("form").style.display = "none";
-    document.getElementById("neta").style.display = "none";
+    document.getElementById("story").style.display = "none";
     document.getElementById("top").style.display = "block";
     document.getElementById("about").style.display = "block";
     location.href = '#about';
@@ -140,7 +140,7 @@ function display_message(id, text) {
     console.log(text);
 }
 
-function get_neta_info() {
+function get_story_info() {
     var res = '';
     if (genre != '') {
         res = 'ジャンル:' + genre + '<br>';
@@ -168,7 +168,7 @@ function generate_share_button() {
     const query = new URLSearchParams([text, hashtags, url]).toString();
     const shareUrl = `${baseUrl}${query}`;
     document.getElementById("skip").style.display = 'none';
-    var target = document.getElementById("neta_share_button");
+    var target = document.getElementById("story_share_button");
     console.log(target.href);
     target.style.display = "block";
     target.href = shareUrl;
@@ -203,17 +203,17 @@ async function say(pearson, text){
     }
 }
 
-async function tsukami(first_stage){
+async function present(first_stage){
     // つかみネタ
     await say(0, '整いました');
     if (!next) return;
     await say(0, "どうもーAIミルクボーイです。お願いします。");
     if (!next) return;
 
-    if (first_stage["tsukami"].length >= 10) {
-        var text1 = 'あーありがとうございますー。ね、今、' + first_stage["tsukami"] + 'をいただきましたけどもね。';
+    if (first_stage["present"].length >= 10) {
+        var text1 = 'あーありがとうございますー。ね、今、' + first_stage["present"] + 'をいただきましたけどもね。';
         var text2 = 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。';
-        present = first_stage["tsukami"];
+        present = first_stage["present"];
     }
     else {
         var text1 = 'あーありがとうございますー。ね、今、何もいただけませんでしたけどもね。';
@@ -222,7 +222,7 @@ async function tsukami(first_stage){
     }
     await say(0, text1);
     if (!next) return;
-    display_message('neta_info', get_neta_info());
+    display_message('story_info', get_story_info());
     await say(0, text2);
     rally_num++;
     if (stage_max == 0) await finish();
@@ -238,21 +238,21 @@ async function introduction(first_stage){
     await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
     if (!next) return;
     category = first_stage["category"];
-    display_message('neta_info', get_neta_info());
+    display_message('story_info', get_story_info());
 
-    switch (first_stage["pred1"]) {
+    switch (first_stage["prediction1"]) {
         case '':
             break;
 
         default:
             await say(0, '好きな' + first_stage["category"] + '忘れてもうて。どうなってんねんそれ。');
-            if (first_stage["pred2"]=='') {
-                var preds = first_stage["pred1"];
+            if (first_stage["prediction2"]=='') {
+                var predictions = first_stage["prediction1"];
             }
             else {
-                var preds = first_stage["pred1"] + '」か「' + first_stage["pred2"];
+                var predictions = first_stage["prediction1"] + '」か「' + first_stage["prediction2"];
             }
-            await say(0, 'ほんでもおかんが好きな' + first_stage["category"] + 'なんて、「' + preds + '」くらいでしょう。');
+            await say(0, 'ほんでもおかんが好きな' + first_stage["category"] + 'なんて、「' + predictions + '」くらいでしょう。');
             await say(1, 'それが違うらしいねんな');
     }
     await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
@@ -274,7 +274,7 @@ async function print_stage(stage_obj){
             await say(0, stage_obj["featX_reply"]);
             if (stage==0) {
                 theme = stage_obj["theme"];
-                display_message('neta_info', get_neta_info());
+                display_message('story_info', get_story_info());
             }
             rally_num++;
             return;
@@ -287,7 +287,7 @@ async function print_stage(stage_obj){
             if (stage_obj["next_is_last"]) {
                 stage = -1;
                 rally_num = 0;
-                need_neta = true;
+                need_story = true;
             }
             else rally_num++
             return;
@@ -297,7 +297,7 @@ async function print_stage(stage_obj){
             await say(0, stage_obj["conjunction"]);
             stage++;
             rally_num = 0;
-            need_neta = true;
+            need_story = true;
             return;
   }
 }
@@ -317,7 +317,7 @@ async function drop(last_stage){
             if (!next) return;
             await say(0, last_stage["anti_featX_reply"]);
             father = last_stage["anti_theme"];
-            display_message('neta_info', get_neta_info());
+            display_message('story_info', get_story_info());
             rally_num++;
             return;
 
@@ -361,7 +361,7 @@ async function show_next() {
         return;
     }
 
-    if (need_neta) {
+    if (need_story) {
         getJSON();
         return;
     }
@@ -369,7 +369,7 @@ async function show_next() {
     console.log("=".repeat(50));
     console.log("stage: " + stage + " rally_num: " + rally_num);
 
-    if (rally_num == -2) await tsukami(cur_stage_obj);
+    if (rally_num == -2) await present(cur_stage_obj);
     else if (rally_num == -1) await introduction(cur_stage_obj);
     else if (cur_stage_obj["stage"] == -1) await drop(cur_stage_obj);
     else await print_stage(cur_stage_obj);
@@ -385,7 +385,7 @@ async function getJSON() {
             cur_stage_obj = JSON.parse(req.responseText);
             console.log(req.responseText);
             // cur_stage_obj = cur_stage_obj[0];
-            need_neta = false;
+            need_story = false;
             if (next) show_next();
         }
         else {

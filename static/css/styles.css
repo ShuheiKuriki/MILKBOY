@@ -42,7 +42,7 @@ html{
     font-size: min(2vw, 20px);
 }
 
-#neta_info {
+#story_info {
     font-family: 'Noto Sans JP', sans-serif;
     background-color: rgba(255, 255, 255, 0.3);
     font-size: max(10px, min(2vw, 15px));
@@ -55,7 +55,7 @@ html{
     font-size: max(10px, min(1.5vw, 15px));
 }
 
-#form, #neta, #neta_share_button, #genre_mode {
+#form, #story, #story_share_button, #genre_mode {
     display: none;
     font-family: 'Noto Sans JP', sans-serif;
 }

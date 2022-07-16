@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',                         #追加
+    'django.contrib.sites',                         # 追加
     'config',
     'bootstrap4',
     'milkboy.apps.MilkboyConfig'

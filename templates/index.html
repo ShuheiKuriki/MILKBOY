@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="ja">
     <head>
             <meta charset="utf-8" />
@@ -57,7 +57,7 @@
         <header class="masthead" id="top">
             <div class="container d-flex h-100">
                 <div class="mx-auto text-center">
-                    <h2><br></br><br></br><br></br></h2>
+                    <h2><br><br><br></h2>
                     <h1 class="mx-auto mt-4 text-uppercase">MILKBOY</h1>
                     <h2 class="text-white-30 mx-auto mt-2 mb-5">
                         <span class=text-white-75>M</span>anzai
@@ -67,7 +67,7 @@
                         <span class=text-white-75>B</span>uilt in an<br>
                         <span class=text-white-75>O</span>nline-hackathon by
                         <span class=text-white-75>Y</span>ahoo!
-                        <br></br>
+                        <br>
                     </h2>
                     <h3 class="text-white mx-auto mt-5">
                         ミルクボーイ風漫才で</h3>
@@ -96,21 +96,21 @@
                         <p class="text-white-50">
                             このアプリはテーマを与えるだけで、
                             大人気お笑いコンビ「ミルクボーイ」風のネタを自動的に生成し、
-                            漫才風に読み上げてくれます。<br></br>
+                            漫才風に読み上げてくれます。<br>
 
                             ミルクボーイの偉業は「漫才のフレームワークを作ったこと」にあると言われます。
                             このフレームワークにより、ある種の「ネタの量産化」が可能となったわけですが、
-                            そうはいってもやはり面白いネタを考えるには人の労力とセンスが必要です。<br></br>
+                            そうはいってもやはり面白いネタを考えるには人の労力とセンスが必要です。<br>
 
                             我々は技術の力でこの問題に挑みました。
                             すなわち、この「漫才のフレームワーク」に合わせて、
                             フリー百科事典Wikipediaの当該テーマページから
                             適切なルールに基づいて文章を引用することにより、
                             <span class=text-danger>全自動で無限にネタを生成できる</span>システムを作りました。
-                            もはや、最初に与えるテーマですらランダムに生成できますし、ジャンルを指定して好みに合ったネタにすることもできます。<br></br>
+                            もはや、最初に与えるテーマですらランダムに生成できますし、ジャンルを指定して好みに合ったネタにすることもできます。<br>
 
                             そして、このシステムを<span class=text-danger>「MILKBOY CORE AI」</span>と命名し、
-                            アプリとしてリリースするにいたりました。<br></br>
+                            アプリとしてリリースするにいたりました。<br>
 
                             最後に、この作品は<a href="https://hackday.jp/">Hack Day 2021</a>という技術ハッカソンにおいて、
                             お笑いコンビミルクボーイを敬愛するチームメンバーによって作られました。
@@ -123,11 +123,11 @@
                 </div>
             </div>
         </section>
-        <div id="neta">
+        <div id="story">
             <div id="container">
-                <h3><br></br></h3>
+                <h3><br></h3>
                 <div class='container' style="max-width: 540px;">
-                    <div class="mt-3" id="neta_info">
+                    <div class="mt-3" id="story_info">
                         いただいたもの：？？<br>カテゴリー：？？<br>お題：？？<br>おとん：？？
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                 <div class='container mt-3'>
                     <div class="row">
                         <div class="ml-auto col-auto text-center">
-                            <a type="button" class="btn btn btn-primary" id="neta_share_button" href="#neta">ネタをシェア</a>
+                            <a type="button" class="btn btn btn-primary" id="story_share_button" href="#story">ネタをシェア</a>
                             <button type="button" class="btn btn btn-secondary" id="skip" onclick="skip()">スキップ</button>
                         </div>
                         <div class="mr-auto col-auto text-center">
@@ -152,7 +152,7 @@
             </div>
         </div>
         <div id="form">
-            <h5><br></br></h5>
+            <h5><br></h5>
             <div class='container' style="max-width: 630px;">
                 <form class='text-center mx-auto'>
                     <div id="theme_mode">
@@ -176,7 +176,7 @@
                             <label class="text-white">漫才ネタのジャンル</label>
                             <select class="form-control input-sm" id="genre">
                                 {% for genre in genres %}
-                                <option value='{{genre}}'>{{genre}}</option>
+                                    <option value='{{genre}}'>{{genre}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -215,7 +215,7 @@
                         </select>
                         <div class="text-white-50 text-center mx-auto description mt-3">
                             ※ネタの長さを指定しても、<br>ネタに必要な情報が足りない場合、<br>短くなることがあります。ご了承ください。
-                            <br></br></div>
+                            <br></div>
                     </div>
                     <div class="checkbox mt-2 col-8 mx-auto">
                         <label class="form-control">リピート
@@ -223,7 +223,7 @@
                         </label>
                         <div class="text-white-50 text-center mx-auto description">
                             ※お題ランダムかジャンルモードで<br>リピートとすると新しいネタが<br>流れ続けておすすめです！<br>
-                            作業用BGM等としてご活用ください<br></br></div>
+                            作業用BGM等としてご活用ください<br></div>
                     </div>
                 </form>
             </div>

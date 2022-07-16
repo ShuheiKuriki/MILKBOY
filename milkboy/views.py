@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
-from .coreAI import generate_neta_list
+from .coreAI import generate_story_list
 from collections import defaultdict
 GLOBAL_DICTS = defaultdict(lambda: {})
 
@@ -23,7 +23,7 @@ def theme(request):
     k = (data['input_theme'], data['seed'], data['stage_max'])
     if k not in GLOBAL_DICTS or data['stage'] not in GLOBAL_DICTS[k]:
         # ネタを作る
-        result_list = generate_neta_list(data['input_theme'], data['seed'], data['stage_max'])
+        result_list = generate_story_list(data['input_theme'], data['seed'], data['stage_max'])
 
         if len(result_list) == 1:
             return JsonResponse(result_list[0])
@@ -44,7 +44,7 @@ def genre(request):
 
     k = (data['genre'], data['seed'], data['stage_max'])
     if k not in GLOBAL_DICTS or data['stage'] not in GLOBAL_DICTS[k]:
-        result_list = generate_neta_list('', data['seed'], data['stage_max'], data['genre'])
+        result_list = generate_story_list('', data['seed'], data['stage_max'], data['genre'])
         if len(result_list) == 1:
             return JsonResponse(result_list[0])
 
