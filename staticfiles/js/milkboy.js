@@ -84,7 +84,7 @@ async function start() {
     present = '？？';
     father = '？？';
 
-    await say(0, 'ネタを生成中です。');
+    await say(0, 'ネタを作っています。');
     display_message(name2[0], "10秒ほどお待ちください");
     display_message('story_info', get_story_info());
 
@@ -203,7 +203,7 @@ async function say(pearson, text){
     }
 }
 
-async function present(first_stage){
+async function get_present(first_stage){
     // つかみネタ
     await say(0, '整いました');
     if (!next) return;
@@ -369,7 +369,7 @@ async function show_next() {
     console.log("=".repeat(50));
     console.log("stage: " + stage + " rally_num: " + rally_num);
 
-    if (rally_num == -2) await present(cur_stage_obj);
+    if (rally_num == -2) await get_present(cur_stage_obj);
     else if (rally_num == -1) await introduction(cur_stage_obj);
     else if (cur_stage_obj["stage"] == -1) await drop(cur_stage_obj);
     else await print_stage(cur_stage_obj);
