@@ -210,16 +210,10 @@ async function get_present(first_stage){
     await say(0, "どうもーAIミルクボーイです。お願いします。");
     if (!next) return;
 
-    if (first_stage["present"].length >= 10) {
-        var text1 = 'あーありがとうございますー。ね、今、' + first_stage["present"] + 'をいただきましたけどもね。';
-        var text2 = 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。';
-        present = first_stage["present"];
-    }
-    else {
-        var text1 = 'あーありがとうございますー。ね、今、何もいただけませんでしたけどもね。';
-        var text2 = '何ももらえなくてもね、聞いてもらえるだけありがたいですよ。いうとりますけどもね。';
-        present = '何ももらえませんでした';
-    }
+    var text1 = 'あーありがとうございますー。ね、今、' + first_stage["present"] + 'をいただきましたけどもね。';
+    var text2 = 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。';
+    present = first_stage["present"];
+
     await say(0, text1);
     if (!next) return;
     display_message('story_info', get_story_info());
