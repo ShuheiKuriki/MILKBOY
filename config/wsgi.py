@@ -130,7 +130,8 @@ def auto_reply():
         stage_max = 5
         stage_num = 0
         story_list = []
-        print(tweet)
+        print(tweet['name'])
+        print(tweet['text'])
         theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
         print(theme)
         if '@' in theme or len(theme) > 30:

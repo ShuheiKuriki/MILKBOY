@@ -22,7 +22,7 @@ var category = '？？';
 var present = '？？';
 var father = '？？';
 
-async function start_manzai(){
+async function start_story(){
     inputValue = document.getElementById("theme").value;
     stage_max = document.getElementById("length").value;
     inf = document.getElementById("repeat").checked;
@@ -186,11 +186,11 @@ async function say(pearson, text){
         if(voice.lang.match('ja')) ja_voices.push(voice);
     })
 
-    const uttr = new SpeechSynthesisUtterance(text);
-    uttr.voice = ja_voices[pearson];
-    uttr.rate = speed;
-    uttr.volume = vol;
-    speechSynthesis.speak(uttr);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = ja_voices[pearson];
+    utterance.rate = speed;
+    utterance.volume = vol;
+    speechSynthesis.speak(utterance);
 
     var i = 0;
     while (speechSynthesis.speaking) {
@@ -232,7 +232,7 @@ async function present(first_stage){
 async function introduction(first_stage){
     // 導入
     if (first_stage["category"] == '') {
-        no_manzai();
+        no_story();
         return;
     }
     await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
@@ -259,7 +259,7 @@ async function introduction(first_stage){
     rally_num++;
 }
 
-async function no_manzai() {
+async function no_story() {
     await say(1, 'うちのおかんがね、最近はあんまり物忘れをしないらしくてね');
     await say(0, 'ほな、漫才にならんやないかい！');
     finish();
