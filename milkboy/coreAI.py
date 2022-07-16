@@ -38,7 +38,7 @@ def get_present(article=''):
         {"TEXT": "の", "OP": "?"},
         {"POS": {"IN": ["NUM", "NOUN", "PROPN"]}, "OP": "+"}
     ]
-    matcher.add("present", None, pattern)
+    matcher.add("present", [pattern])
     # t = time.time()
     present = ''
     url = BASE_WIKI + article if article != '' else RANDOM_WIKI
@@ -656,7 +656,7 @@ if __name__ == "__main__":
     start = time.time()
     t = start
     power = 0
-    trials = 10
+    trials = 1
     for _ in range(trials):
         number = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
         generated_story = generate_story_list(input_theme=entry_theme, seed_num=number, stage_max=4)
@@ -664,7 +664,7 @@ if __name__ == "__main__":
         new_t = time.time()
         power += (new_t - t) ** 2
         t = new_t
-    total = new_t - start
+    total = t - start
     print("実行時間の平均値：", total / trials)
     # 1回のみ実行の場合は0になる
     print("実行時間の標準偏差：", (power / trials - (total / trials) ** 2) ** 0.5)
