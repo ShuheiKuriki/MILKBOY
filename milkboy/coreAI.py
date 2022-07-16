@@ -5,6 +5,7 @@ import requests
 import sys
 import numpy as np
 import random
+import time
 from pprint import pprint
 from bs4 import BeautifulSoup
 import spacy
@@ -40,19 +41,19 @@ def get_present(article=''):
     matcher.add("present", None, pattern)
     # t = time.time()
     present = ''
-    while len(present) < 10:
-        url = BASE_WIKI + article if article != '' else RANDOM_WIKI
-        p_tags = BeautifulSoup(requests.get(url).text, "html.parser").find_all('p')
-        max_len = 0
-        for p_tag in p_tags:
-            text = p_tag.getText()
-            # t2 = time.time()
-            doc = nlp(text)
-            for _, first_ind, last_ind in matcher(doc):
-                candidate_present = doc[first_ind:last_ind].text
-                if len(candidate_present) > max_len:
-                    present = candidate_present
-                    max_len = len(candidate_present)
+    url = BASE_WIKI + article if article != '' else RANDOM_WIKI
+    p_tags = BeautifulSoup(requests.get(url).text, "html.parser").find_all('p')
+    max_len = 0
+    for p_tag in p_tags:
+        text = p_tag.getText()
+        # t2 = time.time()
+        doc = nlp(text)
+        for _, first_ind, last_ind in matcher(doc):
+            candidate_present = doc[first_ind:last_ind].text
+            if len(candidate_present) > max_len:
+                present = candidate_present
+                max_len = len(candidate_present)
+    print(f"プレゼントの候補：{present}")
     # new_t = time.time()
     # print(len(p_tags), time.time()-t)
     # t = new_t
@@ -165,14 +166,12 @@ def choose_category(word_key, soup=None):
     """
     if soup is None:
         url = f"https://ja.wikipedia.org/wiki/{word_key}"
-        print(url)
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
     try:
         li_tags = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
     except AttributeError:
         return False, False
     word = re.sub(r" ", "", re.sub(r"\(.+?\)", "", word_key))
-    print(word)
     cnt = 0
     urls = []
     categories = []
@@ -544,28 +543,34 @@ def generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_m
 
 def choose_anti_themes(theme, category, category_elements, num):
     """
-    anti_themeをランダムに選ぶ
+    presentを1個と、anti_themeをランダムにnum個選ぶ
     """
     category_element_list = []
     theme = re.sub(r" ", "", re.sub(r"\(.+?\)", "", theme))
     category = re.sub(r" ", "", re.sub(r"\(.+?\)", "", category))
+
     for ele in category_elements:
         ele = re.sub(r" ", "", re.sub(r"\(.+?\)", "", ele))
-        if ele not in theme and \
-                theme not in ele and \
-                ele not in category and \
-                category not in ele and \
+        if ele not in theme and theme not in ele and \
+                ele not in category and category not in ele and \
                 'Template:' not in ele:
             category_element_list.append(ele)
+            # print(f"アンチテーマの候補：{ele}")
+
     if len(category_element_list) == 0:
         return None, None, None
-    article = random.choice(category_element_list)
-    present = get_present(article)
+
+    article_for_present = random.choice(category_element_list)
+    present = get_present(article_for_present)
+
     if len(category_element_list) == 1:
         predictions = [category_element_list[0], '']
     else:
         predictions = random.sample(category_element_list, 2)
-    return random.sample(category_element_list, min(len(category_element_list), num)), predictions, present
+
+    anti_themes = random.sample(category_element_list, min(len(category_element_list), num))
+
+    return anti_themes, predictions, present
 
 
 def present_only(present, seed_num):
@@ -594,27 +599,29 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
     全体処理
     """
     np.random.seed(seed_num)
+    # ジャンルモード
     if genre is not None:
         category, category_elements = genre_mode(genre)
         theme = random.choice(category_elements)
-        print(category, theme)
+        print(f"ジャンルモード「カテゴリー：{category}、テーマ：{theme}」")
         anti_themes, predictions, present = choose_anti_themes(theme, category, category_elements, stage_max)
         if stage_max == 0:
             return present_only(present, seed_num)
         random.seed(seed_num)
         if anti_themes is None:
-            print('retry')
+            print('retry generating story')
             return generate_story_list(input_theme, seed_num, stage_max, genre)
         res = generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present)
-        pprint(res)
         return res
+    # テーマモード
     if input_theme in ['', 'random']:
+        # テーマランダムモード
         while True:
             try:
                 soup = BeautifulSoup(requests.get(RANDOM_WIKI).text, "html.parser")
                 theme = soup.find('head').find('title').getText().replace(' - Wikipedia', '')
                 category, category_elements = choose_category(theme, soup)
-                print(category, len(category_elements))
+                print(f"カテゴリー：{category}、記事数：{len(category_elements)}")
                 break
             except AttributeError:
                 pass
@@ -623,13 +630,14 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
         # print(searched_list)
         # print("search:",time.time()-t)
         for theme in searched_list:
-            print(theme)
+            print(f"テーマ候補：{theme}")
             category, category_elements = choose_category(theme)
+            print(f"カテゴリー：{category}、記事数：{len(category_elements)}")
             # print("choose_category:", time.time()-t)
             if category is not False:
                 break
         else:
-            print("ネタ作り失敗")
+            print("カテゴリー選択失敗")
             return False
     anti_themes, predictions, present = choose_anti_themes(theme, category, category_elements, stage_max)
     if stage_max == 0:
@@ -644,22 +652,19 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
 if __name__ == "__main__":
     args = sys.argv
     entry_theme = args[1] if len(args) > 1 else 'random'
-    print(entry_theme)
-    import time
 
     start = time.time()
     t = start
     power = 0
-    trials = 1
+    trials = 10
     for _ in range(trials):
         number = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
-        generated = generate_story_list(input_theme=entry_theme, seed_num=number, stage_max=4)
-        pprint(generated)
+        generated_story = generate_story_list(input_theme=entry_theme, seed_num=number, stage_max=4)
+        pprint(generated_story)
         new_t = time.time()
-        total = new_t - start
         power += (new_t - t) ** 2
-        # 実行時間の平均値
-        print(total / trials)
-        # 実行時間の標準偏差、1回のみ実行の場合は0になる
-        print((power / trials - (total / trials) ** 2) ** 0.5)
         t = new_t
+    total = new_t - start
+    print("実行時間の平均値：", total / trials)
+    # 1回のみ実行の場合は0になる
+    print("実行時間の標準偏差：", (power / trials - (total / trials) ** 2) ** 0.5)
