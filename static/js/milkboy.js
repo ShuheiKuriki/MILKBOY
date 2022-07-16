@@ -1,34 +1,34 @@
 const BASE_URL = location.protocol + "//" + location.host + "/milkboy/"
-const name = ["UTSUMI", "KOMABA"];
-const name2 = ["utsumi", "komaba"];
-const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
+const NAMES = ["UTSUMI", "KOMABA"];
+const SMALL_NAMES = ["utsumi", "komaba"];
+const PAUSE = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
-var stage = 0;
-var need_story = true;
-var rally_num = -2;
-var cur_stage_obj = null;
-var next = true;
-var request_url = BASE_URL;
+var STAGE = 0;
+var STAGE_MAX = 4;
+var NEED_STORY = true;
+var RALLY_NUM = -2;
+var CUR_STAGE_OBJ = null;
+var NEXT = true;
 
-var inputValue = "";
-var genre = '';
-var seed = 0;
-var inf = false;
-var speed = 1.1;
-var vol = 0.6;
+var INPUT_VALUE = "";
+var GENRE = '';
+var SEED = 0;
+var INF = false;
+var SPEED = 1.1;
+var VOL = 0.6;
 
-var theme = '？？';
-var category = '？？';
-var present = '？？';
-var father = '？？';
+var THEME = '？？';
+var CATEGORY = '？？';
+var PRESENT = '？？';
+var FATHER = '？？';
 
 async function start_story(){
-    inputValue = document.getElementById("theme").value;
-    stage_max = document.getElementById("length").value;
-    inf = document.getElementById("repeat").checked;
-    speed = document.getElementById("speed").value;
-    vol = document.getElementById("volume").value;
-    seed = Math.floor( Math.random() * 100000 );
+    INPUT_VALUE = document.getElementById("theme").value;
+    STAGE_MAX = document.getElementById("length").value;
+    INF = document.getElementById("repeat").checked;
+    SPEED = document.getElementById("speed").value;
+    VOL = document.getElementById("volume").value;
+    SEED = Math.floor( Math.random() * 100000 );
     document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
     document.getElementById("story").style.display = "block";
@@ -38,12 +38,12 @@ async function start_story(){
 }
 
 async function start_genre(){
-    genre = document.getElementById("genre").value;
-    stage_max = document.getElementById("length").value;
-    inf = document.getElementById("repeat").checked;
-    speed = document.getElementById("speed").value;
-    vol = document.getElementById("volume").value;
-    seed = Math.floor( Math.random() * 100000 );
+    GENRE = document.getElementById("genre").value;
+    STAGE_MAX = document.getElementById("length").value;
+    INF = document.getElementById("repeat").checked;
+    SPEED = document.getElementById("speed").value;
+    VOL = document.getElementById("volume").value;
+    SEED = Math.floor( Math.random() * 100000 );
     document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
     document.getElementById("story").style.display = "block";
@@ -60,16 +60,16 @@ async function demo() {
     document.getElementById("form").style.display = "none";
     document.getElementById("about").style.display = "none";
     location.href = '#story';
-    inputValue = 'カラオケ';
-    stage_max = 4;
-    seed = 6;
+    INPUT_VALUE = 'カラオケ';
+    STAGE_MAX = 4;
+    SEED = 0;
     await start();
 }
 
 async function repeat_start() {
-    await pause(3);
-    if (!next) return;
-    seed = Math.floor( Math.random() * 100000 );
+    await PAUSE(3);
+    if (!NEXT) return;
+    SEED = Math.floor( Math.random() * 100000 );
     document.getElementById("story_share_button").style.display = "none";
     document.getElementById("skip").style.display = "block";
     location.href = '#story';
@@ -79,20 +79,20 @@ async function repeat_start() {
 async function start() {
     await stop();
 
-    theme = '？？';
-    category = '？？';
-    present = '？？';
-    father = '？？';
+    THEME = '？？';
+    CATEGORY = '？？';
+    PRESENT = '？？';
+    FATHER = '？？';
 
     await say(0, 'ネタを作っています。');
-    display_message(name2[0], "10秒ほどお待ちください");
+    display_message(SMALL_NAMES[0], "10秒ほどお待ちください");
     display_message('story_info', get_story_info());
 
-    stage = 0;
-    need_story = true;
-    next = true;
-    rally_num = -2;
-    await pause(0.5);
+    STAGE = 0;
+    NEED_STORY = true;
+    NEXT = true;
+    RALLY_NUM = -2;
+    await PAUSE(0.5);
     await show_next();
 }
 
@@ -142,20 +142,20 @@ function display_message(id, text) {
 
 function get_story_info() {
     var res = '';
-    if (genre != '') {
-        res = 'ジャンル:' + genre + '<br>';
+    if (GENRE != '') {
+        res = 'ジャンル:' + GENRE + '<br>';
     }
-    res += 'いただいたもの：' + present + '<br>カテゴリー：' + category + '<br>お題：' + theme + '<br>おとん：' + father;
+    res += 'いただいたもの：' + PRESENT + '<br>カテゴリー：' + CATEGORY + '<br>お題：' + THEME + '<br>おとん：' + FATHER;
     return res;
 }
 
 function get_tweet_text() {
     var res = '';
-    if (genre != '') {
-        res = 'ジャンル: ' + genre + '\n\n';
+    if (GENRE != '') {
+        res = 'ジャンル: ' + GENRE + '\n\n';
     }
-    res += 'いま「' + present + '」をいただきましたけどもね・・・\n\n';
-    res += 'うちのおかんがね、好きな「' + category + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
+    res += 'いま「' + PRESENT + '」をいただきましたけどもね・・・\n\n';
+    res += 'うちのおかんがね、好きな「' + CATEGORY + '」があるらしいんやけど、その名前を忘れたらしくてね・・・\n\n';
     res += '続きはこちら→'
     return res;
 }
@@ -176,9 +176,9 @@ function generate_share_button() {
 }
 
 async function say(pearson, text){
-    console.log("say_" + name[pearson] + ":" + text);
+    console.log("say_" + NAMES[pearson] + ":" + text);
 
-    display_message(name2[pearson], text);
+    display_message(SMALL_NAMES[pearson], text);
 
     const voices = speechSynthesis.getVoices();
     ja_voices = new Array();
@@ -188,13 +188,13 @@ async function say(pearson, text){
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = ja_voices[pearson];
-    utterance.rate = speed;
-    utterance.volume = vol;
+    utterance.rate = SPEED;
+    utterance.volume = VOL;
     speechSynthesis.speak(utterance);
 
     var i = 0;
     while (speechSynthesis.speaking) {
-        await pause(text.length * 0.01 / speed);
+        await PAUSE(text.length * 0.01 / SPEED);
         i++;
         if (i>=25) {
             speechSynthesis.cancel();
@@ -204,53 +204,53 @@ async function say(pearson, text){
 }
 
 async function get_present(first_stage){
-    // つかみネタ
+
     await say(0, '整いました');
-    if (!next) return;
+    if (!NEXT) return;
+
     await say(0, "どうもーAIミルクボーイです。お願いします。");
-    if (!next) return;
+    if (!NEXT) return;
 
-    var text1 = 'あーありがとうございますー。ね、今、' + first_stage["present"] + 'をいただきましたけどもね。';
-    var text2 = 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。';
-    present = first_stage["present"];
+    PRESENT = first_stage["present"];
+    await say(0, 'あーありがとうございますー。ね、今、' + PRESENT + 'をいただきましたけどもね。');
+    if (!NEXT) return;
 
-    await say(0, text1);
-    if (!next) return;
     display_message('story_info', get_story_info());
-    await say(0, text2);
-    rally_num++;
-    if (stage_max == 0) await finish();
+
+    await say(0, 'こんなんなんぼあっても良いですからね、ありがたいですよ。いうとりますけどもね。');
+
+    RALLY_NUM++;
+
+    if (STAGE_MAX == 0) await finish();
+
     return;
 }
 
 async function introduction(first_stage){
+
     // 導入
     if (first_stage["category"] == '') {
         no_story();
         return;
     }
+
     await say(1, 'うちのおかんがね、好きな' + first_stage["category"] + 'があるらしいんやけど、その名前をちょっと忘れたらしくてね。');
-    if (!next) return;
-    category = first_stage["category"];
+    if (!NEXT) return;
+    CATEGORY = first_stage["category"];
     display_message('story_info', get_story_info());
 
-    switch (first_stage["prediction1"]) {
-        case '':
-            break;
-
-        default:
-            await say(0, '好きな' + first_stage["category"] + '忘れてもうて。どうなってんねんそれ。');
-            if (first_stage["prediction2"]=='') {
-                var predictions = first_stage["prediction1"];
-            }
-            else {
-                var predictions = first_stage["prediction1"] + '」か「' + first_stage["prediction2"];
-            }
-            await say(0, 'ほんでもおかんが好きな' + first_stage["category"] + 'なんて、「' + predictions + '」くらいでしょう。');
-            await say(1, 'それが違うらしいねんな');
+    if (first_stage["prediction1"] != '') {
+        await say(0, '好きな' + first_stage["category"] + '忘れてもうて。どうなってんねんそれ。');
+        var predictions = first_stage["prediction1"];
+        if (first_stage["prediction2"] != '') {
+            predictions += '」か「' + first_stage["prediction2"];
+        }
+        await say(0, 'ほんでもおかんが好きな' + first_stage["category"] + 'なんて、「' + predictions + '」くらいでしょう。');
+        await say(1, 'それが違うらしいねんな');
     }
+
     await say(0, 'ほんだら俺がね、おかんの好きな' + first_stage["category"] + '一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。');
-    rally_num++;
+    RALLY_NUM++;
 }
 
 async function no_story() {
@@ -260,84 +260,84 @@ async function no_story() {
 }
 
 async function print_stage(stage_obj){
-    switch (rally_num) {
+    switch (RALLY_NUM) {
         case 0:
             // 正しい特徴
             await say(1, stage_obj["featX"]);
-            if (!next) return;
+            if (!NEXT) return;
             await say(0, stage_obj["featX_reply"]);
-            if (stage==0) {
-                theme = stage_obj["theme"];
+            if (STAGE == 0) {
+                THEME = stage_obj["theme"];
                 display_message('story_info', get_story_info());
             }
-            rally_num++;
+            RALLY_NUM++;
             return;
 
         case 1:
             // 誤った特徴
             await say(1, stage_obj["anti_featX"])
-            if (!next) return;
+            if (!NEXT) return;
             await say(0, stage_obj["anti_featX_reply"]);
             if (stage_obj["next_is_last"]) {
-                stage = -1;
-                rally_num = 0;
-                need_story = true;
+                STAGE = -1;
+                RALLY_NUM = 0;
+                NEED_STORY = true;
             }
-            else rally_num++
+            else RALLY_NUM++
             return;
 
         case 2:
             // 次のターンへの接続
             await say(0, stage_obj["conjunction"]);
-            stage++;
-            rally_num = 0;
-            need_story = true;
+            STAGE++;
+            RALLY_NUM = 0;
+            NEED_STORY = true;
             return;
   }
 }
 
 async function drop(last_stage){
     // 締め
-    switch (rally_num) {
+    switch (RALLY_NUM) {
         case 0:
             await say(1, last_stage["featX"]);
-            if (!next) return;
+            if (!NEXT) return;
             await say(0, last_stage["featX_reply"]);
-            rally_num++;
+            RALLY_NUM++;
             return;
 
         case 1:
             await say(1, last_stage["anti_featX"]);
-            if (!next) return;
+            if (!NEXT) return;
             await say(0, last_stage["anti_featX_reply"]);
-            father = last_stage["anti_theme"];
+            FATHER = last_stage["anti_theme"];
             display_message('story_info', get_story_info());
-            rally_num++;
+            RALLY_NUM++;
             return;
 
         case 2:
             await say(1, last_stage["conjunction"]);
-            if (!next) return;
+            if (!NEXT) return;
             await say(0, "いや、絶対ちゃうやろ！");
-            if (!next) return;
+            if (!NEXT) return;
             await say(0, "もうええわ。どうもありがとうございました。");
-            stage = -3;
+            STAGE = -3;
             return;
   }
   return;
 }
 
 async function finish() {
-    stage = -3;
+    STAGE = -3;
     await say(0, "もうええわ。どうもありがとうございました。");
 }
 
 async function stop() {
-    next = false;
+    NEXT = false;
     speechSynthesis.cancel();
 
     for (var i=0; i<2; i++) {
-        var div = document.getElementById(name2[i]);
+        var div = document.getElementById(SMALL_NAMES[i]);
         div.innerHTML = "";
     }
 }
@@ -348,27 +348,27 @@ function skip() {
 }
 
 async function show_next() {
-    if (stage == -3) {
+    if (STAGE == -3) {
         generate_share_button();
         await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
-        if (inf) repeat_start();
+        if (INF) repeat_start();
         return;
     }
 
-    if (need_story) {
+    if (NEED_STORY) {
         getJSON();
         return;
     }
 
     console.log("=".repeat(50));
-    console.log("stage: " + stage + " rally_num: " + rally_num);
+    console.log("stage: " + STAGE + " RALLY_NUM: " + RALLY_NUM);
 
-    if (rally_num == -2) await get_present(cur_stage_obj);
-    else if (rally_num == -1) await introduction(cur_stage_obj);
-    else if (cur_stage_obj["stage"] == -1) await drop(cur_stage_obj);
-    else await print_stage(cur_stage_obj);
+    if (RALLY_NUM == -2) await get_present(CUR_STAGE_OBJ);
+    else if (RALLY_NUM == -1) await introduction(CUR_STAGE_OBJ);
+    else if (CUR_STAGE_OBJ["stage"] == -1) await drop(CUR_STAGE_OBJ);
+    else await print_stage(CUR_STAGE_OBJ);
 
-    if (next) await show_next();
+    if (NEXT) await show_next();
     return;
 }
 
@@ -376,21 +376,21 @@ async function getJSON() {
     var req = new XMLHttpRequest();           // XMLHttpRequest オブジェクトを生成する
     req.onload = function () {    // XMLHttpRequest オブジェクトの状態が変化した際に呼び出されるイベントハンドラ
         if (req.readyState == 4 && req.status == 200) { // サーバーからのレスポンスが完了し、かつ、通信が正常に終了した場合
-            cur_stage_obj = JSON.parse(req.responseText);
+            CUR_STAGE_OBJ = JSON.parse(req.responseText);
             console.log(req.responseText);
-            // cur_stage_obj = cur_stage_obj[0];
-            need_story = false;
-            if (next) show_next();
+            // CUR_STAGE_OBJ = CUR_STAGE_OBJ[0];
+            NEED_STORY = false;
+            if (NEXT) show_next();
         }
         else {
             say(0, 'エラーが発生したため、「次のネタ」ボタンを押してやりなおしてください');
         }
     };
-    if (genre=='') {
-        request_url = BASE_URL + "theme?input_theme="+ inputValue +"&stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max
+    if (GENRE=='') {
+        request_url = BASE_URL + "theme?input_theme="+ INPUT_VALUE +"&stage=" + STAGE + "&seed=" + SEED + "&stage_max=" + STAGE_MAX
     }
     else {
-        request_url = BASE_URL + "genre?stage=" + stage + "&seed=" + seed + "&stage_max=" + stage_max + "&genre=" + genre
+        request_url = BASE_URL + "genre?stage=" + STAGE + "&seed=" + SEED + "&stage_max=" + STAGE_MAX + "&genre=" + GENRE
     }
     console.log(request_url);
     req.open("GET", request_url, true); // HTTPメソッドとアクセスするサーバーの　URL　を指定

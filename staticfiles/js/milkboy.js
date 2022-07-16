@@ -3,7 +3,7 @@ const name = ["UTSUMI", "KOMABA"];
 const name2 = ["utsumi", "komaba"];
 const pause = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
-var stage = 0;
+var STAGE = 0;
 var need_story = true;
 var rally_num = -2;
 var cur_stage_obj = null;
@@ -20,7 +20,7 @@ var vol = 0.6;
 var theme = '？？';
 var category = '？？';
 var present = '？？';
-var father = '？？';
+var FATHER = '？？';
 
 async function start_story(){
     inputValue = document.getElementById("theme").value;
@@ -88,7 +88,7 @@ async function start() {
     display_message(name2[0], "10秒ほどお待ちください");
     display_message('story_info', get_story_info());
 
-    stage = 0;
+    STAGE = 0;
     need_story = true;
     next = true;
     rally_num = -2;
@@ -279,7 +279,7 @@ async function print_stage(stage_obj){
             if (!next) return;
             await say(0, stage_obj["anti_featX_reply"]);
             if (stage_obj["next_is_last"]) {
-                stage = -1;
+                STAGE = -1;
                 rally_num = 0;
                 need_story = true;
             }
@@ -321,14 +321,14 @@ async function drop(last_stage){
             await say(0, "いや、絶対ちゃうやろ！");
             if (!next) return;
             await say(0, "もうええわ。どうもありがとうございました。");
-            stage = -3;
+            STAGE = -3;
             return;
   }
   return;
 }
 
 async function finish() {
-    stage = -3;
+    STAGE = -3;
     await say(0, "もうええわ。どうもありがとうございました。");
 }
 
@@ -348,7 +348,7 @@ function skip() {
 }
 
 async function show_next() {
-    if (stage == -3) {
+    if (STAGE == -3) {
         generate_share_button();
         await say(0, 'このネタが面白かったら下のボタンからシェアをお願いします！');
         if (inf) repeat_start();

@@ -8,6 +8,7 @@ import random
 import time
 from pprint import pprint
 from bs4 import BeautifulSoup
+from .exception import NoResultException, ResultNoneException
 import spacy
 from spacy.matcher import Matcher
 
@@ -20,8 +21,8 @@ FEAT_MIN = 15
 FEAT_MAX = 70
 # SUMMARY_MIN = 20
 # SUMMARY_MAX = 70
-CAT_MEM_MIN = 10
-CAT_MEM_MAX = 1000
+CAT_ELE_MIN = 10
+CAT_ELE_MAX = 1000
 CAT_NUM_MAX = 6
 P_TAGS_MAX = 15
 RANDOM_WIKI = 'https://ja.wikipedia.org/wiki/Special:Random'
@@ -42,7 +43,13 @@ def get_present(article=''):
     # t = time.time()
     present = ''
     url = BASE_WIKI + article if article != '' else RANDOM_WIKI
-    p_tags = BeautifulSoup(requests.get(url).text, "html.parser").find_all('p')
+    print(f"プレゼント取得用url：{url}")
+    soup = None
+    try:
+        soup = BeautifulSoup(requests.get(url).text, "html.parser")
+    except ResultNoneException as e:
+        print(e)
+    p_tags = shape_soup(soup, anti=True)
     max_len = 0
     for p_tag in p_tags:
         text = p_tag.getText()
@@ -62,7 +69,7 @@ def get_present(article=''):
 
 def get_category_info(url):
     """
-    カテゴリーに属する記事数と、そのうち条件を満たすもののリスト。handlerに与えて非同期処理する
+    カテゴリーに属する記事数と、条件を満たすカテゴリーのリスト。handlerに与えて非同期処理する
     """
     # t1 = time.time()
     # print('start:',t1-t)
@@ -70,6 +77,8 @@ def get_category_info(url):
     # t2 = time.time()
     # print("mid", t2-t1, len(text))
     soup = BeautifulSoup(text, "html.parser").find('div', id='mw-pages')
+    if soup is None:
+        raise ResultNoneException(f"{url}のid='mw-pages'のsoup")
     category_elements = []
     category_element_num = int(re.sub(r"\D", "", soup.find('p').getText(strip=True)[:20]))
     groups = soup.find_all(class_="mw-category-group")
@@ -83,14 +92,14 @@ def get_category_info(url):
     return category_element_num, category_elements
 
 
-def get_sub_category(cat, sub=True):
-    url = 'https://ja.wikipedia.org/wiki/Category:' + cat
+def get_sub_category(category, sub=True):
+    url = 'https://ja.wikipedia.org/wiki/Category:' + category
     text = requests.get(url).text
     # t2 = time.time()
     # print("mid", t2-t1, len(text))
-    soup = BeautifulSoup(text, "html.parser").find(id='mw-sub_categories')
+    soup = BeautifulSoup(text, "html.parser").find(id='mw-subcategories')
     if soup is None:
-        return None
+        raise ResultNoneException(f"{url}をid='mw-subcategories'で検索したsoup")
     sub_categories = []
     groups = soup.find_all('ul')
     for group in groups:
@@ -98,44 +107,57 @@ def get_sub_category(cat, sub=True):
         for info in information:
             title = info.find_all('span')[-1]['title']
             nums = list(map(int, re.findall(r'\d+', title)))
-            if (sub and nums[0] >= 1) or (not sub and CAT_MEM_MIN <= nums[1] <= CAT_MEM_MAX):
+            if (sub and nums[0] >= 1) or (not sub and CAT_ELE_MIN <= nums[1] <= CAT_ELE_MAX):
                 sub_categories.append(info.find('a').getText())
     if len(sub_categories) == 0:
-        return None
+        raise NoResultException("sub_categories")
     return random.choice(sub_categories)
 
 
-def get_pages(cat):
-    url = 'https://ja.wikipedia.org/wiki/Category:' + cat
+def get_pages(category):
+    url = 'https://ja.wikipedia.org/wiki/Category:' + category
     text = requests.get(url).text
     # t2 = time.time()
     # print("mid", t2-t1, len(text))
     soup = BeautifulSoup(text, "html.parser").find('div', id='mw-pages')
+    if soup is None:
+        raise ResultNoneException(f"{url}をid='mw-pages'で検索したsoup")
     category_elements = []
     groups = soup.find_all(class_="mw-category-group")
-    cat2 = re.sub(r" ", "", re.sub(r"\(.+?\)", "", cat))
+    category = re.sub(r" ", "", re.sub(r"\(.+?\)", "", category))
     for group in groups:
         if re.fullmatch(r"[ぁ-ゟa-zA-Z]+", group.find('h3').getText()):
             pages = group.find_all('a')
             for page in pages:
-                mem = re.sub(r" ", "", re.sub(r"\(.+?\)", "", page.getText()))
-                if mem not in cat2 and cat2 not in mem and 'Template:' not in mem:
+                ele = re.sub(r" ", "", re.sub(r"\(.+?\)", "", page.getText()))
+                if ele not in category and category not in ele \
+                        and 'Template:' not in ele:
                     category_elements.append(page.getText())
     return category_elements
 
 
 def genre_mode(genre):
+    category = get_sub_category(genre, sub=True)
+    if random.randint(0, 1):
+        try:
+            category = get_sub_category(category, sub=True)
+        except (ResultNoneException, NoResultException) as e:
+            print(e)
+    try:
+        category = get_sub_category(category, sub=True)
+    except (ResultNoneException, NoResultException) as e:
+        print(e)
+    category_elements = None
     while True:
-        cat = get_sub_category(genre, sub=True)
-        if random.randint(0, 1):
-            cat = get_sub_category(cat, sub=True)
-            if cat is None:
-                continue
-        cat = get_sub_category(cat, sub=False)
-        if cat is not None:
+        try:
+            category_elements = get_pages(category)
+        except ResultNoneException as e:
+            print(e)
+            # 属するページがなく下位カテゴリしか存在しないカテゴリーの場合、下位カテゴリーを取得
+            category = get_sub_category(category)
+        if category_elements is not None:
             break
-    category_elements = get_pages(cat)
-    return cat, category_elements
+    return category, category_elements
 
 
 def get_soup(url):
@@ -167,6 +189,8 @@ def choose_category(word_key, soup=None):
     if soup is None:
         url = f"https://ja.wikipedia.org/wiki/{word_key}"
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
+        if soup is None:
+            raise ResultNoneException(f"{url}のsoup")
     try:
         li_tags = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
     except AttributeError:
@@ -208,7 +232,7 @@ def choose_category(word_key, soup=None):
     # カテゴリーに属する記事数によりカテゴリーを選別
     small_categories, large_categories = [], []
     for category, (category_element_num, category_elements) in zip(categories, data):
-        if CAT_MEM_MIN <= category_element_num <= CAT_MEM_MAX:
+        if CAT_ELE_MIN <= category_element_num <= CAT_ELE_MAX:
             small_categories.append((category, category_elements))
         else:
             large_categories.append((category_element_num, category, category_elements))
@@ -309,7 +333,7 @@ def shape_text(sent, cat, words, sub_words, first=False):
     return sent, False
 
 
-def shape_soup(soup, true_word):
+def shape_soup(soup, anti=True):
     # 余分なタグを個別に除外
     extras = ['table', 'small', 'sup', 'header']
     for extra in extras:
@@ -325,7 +349,7 @@ def shape_soup(soup, true_word):
         pass
     texts = soup.find_all('p')[:P_TAGS_MAX]
     # feat_X用にpタグが少ない場合はliタグも追加
-    if len(texts) < 5 and true_word is None:
+    if len(texts) < 5 and not anti:
         try:
             soup.find('div', {"role": 'navigation'}).decompose()
         except AttributeError:
@@ -346,7 +370,9 @@ def make_feats(cat, word_key, soup, num, true_word=None):
     """
     ワードとカテゴリーと記事の情報から特徴文をnum個生成
     """
-    texts = shape_soup(soup, true_word)
+    # antiのときはtrue_wordが設定され、antiでないときはNoneになる
+    anti = true_word is not None
+    texts = shape_soup(soup, anti)
     # print(texts)
     replace_words, replace_sub_words = make_replace_words(word_key, texts, true_word)
     first_feat = ''
@@ -520,20 +546,20 @@ def generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_m
         stage_dicts[-1]["next_is_last"] = True
     # last stage
     stage_dicts.append(
-        {
-            "input_theme": input_theme,
-            "theme": theme,
-            "stage": -1,
-            "seed": seed_num,
-            "next_is_last": True,
-            "category": category,
-            "anti_theme": anti_themes[-1],
-            "featX": "わからへん",
-            "featX_reply": f"わからへんことない！おかんの好きな [{category}] は[{theme}]!",
-            "anti_featX": f"オカンがいうには[{theme}]ではないっていうてた。",
-            "anti_featX_reply": f"先言えよ！",
-            "conjunction": f"申し訳ないなと思って。オトンがいうには、[{anti_themes[-1]}] ちゃうかって。"
-        }
+        dict(
+            input_theme=input_theme,
+            theme=theme,
+            stage=-1,
+            seed=seed_num,
+            next_is_last=True,
+            category=category,
+            anti_theme=anti_themes[-1],
+            featX="わからへん",
+            featX_reply=f"わからへんことない！おかんの好きな [{category}] は[{theme}]!",
+            anti_featX=f"オカンがいうには[{theme}]ではないっていうてた。",
+            anti_featX_reply=f"先言えよ！",
+            conjunction=f"申し訳ないなと思って。オトンがいうには、[{anti_themes[-1]}] ちゃうかって。"
+        )
     )
     stage_dicts[0]['present'] = present
     stage_dicts[0]['prediction1'], stage_dicts[0]['prediction2'] = predictions[0], predictions[1]
@@ -558,7 +584,7 @@ def choose_anti_themes(theme, category, category_elements, num):
             # print(f"アンチテーマの候補：{ele}")
 
     if len(category_element_list) == 0:
-        return None, None, None
+        raise NoResultException("category_element_list")
 
     article_for_present = random.choice(category_element_list)
     present = get_present(article_for_present)
@@ -573,7 +599,7 @@ def choose_anti_themes(theme, category, category_elements, num):
     return anti_themes, predictions, present
 
 
-def present_only(present, seed_num):
+def get_present_only(present, seed_num):
     """つかみだけ"""
     return [
         {
@@ -601,16 +627,22 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
     np.random.seed(seed_num)
     # ジャンルモード
     if genre is not None:
-        category, category_elements = genre_mode(genre)
-        theme = random.choice(category_elements)
-        print(f"ジャンルモード「カテゴリー：{category}、テーマ：{theme}」")
-        anti_themes, predictions, present = choose_anti_themes(theme, category, category_elements, stage_max)
+        print(genre)
+        while True:
+            category, category_elements = genre_mode(genre)
+            if len(category_elements) == 0:
+                continue
+            theme = random.choice(category_elements)
+            print(f"ジャンルモード「カテゴリー：{category}、テーマ：{theme}」")
+            try:
+                anti_themes, predictions, present = choose_anti_themes(theme, category, category_elements, stage_max)
+            except NoResultException as e:
+                print(e)
+                continue
+            break
         if stage_max == 0:
-            return present_only(present, seed_num)
+            return get_present_only(present, seed_num)
         random.seed(seed_num)
-        if anti_themes is None:
-            print('retry generating story')
-            return generate_story_list(input_theme, seed_num, stage_max, genre)
         res = generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present)
         return res
     # テーマモード
@@ -641,7 +673,7 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
             return False
     anti_themes, predictions, present = choose_anti_themes(theme, category, category_elements, stage_max)
     if stage_max == 0:
-        return present_only(present, seed_num)
+        return get_present_only(present, seed_num)
     # print("choose_anti_themes:", time.time()-t)
     if len(anti_themes) > 0:
         print('last of generate_story_list')

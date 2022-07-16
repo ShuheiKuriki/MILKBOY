@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from .coreAI import generate_story_list
 from collections import defaultdict
+from pprint import pprint
+
 GLOBAL_DICTS = defaultdict(lambda: {})
 
 GENRES = ['日本の映画', '日本の漫画', 'アニメ', '日本のゲーム', '日本の歴史', '日本の地理', '日本のスポーツ', '日本の音楽', '日本語の語句',
@@ -45,10 +47,15 @@ def genre(request):
     k = (data['genre'], data['seed'], data['stage_max'])
     if k not in GLOBAL_DICTS or data['stage'] not in GLOBAL_DICTS[k]:
         result_list = generate_story_list('', data['seed'], data['stage_max'], data['genre'])
+        print(f"ネタの長さ：{len(result_list)}")
         if len(result_list) == 1:
-            return JsonResponse(result_list[0])
+            result = result_list[0]
+            GLOBAL_DICTS[k][result['stage']] = result
+            return JsonResponse(result)
 
         for result in result_list:
-            GLOBAL_DICTS[(data['genre'], data['seed'], data['stage_max'])][result['stage']] = result
-    print(GLOBAL_DICTS[k][data['stage']])
+            GLOBAL_DICTS[k][result['stage']] = result
+
+    pprint(GLOBAL_DICTS[k][data['stage']])
+
     return JsonResponse(GLOBAL_DICTS[k][data['stage']])
