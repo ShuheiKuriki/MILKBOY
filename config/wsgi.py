@@ -130,8 +130,8 @@ def auto_reply():
         stage_max = 5
         stage_num = 0
         story_list = []
-        print(tweet['name'])
-        print(tweet['text'])
+        print(f"リプライツイートアカウント名：{tweet['user']['name']}")
+        print(f"ツイート内容：{tweet['text']}")
         theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
         print(theme)
         if '@' in theme or len(theme) > 30:
@@ -172,6 +172,7 @@ def auto_reply():
         reply_text = f"@{tweet['user']['screen_name']}\nネタを投稿しました！\n"
         reply_text += f"https://twitter.com/milkboy_core_ai/status/{first_tweet['id']}"
         update_status(reply_text, tweet['id_str'])
+        print("ツイート成功")
 
 
 def multiple_tweets(texts, data):
