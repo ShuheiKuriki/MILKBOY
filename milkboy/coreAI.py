@@ -44,11 +44,9 @@ def get_present(article=''):
     present = ''
     url = BASE_WIKI + article if article != '' else RANDOM_WIKI
     print(f"プレゼント取得用url：{url}")
-    soup = None
-    try:
-        soup = BeautifulSoup(requests.get(url).text, "html.parser")
-    except ResultNoneException as e:
-        print(e)
+    soup = BeautifulSoup(requests.get(url).text, "html.parser")
+    if soup is None:
+        raise ResultNoneException(f"{url}のsoup")
     p_tags = shape_soup(soup, anti=True)
     max_len = 0
     for p_tag in p_tags:
@@ -147,7 +145,6 @@ def genre_mode(genre):
         category = get_sub_category(category, sub=True)
     except (ResultNoneException, NoResultException) as e:
         print(e)
-    category_elements = None
     while True:
         try:
             category_elements = get_pages(category)
@@ -155,7 +152,7 @@ def genre_mode(genre):
             print(e)
             # 属するページがなく下位カテゴリしか存在しないカテゴリーの場合、下位カテゴリーを取得
             category = get_sub_category(category)
-        if category_elements is not None:
+        else:
             break
     return category, category_elements
 
