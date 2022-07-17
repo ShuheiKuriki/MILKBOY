@@ -244,7 +244,7 @@ def daily():
         schedule.every().day.at(tweet_time).do(tweet_story)
     while True:
         schedule.run_pending()
-        time.sleep(300)
+        time.sleep(1200)
         req = requests.get("https://www.milkboy-core-ai.tech")
         print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
 

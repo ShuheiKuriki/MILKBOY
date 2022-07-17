@@ -110,7 +110,7 @@ def get_sub_category(category, sub=True):
             if (sub and nums[0] >= 1) or (not sub and CAT_ELE_MIN <= nums[1] <= CAT_ELE_MAX):
                 sub_categories.append(info.find('a').getText())
     if len(sub_categories) == 0:
-        raise NoResultException("sub_categories")
+        raise NoResultException(f"{url}のsub_categories")
     return random.choice(sub_categories)
 
 
@@ -584,7 +584,7 @@ def choose_anti_themes(theme, category, category_elements, num):
             # print(f"アンチテーマの候補：{ele}")
 
     if len(category_element_list) == 0:
-        raise NoResultException("category_element_list")
+        raise NoResultException(f"{category}の適切なカテゴリー要素")
 
     article_for_present = random.choice(category_element_list)
     present = get_present(article_for_present)

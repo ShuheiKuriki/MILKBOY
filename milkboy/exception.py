@@ -4,7 +4,7 @@ class NoResultException(Exception):
         self.target = target
 
     def __str__(self):
-        return f"{self.target}が0件です"
+        return f"{self.target}が見つかりませんでした"
 
 
 class ResultNoneException(Exception):
