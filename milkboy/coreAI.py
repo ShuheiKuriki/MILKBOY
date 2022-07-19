@@ -8,7 +8,8 @@ import random
 import time
 from pprint import pprint
 from bs4 import BeautifulSoup
-from .exception import NoResultException, ResultNoneException
+from exception import NoResultException, ResultNoneException, \
+                    FailError, InvalidSentenceException, EmptySentenceException
 import spacy
 from spacy.matcher import Matcher
 
@@ -76,12 +77,20 @@ def get_category_info(url):
     # print("mid", t2-t1, len(text))
     soup = BeautifulSoup(text, "html.parser").find('div', id='mw-pages')
     if soup is None:
-        raise ResultNoneException(f"{url}のid='mw-pages'のsoup")
+        # 存在しないページの場合
+        print(f"{url}のページは存在しません")
+        return 0, []
+
+    category_element_num_sentence = soup.find('p').getText(strip=True)
+    if category_element_num_sentence == "このカテゴリには以下のページのみが含まれています。":
+        category_element_num = 1
+    else:
+        category_element_num = int(re.sub(r"\D", "", category_element_num_sentence[:20]))
+
     category_elements = []
-    category_element_num = int(re.sub(r"\D", "", soup.find('p').getText(strip=True)[:20]))
     groups = soup.find_all(class_="mw-category-group")
     for group in groups:
-        if re.fullmatch(r"[ぁ-ゟa-zA-Z]+", group.find('h3').getText()):
+        if re.fullmatch(r"[ぁ-ゟa-zA-Z1-9|*]+", group.find('h3').getText()):
             elements = group.find_all('a')
             for ele in elements:
                 category_elements.append(ele.getText())
@@ -98,17 +107,19 @@ def get_sub_category(category, sub=True):
     soup = BeautifulSoup(text, "html.parser").find(id='mw-subcategories')
     if soup is None:
         raise ResultNoneException(f"{url}をid='mw-subcategories'で検索したsoup")
+
     sub_categories = []
-    groups = soup.find_all('ul')
-    for group in groups:
+    for group in soup.find_all('ul'):
         information = group.find_all(class_='CategoryTreeItem')
         for info in information:
             title = info.find_all('span')[-1]['title']
             nums = list(map(int, re.findall(r'\d+', title)))
             if (sub and nums[0] >= 1) or (not sub and CAT_ELE_MIN <= nums[1] <= CAT_ELE_MAX):
                 sub_categories.append(info.find('a').getText())
+
     if len(sub_categories) == 0:
         raise NoResultException(f"{url}のsub_categories")
+
     return random.choice(sub_categories)
 
 
@@ -190,13 +201,13 @@ def choose_category(word_key, soup=None):
             raise ResultNoneException(f"{url}のsoup")
     try:
         li_tags = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
-    except AttributeError:
-        return False, False
+    except AttributeError as e:
+        raise e
     word = re.sub(r" ", "", re.sub(r"\(.+?\)", "", word_key))
-    cnt = 0
+    cat_num_cnt = 0
     urls = []
     categories = []
-    prohibit = ['議論が行われているページ', '告知事項があるページ', '同名の作品',
+    prohibit = ['議論が行われているページ', '告知事項があるページ', '同名の作品', '誤表記',
                 '提案があるページ', '質問があるページ', '確認・注意事項があるページ']
     for li in li_tags:
         # print('start', time.time()-t)
@@ -211,15 +222,15 @@ def choose_category(word_key, soup=None):
                 or li_text in word_key \
                 or li_text in word:
             continue
-        if re.search('.[0-9][0-9]', li_text) is not None:
+        if re.search(r'.\d\d', li_text) is not None:
             continue
 
         category_key = li.find('a')['title']
         categories.append(li_text)
         url = f"https://ja.wikipedia.org/wiki/{category_key}"
         urls.append(url)
-        cnt += 1
-        if cnt == CAT_NUM_MAX:
+        cat_num_cnt += 1
+        if cat_num_cnt == CAT_NUM_MAX:
             break
 
     loop = asyncio.new_event_loop()
@@ -227,23 +238,24 @@ def choose_category(word_key, soup=None):
     data = loop.run_until_complete(handler(loop, urls, get_category_info))
 
     # カテゴリーに属する記事数によりカテゴリーを選別
-    small_categories, large_categories = [], []
+    normal_categories, large_categories = [], []
     for category, (category_element_num, category_elements) in zip(categories, data):
         if CAT_ELE_MIN <= category_element_num <= CAT_ELE_MAX:
-            small_categories.append((category, category_elements))
+            normal_categories.append((category, category_elements))
         else:
             large_categories.append((category_element_num, category, category_elements))
-    large_categories.sort()
 
-    if len(small_categories) > 0:
-        ind = np.random.binomial(len(small_categories) - 1, 0.4)
-        # if ind >= len(small_categories): ind = 0
-        return small_categories[ind]
-    if len(large_categories) == 0:
-        return False, False
-    # if ind >= len(large_categories): ind = 0
-    ind = np.random.binomial(len(large_categories) - 1, 0.4)
-    return large_categories[ind][1:]
+    if len(normal_categories) == 0:
+        if len(large_categories) == 0:
+            raise NoResultException("入力されたテーマに対応するカテゴリー")
+        large_categories.sort()
+        # if ind >= len(large_categories): ind = 0
+        ind = np.random.binomial(len(large_categories) - 1, 0.4)
+        return large_categories[ind][1:]
+
+    ind = np.random.binomial(len(normal_categories) - 1, 0.4)
+    # if ind >= len(normal_categories): ind = 0
+    return normal_categories[ind]
 
 
 def make_replace_words(word_key, texts, true_word):
@@ -296,34 +308,43 @@ def replace_theme(sent, cat, words, sub_words):
 
 def shape_text(sent, cat, words, sub_words, first=False):
     sent = sent.replace(r" ", "").replace("　", "")
-    if len(sent) == 0 or sent[-1] == '、':
-        return '', False
+    if len(sent) == 0:
+        raise EmptySentenceException
+    if sent[-1] in '、」':
+        raise InvalidSentenceException(f"文末が{sent[-1]}で終わっている", sent)
+
     # 一文目の禁止ワード
     pre = ['これ', 'それ', 'この', 'その', 'あの', 'ここ', 'そこ', 'こう', 'そう', '以上', '上記', '上述']
     # 全てに共通する禁止ワード
     post = ['以下', '下記', '下表', '※', '次の', '凡例', '参照', '別途', '記載', '記述', '述べる', 'ISBN', '出典', '本項', '\\']
     for word in post:
         if word in sent:
-            return False, False
+            raise InvalidSentenceException("禁止ワードを含む", sent)
+
+    if sent[:3] in ["また、", "なお、"]:
+        sent = sent[3:]
+    elif sent[:2] in ["また", "なお"]:
+        sent = sent[2:]
+
     tokens = nlp(sent)
     if tokens[-1].pos_ == 'SPACE':
         if len(tokens) == 1:
-            return '', False
+            raise EmptySentenceException
         tokens = tokens[:-1]
+
     if tokens[-1].pos_ in ['PUNCT', 'ADP', 'CCONJ']:
-        return False, False
+        tokens = tokens[:-1]
+
     if first:
         if tokens[0].pos_ in ['ADP', 'CCONJ']:
-            return False, False
-        for token in tokens:
+            raise InvalidSentenceException("一文目の文頭が助詞または接続詞である", sent)
+
+        for i, token in enumerate(tokens):
             for pr in pre:
-                if pr in token.orth_:
-                    return False, False
+                if pr in token.orth_ and i < 10:
+                    raise InvalidSentenceException(f"一文目の{i+1}語目に指示語を含む", sent)
             if token.pos_ == 'PUNCT':
                 break
-            if token.dep_ == 'nsubj' and token.pos_ == 'PROPN' and token.orth_ not in words + sub_words:
-                if token.head.i >= len(tokens) - 7:
-                    return False, False
     sent = replace_theme(str(tokens), cat, words, sub_words)
     if 'その' + cat in sent:
         return sent, True
@@ -395,10 +416,12 @@ def make_feats(cat, word_key, soup, num, true_word=None):
             continue
         doc = text.split('。')
         for i, sent in enumerate(doc):
-            sent, flag2 = shape_text(sent, cat, replace_words, replace_sub_words, i == 0)
-            if sent is False:
+            try:
+                sent, flag2 = shape_text(sent, cat, replace_words, replace_sub_words, i == 0)
+            except InvalidSentenceException as e:
+                print(e)
                 break
-            if len(sent) == 0:
+            except EmptySentenceException:
                 continue
             if first_feat == '' and feat == '':
                 feat += sent + '。'
@@ -407,6 +430,7 @@ def make_feats(cat, word_key, soup, num, true_word=None):
             else:
                 break
             flag |= flag2
+
         if len(feat) >= FEAT_MIN:
             # print(feat, first_feat)
             if first_feat == '':
@@ -417,22 +441,28 @@ def make_feats(cat, word_key, soup, num, true_word=None):
                 feat_supplement.append(feat)
         feat = ''
         flag = False
+
     if true_word:  # anti_featXの場合
         if len(feat_set) >= 1:
             ind = np.random.binomial(len(feat_set) - 1, num)
             return feat_set[ind]
         return ''
+
     if first_feat != '':  # featXで、featが一つは見つかった場合
         if len(feat_set) >= num - 1:
             indices = sorted(random.sample(range(len(feat_set)), num - 1))
             return [first_feat] + list(np.array(feat_set)[indices])
+
         indices = sorted(random.sample(range(len(feat_supplement)), min(len(feat_supplement), num - 1 - len(feat_set))))
         return [first_feat] + feat_set + list(np.array(feat_supplement)[indices])
+
     if len(feat_set) + len(feat_supplement) == 0:
         return ['']
+
     if len(feat_set) >= num:
         indices = sorted(random.sample(range(len(feat_set)), num))
         return list(np.array(feat_set)[indices])
+
     indices = sorted(random.sample(range(len(feat_supplement)), min(len(feat_supplement), num - len(feat_set))))
     return feat_set + list(np.array(feat_supplement)[indices])
 
@@ -451,12 +481,14 @@ def make_all_feats(cat, theme, anti_themes):
     for anti, soup in zip(anti_themes, soups[1:]):
         feat = make_feats(cat, anti, soup, 0.5, theme)
         anti_feats.append(feat)
+
     feats = make_feats(cat, theme, soups[0], max(1, len(anti_feats)))
     if len(feats) == 0:
         feats = [""]
         anti_feats = [""]
     elif len(anti_feats) == 0:
         anti_feats = [""]
+
     return feats, anti_feats
 
 
@@ -569,19 +601,25 @@ def choose_anti_themes(theme, category, category_elements, num):
     presentを1個と、anti_themeをランダムにnum個選ぶ
     """
     category_element_list = []
+    category_element_sub_list = []
     theme = re.sub(r" ", "", re.sub(r"\(.+?\)", "", theme))
     category = re.sub(r" ", "", re.sub(r"\(.+?\)", "", category))
 
     for ele in category_elements:
         ele = re.sub(r" ", "", re.sub(r"\(.+?\)", "", ele))
-        if ele not in theme and theme not in ele and \
-                ele not in category and category not in ele and \
-                'Template:' not in ele:
+        if 'Template:' in ele:
+            continue
+        elif ele in theme or theme in ele or \
+                ele in category or category in ele:
+            category_element_sub_list.append(ele)
+        else:
             category_element_list.append(ele)
             # print(f"アンチテーマの候補：{ele}")
 
     if len(category_element_list) == 0:
-        raise NoResultException(f"{category}の適切なカテゴリー要素")
+        if len(category_element_sub_list) == 0:
+            raise NoResultException(f"「{category}」の適切なカテゴリー要素")
+        category_element_list = category_element_sub_list
 
     article_for_present = random.choice(category_element_list)
     present = get_present(article_for_present)
@@ -640,8 +678,7 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
         if stage_max == 0:
             return get_present_only(present, seed_num)
         random.seed(seed_num)
-        res = generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present)
-        return res
+        return generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present)
     # テーマモード
     if input_theme in ['', 'random']:
         # テーマランダムモード
@@ -650,24 +687,28 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
                 soup = BeautifulSoup(requests.get(RANDOM_WIKI).text, "html.parser")
                 theme = soup.find('head').find('title').getText().replace(' - Wikipedia', '')
                 category, category_elements = choose_category(theme, soup)
-                print(f"カテゴリー：{category}、記事数：{len(category_elements)}")
+                print(f"テーマ：{theme}、カテゴリー：{category}、カテゴリー要素数：{len(category_elements)}")
                 break
-            except AttributeError:
-                pass
+            except (AttributeError, NoResultException) as e:
+                print(e)
+                continue
     else:
+        # テーマノーマルモード
         searched_list = wikipedia.search(input_theme)
         # print(searched_list)
         # print("search:",time.time()-t)
         for theme in searched_list:
             print(f"テーマ候補：{theme}")
-            category, category_elements = choose_category(theme)
-            print(f"カテゴリー：{category}、記事数：{len(category_elements)}")
-            # print("choose_category:", time.time()-t)
-            if category is not False:
+            try:
+                category, category_elements = choose_category(theme)
+            except (AttributeError, NoResultException) as e:
+                print(e)
+            else:
+                print(f"カテゴリー：{category}、記事数：{len(category_elements)}")
+                # print("choose_category:", time.time()-t)
                 break
         else:
-            print("カテゴリー選択失敗")
-            return False
+            raise FailError("カテゴリー選択")
     anti_themes, predictions, present = choose_anti_themes(theme, category, category_elements, stage_max)
     if stage_max == 0:
         return get_present_only(present, seed_num)
@@ -680,20 +721,22 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
 
 if __name__ == "__main__":
     args = sys.argv
-    entry_theme = args[1] if len(args) > 1 else 'random'
+    test_theme = args[1] if len(args) >= 2 else 'random'
+    trial_times = int(args[2]) if len(args) >= 3 else 1
 
     start = time.time()
     t = start
     power = 0
-    trials = 1
-    for _ in range(trials):
-        number = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
-        generated_story = generate_story_list(input_theme=entry_theme, seed_num=number, stage_max=4)
-        pprint(generated_story)
+    for cnt in range(trial_times):
+        print(f"{cnt+1}回目")
+        test_seed = int(args[2]) if len(args) > 2 else random.randint(0, 100000)
+        generated_story = generate_story_list(input_theme=test_theme, seed_num=test_seed, stage_max=4)
+        # pprint(generated_story)
         new_t = time.time()
         power += (new_t - t) ** 2
         t = new_t
+        print()
     total = t - start
-    print("実行時間の平均値：", total / trials)
+    print("実行時間の平均値：", total / trial_times)
     # 1回のみ実行の場合は0になる
-    print("実行時間の標準偏差：", (power / trials - (total / trials) ** 2) ** 0.5)
+    print("実行時間の標準偏差：", (power / trial_times - (total / trial_times) ** 2) ** 0.5)
