@@ -8,7 +8,7 @@ import random
 import time
 from pprint import pprint
 from bs4 import BeautifulSoup
-from exception import NoResultException, ResultNoneException, \
+from .exception import NoResultException, ResultNoneException, \
                     FailError, InvalidSentenceException, EmptySentenceException
 import spacy
 from spacy.matcher import Matcher
