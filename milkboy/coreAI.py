@@ -723,6 +723,7 @@ if __name__ == "__main__":
     args = sys.argv
     test_theme = args[1] if len(args) >= 2 else 'random'
     trial_times = int(args[2]) if len(args) >= 3 else 1
+
     start = time.time()
     t = start
     power = 0
