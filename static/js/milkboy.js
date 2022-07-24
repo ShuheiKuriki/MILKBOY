@@ -381,15 +381,13 @@ async function getJSON() {
             // CUR_STAGE_OBJ = CUR_STAGE_OBJ[0];
             NEED_STORY = false;
             if (NEXT) show_next();
-        }
-        else {
+        } else {
             say(0, 'エラーが発生したため、「次のネタ」ボタンを押してやりなおしてください');
         }
     };
     if (GENRE=='') {
-        request_url = BASE_URL + "theme?input_theme="+ INPUT_VALUE +"&stage=" + STAGE + "&seed=" + SEED + "&stage_max=" + STAGE_MAX
-    }
-    else {
+        request_url = BASE_URL + "theme?input_theme=" + INPUT_VALUE + "&stage=" + STAGE + "&seed=" + SEED + "&stage_max=" + STAGE_MAX
+    } else {
         request_url = BASE_URL + "genre?stage=" + STAGE + "&seed=" + SEED + "&stage_max=" + STAGE_MAX + "&genre=" + GENRE
     }
     console.log(request_url);
