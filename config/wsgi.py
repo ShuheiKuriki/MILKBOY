@@ -130,8 +130,11 @@ def auto_reply():
         stage_max = 5
         stage_num = 0
         story_list = []
-        print(f"リプライツイートアカウント名：{tweet['user']['name']}")
-        print(f"ツイート内容：{tweet['text']}")
+        try:
+            print(f"リプライツイートアカウント名：{tweet['user']['name']}")
+            print(f"ツイート内容：{tweet['text']}")
+        except KeyError:
+            continue
         theme = tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
         print(theme)
         if '@' in theme or len(theme) > 30:
