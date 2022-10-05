@@ -18,6 +18,7 @@ import requests
 from django.core.wsgi import get_wsgi_application
 from milkboy.coreAI import generate_story_list
 from twitter import Twitter, TwitterStream, OAuth
+from milkboy.exception import FailError
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
 
@@ -84,11 +85,13 @@ def tweet_story():
         while True:
             start_t = time.time()
             seed = random.randint(0, 100000)
-            if genre_name == 'random':
-                story_list = generate_story_list('random', seed, stage_max)
-            else:
-                story_list = generate_story_list('', seed, stage_max, genre_name)
-            if story_list is False:
+            try:
+                if genre_name == 'random':
+                    story_list = generate_story_list('random', seed, stage_max)
+                else:
+                    story_list = generate_story_list('', seed, stage_max, genre_name)
+            except FailError as e:
+                print(e)
                 continue
             stage_num = len(story_list)
             if time.time() - start_t > 30:
