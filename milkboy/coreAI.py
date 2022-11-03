@@ -25,9 +25,10 @@ BASE_WIKI = 'https://ja.wikipedia.org/wiki'
 RANDOM_WIKI = f'{BASE_WIKI}/Special:Random'
 
 
-def select_neta_words(theme: str, category: str, category_articles: list[str], num: int) -> tuple[list[str], list[str], str]:
+def select_neta_words(theme: str, category: str, category_articles: list[str], num: int)\
+        -> tuple[list[str], list[str], str]:
     """
-        カテゴリーに属するテーマ記事の中からpresentを1個と、predictionsを2個と、anti_themeをランダムにnum個選ぶ
+        カテゴリーに属するテーマ記事の中からanti_themeをランダムにnum個と、predictionsを2個と、presentを1個選ぶ
     """
     # 記事リストを作る
     category_article_list = []
@@ -67,21 +68,21 @@ def select_neta_words(theme: str, category: str, category_articles: list[str], n
     return anti_themes, predictions, present
 
 
-def get_sub_category(category: str, sub=True) -> str:
+def get_sub_category(category: str, sub: bool = True) -> str:
     """
         カテゴリーページにアクセスし、適切なサブカテゴリーを1つ選んで返す
     """
     soup = get_category_soup(category)
 
-    subcategories_soup = soup.find(id='mw-subcategories')
+    subcategories_soup: Tag | None = soup.find(id='mw-subcategories')
     if subcategories_soup is None:
         raise ResultNoneException(f"{category}ページをid='mw-subcategories'で検索したsoup")
 
     sub_categories = []
     for group in subcategories_soup.find_all('ul'):
-        information = group.find_all(class_='CategoryTreeItem')
+        information: list[Tag] = group.find_all(class_='CategoryTreeItem')
         for info in information:
-            title = info.find_all('span')[-1]['title']
+            title: str = info.find_all('span')[-1]['title']
             nums = list(map(int, re.findall(r'\d+', title)))
             if (sub and nums[0] >= 1) or (not sub and CAT_ELE_MIN <= nums[1] <= CAT_ELE_MAX):
                 sub_categories.append(info.find('a').getText())
@@ -100,7 +101,7 @@ def get_category_elements(category: str) -> list[str]:
     """
     soup = get_category_soup(category)
 
-    mw_pages_soup = soup.find('div', id='mw-pages')
+    mw_pages_soup: Tag | None = soup.find('div', id='mw-pages')
     if mw_pages_soup is None:
         raise ResultNoneException(f"{category}ページをid='mw-pages'で検索したsoup")
 
@@ -109,7 +110,7 @@ def get_category_elements(category: str) -> list[str]:
     category = re.sub(r" ", "", re.sub(r"\(.+?\)", "", category))
     for group in groups:
         if re.fullmatch(r"[ぁ-ゟa-zA-Z]+", group.find('h3').getText()):
-            a_tags = group.find_all('a')
+            a_tags: list[Tag] = group.find_all('a')
             for a_tag in a_tags:
                 ele = re.sub(r" ", "", re.sub(r"\(.+?\)", "", a_tag.getText()))
                 if ele not in category and category not in ele \
@@ -119,7 +120,8 @@ def get_category_elements(category: str) -> list[str]:
     return category_elements
 
 
-def gather_feats(category, word_key, soup, is_anti, true_word=None):
+def gather_feats(category: str, word_key: str, soup: BeautifulSoup, is_anti: bool, true_word: str = None) \
+        -> list[str] | tuple[str, list[str], list[str]]:
     """
         候補となるアンチ特徴文をかき集める
     """
@@ -174,21 +176,21 @@ def gather_feats(category, word_key, soup, is_anti, true_word=None):
     return feats if is_anti else (first_feat, feats, feat_supplement)
 
 
-def select_category_from_theme(theme, soup=None):
+def get_category_info_from_theme(theme: str, soup: BeautifulSoup = None) -> tuple[str, list[str]]:
     """
-        テーマが属するカテゴリーの中から条件を満たすものを選び出す
+        テーマが属するカテゴリーの中から条件を満たすカテゴリーのカテゴリー情報を返す
     """
     if soup is None:
         soup = get_theme_soup(theme)
 
-    word = re.sub(r" ", "", re.sub(r"\(.+?\)", "", theme))
+    word: str = re.sub(r" ", "", re.sub(r"\(.+?\)", "", theme))
     category_num_cnt = 0
     urls = []
     categories = []
     prohibit_category = ['議論が行われているページ', '告知事項があるページ', '同名の作品', '誤表記',
                          '提案があるページ', '質問があるページ', '確認・注意事項があるページ']
 
-    category_links = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
+    category_links: list[Tag] = soup.find('div', id='mw-normal-catlinks').find('ul').find_all('li')
 
     for category_link in category_links:
         # print('start', time.time()-t)
@@ -209,7 +211,7 @@ def select_category_from_theme(theme, soup=None):
 
         categories.append(category_name)
 
-        category_page_title = category_link.find('a')['title']
+        category_page_title: str = category_link.find('a')['title']
         url = f"{BASE_WIKI}/{category_page_title}"
         urls.append(url)
 
@@ -218,7 +220,7 @@ def select_category_from_theme(theme, soup=None):
             break
 
     loop = asyncio.new_event_loop()
-    data = loop.run_until_complete(handler(loop, urls, get_category_info))
+    data: list[tuple[int, list[str]]] = loop.run_until_complete(handler(loop, urls, get_category_info))
 
     # カテゴリーに属する記事数によりカテゴリーを選別
     normal_categories, large_categories = [], []
@@ -233,17 +235,16 @@ def select_category_from_theme(theme, soup=None):
             raise NoResultException("入力されたテーマに対応するカテゴリー")
         large_categories.sort()
         # if ind >= len(large_categories): ind = 0
-        ind = np.random.binomial(len(large_categories) - 1, 0.4)
-        category = large_categories[ind][1:]
-        return category
+        ind: int = np.random.binomial(len(large_categories) - 1, 0.4)
+        category_info: tuple[str, list[str]] = large_categories[ind][1:]
+    else:
+        ind = np.random.binomial(len(normal_categories) - 1, 0.4)
+        # if ind >= len(normal_categories): ind = 0
+        category_info = normal_categories[ind]
+    return category_info
 
-    ind = np.random.binomial(len(normal_categories) - 1, 0.4)
-    # if ind >= len(normal_categories): ind = 0
-    category = normal_categories[ind]
-    return category
 
-
-def select_category_from_genre(genre):
+def select_category_from_genre(genre: str) -> tuple[str, list[str]]:
     """
         与えられたジャンルに属するカテゴリーとカテゴリー要素を選ぶ
     """
@@ -273,10 +274,13 @@ def select_category_from_genre(genre):
     return category, category_elements
 
 
-def select_true_feats(category, theme, true_soup, num):
+def select_true_feats(category: str, theme: str, true_soup: BeautifulSoup, num: int) -> list[str]:
     """
         カテゴリーとテーマと記事のsoupからfeat_Xをnum個生成
     """
+    first_feat: str
+    feats: list[str]
+    feat_supplement: list[str]
     first_feat, feats, feat_supplement = gather_feats(category, word_key=theme, soup=true_soup, is_anti=False)
     if first_feat != '':  # featXで、featが一つは見つかった場合
         if len(feats) >= num - 1:
@@ -293,27 +297,27 @@ def select_true_feats(category, theme, true_soup, num):
     return feats
 
 
-def select_anti_feat(category, anti_theme, anti_soup, prob, true_word):
+def select_anti_feat(category: str, anti_theme: str, anti_soup: BeautifulSoup, prob: float, true_word: str) -> str:
     """
         カテゴリーとアンチテーマと記事のsoupからanti_feat_Xを1個選択
     """
     feats = gather_feats(category, word_key=anti_theme, soup=anti_soup, is_anti=True, true_word=true_word)
     if len(feats) >= 1:
         # 二項分布でanti_featsの中からfeatsを一つ洗濯する
-        ind = np.random.binomial(len(feats) - 1, prob)
+        ind: int = np.random.binomial(len(feats) - 1, prob)
         feat = feats[ind]
     else:
         feat = ''
     return feat
 
 
-def make_all_feats(category, theme, anti_themes):
+def make_all_feats(category: str, theme: str, anti_themes: list[str]) -> tuple[list[str], list[str]]:
     """
         カテゴリ、テーマと全てのアンチテーマに対して特徴文を出力
     """
     urls = [f"https://ja.wikipedia.org/wiki/{word}" for word in [theme] + anti_themes]
     loop = asyncio.new_event_loop()
-    soups = loop.run_until_complete(handler(loop, urls, get_soup))
+    soups: list[BeautifulSoup] = loop.run_until_complete(handler(loop, urls, get_soup))
 
     anti_feats = []
     anti_soups = soups[1:]
@@ -331,7 +335,8 @@ def make_all_feats(category, theme, anti_themes):
     return feats, anti_feats
 
 
-def generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present):
+def generate_stages(input_theme: str, theme: str, anti_themes: list[str], category: str, seed_num: int
+                    , stage_max: int, predictions: list[str], present: str) -> list[dict]:
     """
         全ステージを生成
     """
@@ -389,7 +394,7 @@ def generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_m
     return stage_dicts
 
 
-def generate_story_list(input_theme, seed_num, stage_max, genre=None):
+def generate_story_list(input_theme: str, seed_num: int, stage_max: int, genre: str = None) -> list[dict]:
     """
         全体処理
     """
@@ -397,7 +402,7 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
     # ジャンルモード
     if genre is not None:
         print(genre)
-        while True:
+        for _ in range(10):
             category, category_articles = select_category_from_genre(genre)
             if len(category_articles) == 0:
                 continue
@@ -405,41 +410,45 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
             print(f"ジャンルモード「カテゴリー：{category}、テーマ：{theme}」")
             try:
                 anti_themes, predictions, present = select_neta_words(theme, category, category_articles, stage_max)
+                if stage_max == 0:
+                    return get_present_only(present, seed_num)
+                random.seed(seed_num)
+                return generate_stages(input_theme, theme, anti_themes, category
+                                       , seed_num, stage_max, predictions, present)
             except NoResultException as e:
                 print(e)
                 continue
-            break
-        if stage_max == 0:
-            return get_present_only(present, seed_num)
-        random.seed(seed_num)
-        return generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present)
+        raise FailError("ネタ作成")
+
     # テーマモード
     if input_theme in ['', 'random']:
         # テーマランダムモード
-        while True:
+        for _ in range(10):
             try:
                 soup = get_soup(RANDOM_WIKI)
                 theme = soup.find('head').find('title').getText().replace(' - Wikipedia', '')
-                category, category_articles = select_category_from_theme(theme, soup)
+                category, category_articles = get_category_info_from_theme(theme, soup)
                 print(f"テーマ：{theme}、カテゴリー：{category}、カテゴリー要素数：{len(category_articles)}")
                 break
             except (AttributeError, NoResultException) as e:
                 print(e)
                 continue
+        else:
+            raise FailError("カテゴリー選択")
     else:
         # テーマノーマルモード
-        searched_list = wikipedia.search(input_theme)
+        searched_list: list[str] = wikipedia.search(input_theme)
         # print(searched_list)
         # print("search:",time.time()-t)
         for theme in searched_list:
             print(f"テーマ候補：{theme}")
             try:
-                category, category_articles = select_category_from_theme(theme)
+                category, category_articles = get_category_info_from_theme(theme)
             except (AttributeError, NoResultException) as e:
                 print(e)
             else:
                 print(f"カテゴリー：{category}、記事数：{len(category_articles)}")
-                # print("select_category_from_theme:", time.time()-t)
+                # print("get_category_info_from_theme:", time.time()-t)
                 break
         else:
             raise FailError("カテゴリー選択")

@@ -1,9 +1,11 @@
 import asyncio
 import random
 import re
+from asyncio import *
+from typing import Any
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 try:
     from .exception import *
@@ -11,9 +13,10 @@ except ImportError:
     from exception import *
 
 import spacy
+from spacy import Language
 from spacy.matcher import Matcher
 
-nlp = spacy.load("ja_ginza")
+nlp: Language = spacy.load("ja_ginza")
 matcher = Matcher(nlp.vocab)
 
 # global
@@ -22,11 +25,11 @@ BASE_WIKI = 'https://ja.wikipedia.org/wiki'
 RANDOM_WIKI = f'{BASE_WIKI}/Special:Random'
 
 
-async def handler(loop, urls, func):
+async def handler(loop: AbstractEventLoop, urls: list[str], func: Any):
     """
         非同期処理のためにloop.run_until_completeに与えるコルーチンのリストを返す
     """
-    async def async_ex(url):
+    async def async_ex(url: str):
         # 非同期処理１つ分のコルーチン
         async with asyncio.Semaphore(20):
             # セマフォで最大並列数を制限
@@ -36,7 +39,7 @@ async def handler(loop, urls, func):
     return await asyncio.gather(*[async_ex(url) for url in urls])
 
 
-def get_present_only(present, seed_num):
+def get_present_only(present: str, seed_num: int) -> list[dict]:
     """つかみだけのステージを取得"""
     return [
         {
@@ -57,7 +60,7 @@ def get_present_only(present, seed_num):
     ]
 
 
-def feat_to_script(feat, is_anti, theme):
+def feat_to_script(feat: str, is_anti: bool, theme: str) -> tuple[str, str]:
     if len(feat) == 0 and not is_anti:
         speech = "オカンが言うには、これと言った特徴がないらしいねん。"
         reply = "これと言った特徴がない?! お前のオカン、頑張って特徴を思い出してくれ。"
@@ -102,43 +105,43 @@ def feat_to_script(feat, is_anti, theme):
     return speech, reply
 
 
-def shape_soup(soup, is_anti=True):
+def shape_soup(soup: BeautifulSoup, is_anti: bool = True) -> list[Tag]:
     """
         soupを整形して必要なpタグのみ残す。is_anti=Falseでpタグが少ない場合、liタグも追加
     """
-    soup = soup.find('div', {"class": 'mw-content-container'})
+    tag: Tag = soup.find('div', {"class": 'mw-content-container'})
     # 余分なタグを個別に除外
     extras = ['table', 'small', 'sup']
     for extra in extras:
-        for ex in soup.find_all(extra):
+        for ex in tag.find_all(extra):
             ex.decompose()
     try:
-        soup.find('div', {"class": 'thumb'}).decompose()
+        tag.find('div', {"class": 'thumb'}).decompose()
     except AttributeError:
         pass
     try:
-        soup.find('li', {"class": 'gallerybox'}).decompose()
+        tag.find('li', {"class": 'gallerybox'}).decompose()
     except AttributeError:
         pass
-    texts = soup.find_all('p')[:P_TAGS_MAX]
+    p_tags: list[Tag] = tag.find_all('p')[:P_TAGS_MAX]
     # feat_X用にpタグが少ない場合はliタグも追加
-    if len(texts) < 5 and not is_anti:
+    if len(p_tags) < 5 and not is_anti:
         try:
-            soup.find('div', {"role": 'navigation'}).decompose()
+            tag.find('div', {"role": 'navigation'}).decompose()
         except AttributeError:
             pass
-        for ol in soup.find_all('ol', class_='references'):
+        for ol in tag.find_all('ol', class_='references'):
             ol.decompose()
         try:
-            soup.find('div', {'id': 'catlinks'}).decompose()
+            tag.find('div', {'id': 'catlinks'}).decompose()
         except AttributeError:
             pass
-        soup.find('nav').decompose()
-        texts += soup.find_all('li')[:P_TAGS_MAX]
-    return texts
+        tag.find('nav').decompose()
+        p_tags += tag.find_all('li')[:P_TAGS_MAX]
+    return p_tags
 
 
-def get_soup(url):
+def get_soup(url: str) -> BeautifulSoup:
     """
         特徴文作成のためにwikiの本文を抽出する
     """
@@ -149,7 +152,7 @@ def get_soup(url):
     return soup
 
 
-def get_category_soup(category):
+def get_category_soup(category: str) -> BeautifulSoup:
     """
         カテゴリー記事のsoupを取得する
     """
@@ -157,7 +160,7 @@ def get_category_soup(category):
     return get_soup(url)
 
 
-def get_theme_soup(theme):
+def get_theme_soup(theme: str) -> BeautifulSoup:
     """
         記事のsoupを取得する
     """
@@ -165,7 +168,7 @@ def get_theme_soup(theme):
     return get_soup(url)
 
 
-def get_category_info(url):
+def get_category_info(url: str) -> tuple[int, list[str]]:
     """
         カテゴリーに属する記事数と、条件を満たすカテゴリーのリストを返す。handlerに与えて非同期処理する
     """
@@ -192,14 +195,14 @@ def get_category_info(url):
     groups = soup.find_all(class_="mw-category-group")
     for group in groups:
         if re.fullmatch(r"[ぁ-ゟa-zA-Z1-9|*]+", group.find('h3').getText()):
-            elements = group.find_all('a')
+            elements: list[Tag] = group.find_all('a')
             for ele in elements:
                 category_elements.append(ele.getText())
 
     return category_element_num, category_elements
 
 
-def get_present(article=''):
+def get_present(article: str = '') -> str:
     """
         wikipediaの記事からプレゼントを取得する
     """
@@ -239,7 +242,7 @@ def get_present(article=''):
     return present
 
 
-def make_replace_words(word_key, texts, true_word=None):
+def make_replace_words(word_key: str, texts: list[Tag], true_word: str = None) -> tuple[list[str], list[str]]:
     """
         特徴文中で置換する必要のあるワードを収集する。置換しないとネタバレになってしまうテーマに近い単語が該当
     """
@@ -277,7 +280,7 @@ def make_replace_words(word_key, texts, true_word=None):
     return replace_words, replace_sub_words
 
 
-def replace_theme(sent, cat, words, sub_words):
+def replace_theme(sent: str, cat: str, words: list[str], sub_words: list[str]) -> str:
     """
         sent（特徴文）中でテーマのネタバレになってしまう単語を「その『カテゴリー名』」に置換する
     """
@@ -291,7 +294,7 @@ def replace_theme(sent, cat, words, sub_words):
     return sent
 
 
-def shape_text(sent, cat, words, sub_words, first=False):
+def shape_text(sent: str, cat: str, words: list[str], sub_words: list[str], first: bool = False) -> tuple[str, bool]:
     """
         特徴文を整形する
     """
