@@ -1,9 +1,14 @@
-import re
 import asyncio
-import requests
 import random
+import re
+
+import requests
 from bs4 import BeautifulSoup
-from exception import ResultNoneException, InvalidSentenceException, EmptySentenceException
+
+try:
+    from .exception import ResultNoneException, InvalidSentenceException, EmptySentenceException
+except ImportError:
+    from exception import ResultNoneException, InvalidSentenceException, EmptySentenceException
 import spacy
 from spacy.matcher import Matcher
 

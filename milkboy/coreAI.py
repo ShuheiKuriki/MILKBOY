@@ -1,16 +1,19 @@
-import wikipedia
-import re
-import asyncio
-import requests
 import sys
-import numpy as np
-import random
 import time
-from pprint import pprint
-from exception import NoResultException, ResultNoneException, \
-    FailError, InvalidSentenceException, EmptySentenceException
-from utils import *
-import spacy
+
+import numpy as np
+import wikipedia
+
+try:
+    from .exception import NoResultException, ResultNoneException, \
+        FailError, InvalidSentenceException, EmptySentenceException
+except ImportError:
+    from exception import NoResultException, ResultNoneException, \
+        FailError, InvalidSentenceException, EmptySentenceException
+try:
+    from .utils import *
+except ImportError:
+    from utils import *
 
 wikipedia.set_lang("ja")
 
@@ -147,7 +150,7 @@ def gather_feats(category, word_key, soup, is_anti, true_word=None):
             text = re.sub(extra, "", text)
         if len(text) < 5:
             continue
-        doc = text.split('。')
+        doc = text.replace('\n', '').split('。')
         for i, sent in enumerate(doc):
             try:
                 first_sent = (i == 0)
@@ -164,7 +167,6 @@ def gather_feats(category, word_key, soup, is_anti, true_word=None):
             else:
                 break
             replace |= replace_flg
-
         if len(feat) >= FEAT_MIN:
             # print(feat, first_feat)
             if first_feat == '':
@@ -173,7 +175,7 @@ def gather_feats(category, word_key, soup, is_anti, true_word=None):
                 feats.append(feat)
             else:
                 feat_supplement.append(feat)
-    return feats if is_anti else first_feat, feats, feat_supplement
+    return feats if is_anti else (first_feat, feats, feat_supplement)
 
 
 def select_category_from_theme(theme, soup=None):
@@ -219,7 +221,7 @@ def select_category_from_theme(theme, soup=None):
         if category_num_cnt == CAT_NUM_MAX:
             break
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     data = loop.run_until_complete(handler(loop, urls, get_category_info))
 
     # カテゴリーに属する記事数によりカテゴリーを選別
@@ -314,14 +316,14 @@ def make_all_feats(category, theme, anti_themes):
         カテゴリ、テーマと全てのアンチテーマに対して特徴文を出力
     """
     urls = [f"https://ja.wikipedia.org/wiki/{word}" for word in [theme] + anti_themes]
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     soups = loop.run_until_complete(handler(loop, urls, get_soup))
 
     anti_feats = []
     anti_soups = soups[1:]
     for anti_theme, anti_soup in zip(anti_themes, anti_soups):
-        feat = select_anti_feat(category, anti_theme, anti_soup, prob=0.5, true_word=theme)
-        anti_feats.append(feat)
+        anti_feat = select_anti_feat(category, anti_theme, anti_soup, prob=0.5, true_word=theme)
+        anti_feats.append(anti_feat)
     if len(anti_feats) == 0:
         anti_feats = [""]
 
@@ -448,7 +450,7 @@ def generate_story_list(input_theme, seed_num, stage_max, genre=None):
     anti_themes, predictions, present = select_neta_words(theme, category, category_articles, stage_max)
     if stage_max == 0:
         return get_present_only(present, seed_num)
-    # print("choose_anti_themes:", time.time()-t)
+    # print("select_neta_words:", time.time()-t)
     if len(anti_themes) > 0:
         print('last of generate_story_list')
         return generate_stages(input_theme, theme, anti_themes, category, seed_num, stage_max, predictions, present)

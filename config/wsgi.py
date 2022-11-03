@@ -7,17 +7,18 @@ For more information on this file, see
 https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 """
 
-import os
-import time
 import datetime
+import os
 import random
-import schedule
 import threading
-import requests
+import time
 
+import requests
+import schedule
 from django.core.wsgi import get_wsgi_application
-from milkboy.coreAI import generate_story_list
 from twitter import Twitter, TwitterStream, OAuth
+
+from milkboy.coreAI import generate_story_list
 from milkboy.exception import FailError
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
@@ -113,7 +114,7 @@ def tweet_story():
             feat_text = [f"駒場「{story['featX']}」\n\n", f"内海「{story['featX_reply']}」\n\n",
                          f"駒場「{story['anti_featX']}」\n\n", f"内海「{story['anti_featX_reply']}」\n\n"]
             if i != stage_num - 2:
-                feat_text.append(f"駒場「{story['conjunction']}」\n\n")
+                feat_text.append(f"内海「{story['conjunction']}」\n\n")
             if i == stage_num - 1:
                 feat_text.append("内海「いや、絶対ちゃうやろ。」\n\n")
                 feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
@@ -170,7 +171,7 @@ def auto_reply():
             feat_text = [f"駒場「{story['featX']}」\n\n", f"内海「{story['featX_reply']}」\n\n",
                          f"駒場「{story['anti_featX']}」\n\n", f"内海「{story['anti_featX_reply']}」\n\n"]
             if i != stage_num - 2:
-                feat_text.append(f"駒場「{story['conjunction']}」\n\n")
+                feat_text.append(f"内海「{story['conjunction']}」\n\n")
             if i == stage_num - 1:
                 feat_text.append("内海「いや、絶対ちゃうやろ。」\n\n")
                 feat_text.append("内海「もうええわ、どうもありがとうございました。」\n\n")
