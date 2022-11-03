@@ -312,26 +312,28 @@ def shape_text(sent, cat, words, sub_words, first=False):
         sent = sent[3:]
     elif sent[:2] in ["また", "なお"]:
         sent = sent[2:]
-
     tokens = nlp(sent)
-    if tokens[-1].pos_ == 'SPACE':
-        if len(tokens) == 1:
-            raise EmptySentenceException
-        tokens = tokens[:-1]
+    try:
+        if tokens[-1].pos_ == 'SPACE':
+            if len(tokens) == 1:
+                raise EmptySentenceException
+            tokens = tokens[:-1]
 
-    if tokens[-1].pos_ in ['PUNCT', 'ADP', 'CCONJ']:
-        tokens = tokens[:-1]
+        if tokens[-1].pos_ in ['PUNCT', 'ADP', 'CCONJ']:
+            tokens = tokens[:-1]
 
-    if first:
-        if tokens[0].pos_ in ['ADP', 'CCONJ']:
-            raise InvalidSentenceException("一文目の文頭が助詞または接続詞である", sent)
+        if first:
+            if tokens[0].pos_ in ['ADP', 'CCONJ']:
+                raise InvalidSentenceException("一文目の文頭が助詞または接続詞である", sent)
 
-        for i, token in enumerate(tokens):
-            for pr in pre:
-                if pr in token.orth_ and i < 10:
-                    raise InvalidSentenceException(f"一文目の{i + 1}語目に指示語を含む", sent)
-            if token.pos_ == 'PUNCT':
-                break
+            for i, token in enumerate(tokens):
+                for pr in pre:
+                    if pr in token.orth_ and i < 10:
+                        raise InvalidSentenceException(f"一文目の{i + 1}語目に指示語を含む", sent)
+                if token.pos_ == 'PUNCT':
+                    break
+    except IndexError as e:
+        raise InvalidSentenceException("形態素解析に失敗した", sent)
     sent = replace_theme(str(tokens), cat, words, sub_words)
     replace_flg = 'その' + cat in sent
     return sent, replace_flg
