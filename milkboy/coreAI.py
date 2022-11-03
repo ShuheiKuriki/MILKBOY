@@ -5,14 +5,10 @@ import numpy as np
 import wikipedia
 
 try:
-    from .exception import NoResultException, ResultNoneException, \
-        FailError, InvalidSentenceException, EmptySentenceException
-except ImportError:
-    from exception import NoResultException, ResultNoneException, \
-        FailError, InvalidSentenceException, EmptySentenceException
-try:
+    from .exception import *
     from .utils import *
 except ImportError:
+    from exception import *
     from utils import *
 
 wikipedia.set_lang("ja")

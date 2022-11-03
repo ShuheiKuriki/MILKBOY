@@ -6,9 +6,10 @@ import requests
 from bs4 import BeautifulSoup
 
 try:
-    from .exception import ResultNoneException, InvalidSentenceException, EmptySentenceException
+    from .exception import *
 except ImportError:
-    from exception import ResultNoneException, InvalidSentenceException, EmptySentenceException
+    from exception import *
+
 import spacy
 from spacy.matcher import Matcher
 

@@ -49,11 +49,11 @@ config/settings/dev.py
 開発をする方には直接伝えます。
 
 その上でpython環境を用意し、環境内で
-```buildoutcfg
+```commandline
 pip install -r requirements.txt
 ```
 を実行。さらにルートディレクトリにて
-```buildoutcfg
+```commandline
 python manage.py runserver
 ```
 を実行するとローカルサーバーが起動します。
@@ -61,3 +61,7 @@ python manage.py runserver
 ## 本番環境
 本番環境については個人アカウントで公開したため、
 開発者以外は変更をpushできません。
+```commandline
+git push origin master
+```
+を実行すると、herokuにも自動的にpushされます。

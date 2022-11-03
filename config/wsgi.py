@@ -46,8 +46,7 @@ GENRE_dic = {
 
 GENRES = []
 for k, v in GENRE_dic.items():
-    for _ in range(v):
-        GENRES.append(k)
+    GENRES += [k]*v
 
 
 def get_auth():
@@ -146,7 +145,11 @@ def auto_reply():
         for _ in range(10):
             seed = random.randint(0, 100000)
             print(f"seed:{seed}")
-            story_list = generate_story_list(theme, seed, stage_max)
+            try:
+                story_list = generate_story_list(theme, seed, stage_max)
+            except FailError as e:
+                print(e)
+                continue
             if story_list is False:
                 continue
             stage_num = len(story_list)
