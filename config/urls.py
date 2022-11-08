@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
 from . import settings, views
 
 urlpatterns = [
@@ -27,5 +28,5 @@ try:
     debug = settings.dev.DEBUG    # この if 文 (5STEP) を追加します。
     import debug_toolbar
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
-except:
+except KeyError:
     pass

@@ -26,11 +26,13 @@ def schedule_action():
     schedules = ["09:00", "12:00", "15:00", "18:00", "21:00"]
     for tweet_time in schedules:
         schedule.every().day.at(tweet_time).do(regular_tweet)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 def access():
     while True:
-        schedule.run_pending()
         time.sleep(1200)
         req = requests.get("https://www.milkboy-core-ai.herokuapp.com")
         print('successfully accessed' if req.status_code == requests.codes.ok else 'access failed')
