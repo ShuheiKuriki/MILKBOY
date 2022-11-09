@@ -3,7 +3,7 @@ class NoResultException(Exception):
     """
         検索結果が0件だった場合の例外
     """
-    def __init__(self, target):
+    def __init__(self, target: str):
         self.target = target
 
     def __str__(self):
@@ -14,7 +14,7 @@ class ResultNoneException(Exception):
     """
         実行結果がNoneだった場合の例外
     """
-    def __init__(self, target):
+    def __init__(self, target: str):
         self.target = target
 
     def __str__(self):
@@ -25,7 +25,7 @@ class FailError(Exception):
     """
         ネタの生成に失敗した場合のエラー
     """
-    def __init__(self, target):
+    def __init__(self, target: str):
         self.target = target
 
     def __str__(self):
@@ -36,7 +36,7 @@ class InvalidSentenceException(Exception):
     """
         抽出した文章がネタに使うには不適切だった場合のエラー
     """
-    def __init__(self, reason, sentence):
+    def __init__(self, reason: str, sentence: str):
         self.reason = reason
         self.sentence = sentence
 
