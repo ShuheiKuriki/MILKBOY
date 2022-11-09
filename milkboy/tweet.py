@@ -53,31 +53,30 @@ for k, v in GENRE_dic.items():
     GENRES += [k]*v
 
 
-def present_script(theme: str, present: str) -> tuple[str, str]:
+def make_intro_scripts(theme: str, present: str, category: str, predict1: str, predict2: str) -> list[str]:
     text1 = f"{datetime.datetime.now().strftime('%m月%d日 %H:%M:%S')}\n\n" \
-           f"テーマ: {theme}\n\n" \
-           f"内海「どうもーミルクボーイです。お願いします。」\n\n"
+            f"テーマ: {theme}\n\n" \
+            f"内海「どうもーミルクボーイです。お願いします。」\n\n"
+
     text2 = "内海「あーありがとうございますー。"
     if len(present) >= 5:
         text2 += f'ね、今、[{present}]をいただきましたけどもね。こんなんなんぼあっても良いですからね、'
     else:
         text2 += 'ね、今、何もいただけませんでしたけどもね。何ももらえなくてもね、聞いてもらえるだけ'
     text2 += 'ありがたいですよ。いうとりますけどもね。」\n\n'
-    return text1, text2
 
+    text3 = f'駒場「うちのおかんがね、好きな[{category}]があるらしいんやけど、その名前をちょっと忘れたらしくてね。」\n\n' \
+            f'内海「好きな[{category}]忘れてもうて。どうなってんねんそれ。\n\n'
 
-def introduction(category: str, prediction1: str, prediction2: str) -> list[str]:
-    text1 = f'駒場「うちのおかんがね、好きな[{category}]があるらしいんやけど、その名前をちょっと忘れたらしくてね。」\n\n' \
-           f'内海「好きな[{category}]忘れてもうて。どうなってんねんそれ。\n\n'
-
-    text2 = f'内海「ほんでもおかんが好きな[{category}]なんて、[{prediction1}]か[{prediction2}]くらいでしょう。」\n\n' \
+    text4 = f'内海「ほんでもおかんが好きな[{category}]なんて、[{predict1}]か[{predict2}]くらいでしょう。」\n\n' \
             f'駒場「それが違うらしいねんな」\n\n'
 
-    text3 = f'内海「ほんだら俺がね、おかんの好きな[{category}]一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。」\n\n'
-    return [text1, text2, text3]
+    text5 = f'内海「ほんだら俺がね、おかんの好きな[{category}]一緒に考えてあげるから、どんな特徴言うてたかとか教えてみてよ。」\n\n'
+
+    return [text1, text2, text3, text4, text5]
 
 
-def update_status(tweet_text: str, reply_id: int = None) -> dict:
+def tweet_single_text(tweet_text: str, reply_id: int = None) -> dict:
     texts = []
     if len(tweet_text) > MAX_TWEET_LEN:
         left = 0
@@ -98,34 +97,32 @@ def update_status(tweet_text: str, reply_id: int = None) -> dict:
     return tweet_info
 
 
-def multiple_tweets(texts: list[str], tweet_info: dict) -> dict:
+def tweet_multiple_texts(texts: list[str], tweet_info: dict) -> dict:
     text = ''
     for tweet_text in texts:
         if len(text + tweet_text) <= MAX_TWEET_LEN:
             text += tweet_text
         elif len(text) == 0:
-            tweet_info = update_status(tweet_text, tweet_info['id'])
+            tweet_info = tweet_single_text(tweet_text, tweet_info['id'])
         else:
-            tweet_info = update_status(text, tweet_info['id'])
+            tweet_info = tweet_single_text(text, tweet_info['id'])
             text = tweet_text
-    tweet_info = update_status(text, tweet_info['id'])
+    tweet_info = tweet_single_text(text, tweet_info['id'])
     return tweet_info
 
 
 def tweet_story(story_list: list[dict]) -> dict:
     stage_num = len(story_list)
     first_stage = story_list[0] if len(story_list) > 1 else story_list[-1]
-    prediction1, prediction2 = first_stage['prediction1'], first_stage['prediction2']
-    if prediction1 == '' or prediction2 == '':
+    predict1, predict2 = first_stage['prediction1'], first_stage['prediction2']
+    if predict1 == '' or predict2 == '':
         raise FailError("予測ワード選択")
-    theme = first_stage['theme']
-    # つかみ
-    first_tweet, second_tweet = present_script(theme, first_stage['present'])
-    first_tweet_info = update_status(first_tweet)
-    tweet_info = update_status(second_tweet, first_tweet_info['id'])
+    theme, category, present = first_stage['theme'], first_stage['category'], first_stage['present']
     # 導入
-    intro = introduction(first_stage['category'], prediction1, prediction2)
-    tweet_info = multiple_tweets(intro, tweet_info)
+    intro_scripts = make_intro_scripts(theme, present, category, predict1, predict2)
+    first_tweet_info = tweet_single_text(intro_scripts[0])
+    tweet_info = tweet_single_text(intro_scripts[1], first_tweet_info['id'])
+    tweet_info = tweet_multiple_texts(intro_scripts[2:], tweet_info)
     for i in range(stage_num):
         story = story_list[i] if i < stage_num - 1 else story_list[-1]
         core_story = [
@@ -139,7 +136,7 @@ def tweet_story(story_list: list[dict]) -> dict:
         if i == stage_num - 1:
             core_story.append("内海「いや、絶対ちゃうやろ。」\n\n")
             core_story.append("内海「もうええわ、どうもありがとうございました。」\n\n")
-        tweet_info = multiple_tweets(core_story, tweet_info)
+        tweet_info = tweet_multiple_texts(core_story, tweet_info)
     return first_tweet_info
 
 
@@ -171,15 +168,15 @@ def regular_tweet():
 def auto_reply():
     twitter_stream = TwitterStream(auth=AUTH)
     print('activate auto reply')
-    for call_tweet in twitter_stream.statuses.filter(language='ja', track='@milkboy_core_ai テーマ'):
+    for at_tweet in twitter_stream.statuses.filter(language='ja', track='@milkboy_core_ai テーマ'):
         stage_max = 5
         try:
-            print(f"リプライツイートアカウント名：{call_tweet['user']['name']}")
-            print(f"ツイート内容：{call_tweet['text']}")
+            print(f"リプライツイートアカウント名：{at_tweet['user']['name']}")
+            print(f"ツイート内容：{at_tweet['text']}")
         except KeyError as e:
             print(e)
             continue
-        theme = call_tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
+        theme = at_tweet['text'].split()[-1].translate(str.maketrans({'「': '', '」': ''}))
         print(theme)
         if '@' in theme or len(theme) > 30:
             continue
@@ -189,15 +186,15 @@ def auto_reply():
             try:
                 story_list = generate_story_list(theme, seed, stage_max)
                 first_tweet_info = tweet_story(story_list)
-                reply_text = f"@{call_tweet['user']['screen_name']}\nネタを投稿しました！\n" \
+                reply_text = f"@{at_tweet['user']['screen_name']}\nネタを投稿しました！\n" \
                              f"https://twitter.com/milkboy_core_ai/status/{first_tweet_info['id']}"
-                update_status(reply_text, call_tweet['id_str'])
+                tweet_single_text(reply_text, at_tweet['id_str'])
                 print("ツイート成功")
                 break
             except FailError as e:
                 print(e)
                 continue
         else:
-            reply_text = f"@{call_tweet['user']['screen_name']}\n申し訳ありません。そのテーマではネタを作れませんでした。\n"
-            update_status(reply_text, call_tweet['id_str'])
+            reply_text = f"@{at_tweet['user']['screen_name']}\n申し訳ありません。そのテーマではネタを作れませんでした。\n"
+            tweet_single_text(reply_text, at_tweet['id_str'])
             continue
