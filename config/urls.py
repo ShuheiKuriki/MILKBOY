@@ -28,5 +28,5 @@ try:
     debug = settings.dev.DEBUG    # この if 文 (5STEP) を追加します。
     import debug_toolbar
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
-except KeyError:
+except AttributeError:
     pass
