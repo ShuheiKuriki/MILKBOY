@@ -3,62 +3,62 @@ const NAMES = ["UTSUMI", "KOMABA"];
 const SMALL_NAMES = ["utsumi", "komaba"];
 const PAUSE = sec => new Promise(resolve => setTimeout(resolve, sec * 1000))
 
-var STAGE = 0;
-var STAGE_MAX = 4;
-var NEED_STORY = true;
-var RALLY_NUM = -2;
-var CUR_STAGE_OBJ = null;
-var NEXT = true;
+let STAGE = 0;
+let STAGE_MAX = 4;
+let NEED_STORY = true;
+let RALLY_NUM = -2;
+let CUR_STAGE_OBJ = null;
+let NEXT = true;
 
-var INPUT_VALUE = "";
-var GENRE = '';
-var SEED = 0;
-var INF = false;
-var SPEED = 1.1;
-var VOL = 0.6;
+let INPUT_VALUE = "";
+let GENRE = '';
+let SEED = 0;
+let INF = false;
+let SPEED = 1.1;
+let VOL = 0.6;
 
-var THEME = '？？';
-var CATEGORY = '？？';
-var PRESENT = '？？';
-var FATHER = '？？';
+let THEME = '？？';
+let CATEGORY = '？？';
+let PRESENT = '？？';
+let FATHER = '？？';
 
 async function start_story(){
-    INPUT_VALUE = document.getElementById("theme").value;
-    STAGE_MAX = document.getElementById("length").value;
-    INF = document.getElementById("repeat").checked;
-    SPEED = document.getElementById("speed").value;
-    VOL = document.getElementById("volume").value;
+    INPUT_VALUE = document.querySelector("#theme").value;
+    STAGE_MAX = document.querySelector("#length").value;
+    INF = document.querySelector("#repeat").checked;
+    SPEED = document.querySelector("#speed").value;
+    VOL = document.querySelector("#volume").value;
     SEED = Math.floor( Math.random() * 100000 );
-    document.getElementById("story_share_button").style.display = "none";
-    document.getElementById("skip").style.display = "block";
-    document.getElementById("story").style.display = "block";
-    document.getElementById("form").style.display = "none";
+    document.querySelector("#story_share_button").style.display = "none";
+    document.querySelector("#skip").style.display = "block";
+    document.querySelector("#story").style.display = "block";
+    document.querySelector("#form").style.display = "none";
     location.href = '#story';
     await start();
 }
 
 async function start_genre(){
-    GENRE = document.getElementById("genre").value;
-    STAGE_MAX = document.getElementById("length").value;
-    INF = document.getElementById("repeat").checked;
-    SPEED = document.getElementById("speed").value;
-    VOL = document.getElementById("volume").value;
+    GENRE = document.querySelector("#genre").value;
+    STAGE_MAX = document.querySelector("#length").value;
+    INF = document.querySelector("#repeat").checked;
+    SPEED = document.querySelector("#speed").value;
+    VOL = document.querySelector("#volume").value;
     SEED = Math.floor( Math.random() * 100000 );
-    document.getElementById("story_share_button").style.display = "none";
-    document.getElementById("skip").style.display = "block";
-    document.getElementById("story").style.display = "block";
-    document.getElementById("form").style.display = "none";
+    document.querySelector("#story_share_button").style.display = "none";
+    document.querySelector("#skip").style.display = "block";
+    document.querySelector("#story").style.display = "block";
+    document.querySelector("#form").style.display = "none";
     location.href = '#story';
     await start();
 }
 
 async function demo() {
-    document.getElementById("story_share_button").style.display = "none";
-    document.getElementById("skip").style.display = "block";
-    document.getElementById("top").style.display = "none";
-    document.getElementById("story").style.display = "block";
-    document.getElementById("form").style.display = "none";
-    document.getElementById("about").style.display = "none";
+    document.querySelector("#story_share_button").style.display = "none";
+    document.querySelector("#skip").style.display = "block";
+    document.querySelector("#top").style.display = "none";
+    document.querySelector("#story").style.display = "block";
+    document.querySelector("#form").style.display = "none";
+    document.querySelector("#about").style.display = "none";
     location.href = '#story';
     INPUT_VALUE = 'カラオケ';
     STAGE_MAX = 4;
@@ -70,8 +70,8 @@ async function repeat_start() {
     await PAUSE(3);
     if (!NEXT) return;
     SEED = Math.floor( Math.random() * 100000 );
-    document.getElementById("story_share_button").style.display = "none";
-    document.getElementById("skip").style.display = "block";
+    document.querySelector("#story_share_button").style.display = "none";
+    document.querySelector("#skip").style.display = "block";
     location.href = '#story';
     await start();
 }
@@ -98,40 +98,40 @@ async function start() {
 
 async function go_top() {
     await stop();
-    document.getElementById("top").style.display = "block";
-    document.getElementById("about").style.display = "block";
-    document.getElementById("story").style.display = "none";
-    document.getElementById("form").style.display = "none";
+    document.querySelector("#top").style.display = "block";
+    document.querySelector("#about").style.display = "block";
+    document.querySelector("#story").style.display = "none";
+    document.querySelector("#form").style.display = "none";
     location.href = '#top';
 }
 
 async function go_form() {
     await stop();
-    document.getElementById("form").style.display = "block";
-    document.getElementById("story").style.display = "none";
-    document.getElementById("top").style.display = "none";
-    document.getElementById("about").style.display = "none";
+    document.querySelector("#form").style.display = "block";
+    document.querySelector("#story").style.display = "none";
+    document.querySelector("#top").style.display = "none";
+    document.querySelector("#about").style.display = "none";
     location.href = '#form';
 }
 
 async function go_about() {
     await stop();
-    document.getElementById("form").style.display = "none";
-    document.getElementById("story").style.display = "none";
-    document.getElementById("top").style.display = "block";
-    document.getElementById("about").style.display = "block";
+    document.querySelector("#form").style.display = "none";
+    document.querySelector("#story").style.display = "none";
+    document.querySelector("#top").style.display = "block";
+    document.querySelector("#about").style.display = "block";
     location.href = '#about';
 }
 
 async function genre_mode() {
-    document.getElementById("theme_mode").style.display = "none";
-    document.getElementById("genre_mode").style.display = "block";
+    document.querySelector("#theme_mode").style.display = "none";
+    document.querySelector("#genre_mode").style.display = "block";
     location.href = '#form';
 }
 
 async function theme_mode() {
-    document.getElementById("theme_mode").style.display = "block";
-    document.getElementById("genre_mode").style.display = "none";
+    document.querySelector("#theme_mode").style.display = "block";
+    document.querySelector("#genre_mode").style.display = "none";
     location.href = '#form';
 }
 
@@ -141,7 +141,7 @@ function display_message(id, text) {
 }
 
 function get_story_info() {
-    var res = '';
+    let res = '';
     if (GENRE != '') {
         res = 'ジャンル:' + GENRE + '<br>';
     }
@@ -150,7 +150,7 @@ function get_story_info() {
 }
 
 function get_tweet_text() {
-    var res = '';
+    let res = '';
     if (GENRE != '') {
         res = 'ジャンル: ' + GENRE + '\n\n';
     }
@@ -167,8 +167,8 @@ function generate_share_button() {
     const url = ['url', 'https://www.milkboy-core-ai.tech'];
     const query = new URLSearchParams([text, hashtags, url]).toString();
     const shareUrl = `${baseUrl}${query}`;
-    document.getElementById("skip").style.display = 'none';
-    var target = document.getElementById("story_share_button");
+    document.querySelector("#skip").style.display = 'none';
+    let target = document.querySelector("#story_share_button");
     console.log(target.href);
     target.style.display = "block";
     target.href = shareUrl;
@@ -192,7 +192,7 @@ async function say(pearson, text){
     utterance.volume = VOL;
     speechSynthesis.speak(utterance);
 
-    var i = 0;
+    let i = 0;
     while (speechSynthesis.speaking) {
         await PAUSE(text.length * 0.01 / SPEED);
         i++;
@@ -241,7 +241,7 @@ async function introduction(first_stage){
 
     if (first_stage["prediction1"] != '') {
         await say(0, '好きな' + first_stage["category"] + '忘れてもうて。どうなってんねんそれ。');
-        var predictions = first_stage["prediction1"];
+        let predictions = first_stage["prediction1"];
         if (first_stage["prediction2"] != '') {
             predictions += '」か「' + first_stage["prediction2"];
         }
@@ -336,8 +336,8 @@ async function stop() {
     NEXT = false;
     speechSynthesis.cancel();
 
-    for (var i=0; i<2; i++) {
-        var div = document.getElementById(SMALL_NAMES[i]);
+    for (let i=0; i<2; i++) {
+        let div = document.getElementById(SMALL_NAMES[i]);
         div.innerHTML = "";
     }
 }
@@ -373,7 +373,7 @@ async function show_next() {
 }
 
 async function getJSON() {
-    var req = new XMLHttpRequest();           // XMLHttpRequest オブジェクトを生成する
+    let req = new XMLHttpRequest();           // XMLHttpRequest オブジェクトを生成する
     req.onload = function () {    // XMLHttpRequest オブジェクトの状態が変化した際に呼び出されるイベントハンドラ
         if (req.readyState == 4 && req.status == 200) { // サーバーからのレスポンスが完了し、かつ、通信が正常に終了した場合
             CUR_STAGE_OBJ = JSON.parse(req.responseText);
@@ -382,6 +382,7 @@ async function getJSON() {
             NEED_STORY = false;
             if (NEXT) show_next();
         } else {
+            console.log(req.status);
             say(0, 'エラーが発生したため、「次のネタ」ボタンを押してやりなおしてください');
         }
     };
