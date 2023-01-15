@@ -44,8 +44,8 @@ def always():
 
 
 t = threading.Thread(target=schedule_action)
-t2 = threading.Thread(target=access)
+# t2 = threading.Thread(target=access)
 t3 = threading.Thread(target=always)
 t.start()
-t2.start()
+# t2.start()
 t3.start()
