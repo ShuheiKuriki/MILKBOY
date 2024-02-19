@@ -1,7 +1,7 @@
 # MILKBOY
 MILKBOYアプリをDjangoで再開発しherokuで公開
 
-- 公開url : https://milkboy-core-ai.herokuapp.com/
+- 公開url : https://milkboy-core-ai.herokuapp.com/ →2024/2/19現在閉鎖済
 
 - オリジナルリポジトリ : https://github.com/team-rejected/MILKBOY_web
 
@@ -12,8 +12,8 @@ M1王者ミルクボーイ風AI漫才アプリ「無限ミルクボーイ」
 
 定期的にネタをツイートするTwitter botもあり。
 
-- 公開url : https://www.milkboy-core-ai.tech/
-- Twitter bot : https://twitter.com/milkboy_core_ai
+- 公開url : https://www.milkboy-core-ai.tech/ →2024/2/19現在閉鎖済
+- Twitter bot : https://twitter.com/milkboy_core_ai →2024/2/19現在ツイートは停止していますが、過去のツイートは残っています。
 
 ## 開発経緯
 Yahoo!JapanハッカソンHackDay2021
